@@ -66,21 +66,29 @@ exports.handler = async (event) => {
 
     const data = await response.json();
 
+    const nowMs = Date.now();
+    const HOLD_MS = 2 * 60 * 60 * 1000; // 2시간
+
     const formattedData = data.map(r => {
       const { date, times } = parsePeriodToKST(r.period);
       const isW = Boolean(r.booker_name && (r.booker_name.includes('[고정]') || r.booker_name.includes('[정기권]')));
+      const createdMs = r.created_at ? new Date(r.created_at).getTime() : nowMs;
+      const isExpired = r.status === 'pending' && (nowMs - createdMs > HOLD_MS);
+      const finalStatus = isExpired ? 'expired' : (r.status || 'pending');
 
       return {
         id: r.id,
         reservationNo: r.reservation_no,
         date: date,
-        times: times,
+        times: isExpired ? [] : times, // 만료 시 슬롯 즉시 해제
         teamName: r.booker_name || '이름없음',
         phone: r.booker_phone || '',
         amount: r.amount,
         baseAmount: r.base_amount,
-        status: r.status || 'pending',
-        isWeekly: isW
+        status: finalStatus,
+        isWeekly: isW,
+        createdAt: r.created_at,
+        expiresAt: new Date(createdMs + HOLD_MS).toISOString()
       };
     });
 
