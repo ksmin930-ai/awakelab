@@ -309,7 +309,7 @@ exports.handler = async (event) => {
           date: date,
           timeRange: `${startTime}~${endTime}`,
           weeksRegistered: rows.length,
-          reservationNo: batchResNo
+          reservationNo: `PASS-${batchCode}`
         })
       };
     }

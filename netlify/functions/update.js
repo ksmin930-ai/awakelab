@@ -179,7 +179,7 @@ exports.handler = async (event) => {
     const resultData = await response.json().catch(() => null);
 
     // 예약 승인 시 손님에게 확정 및 비밀번호 안내 문자 자동 발송 (한국 시간 변환)
-    if (action === 'update' && (status === 'confirmed' || !status) && Array.isArray(resultData) && resultData.length > 0) {
+    if ((action === 'update' || action === 'approve_batch') && (status === 'confirmed' || !status) && Array.isArray(resultData) && resultData.length > 0) {
       const item = resultData[0];
       const phone = item.booker_phone;
       const team = item.booker_name || '고객님';
