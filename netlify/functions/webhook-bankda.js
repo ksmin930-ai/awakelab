@@ -67,8 +67,8 @@ exports.handler = async (event) => {
   }
 
   try {
-    const supabaseUrl = process.env.SUPABASE_URL;
-    const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+    const supabaseUrl = process.env.SUPABASE_URL || 'https://sbpczktyzfqpkhzcxydc.supabase.co';
+    const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNicGN6a3R5emZxcGtoemN4eWRjIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc4NzU0MTI2MCwiZXhwIjoyMTAzMTE3MjYwfQ.js6xyw_zd6ntliOOx4wjE3OgxA6tobGs_jx9x0IJlzw';
 
     if (!supabaseUrl || !supabaseKey) {
       throw new Error('Supabase 환경 변수가 설정되지 않았습니다.');
