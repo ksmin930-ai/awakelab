@@ -19,6 +19,13 @@ exports.handler = async (event) => {
 
     const data = await response.json();
 
+    // ★ 진짜 범인을 잡기 위한 탐지기 코드 추가 ★
+    if (!Array.isArray(data)) {
+      console.error('🚨 Supabase가 보낸 에러 원인:', data);
+      console.error('🚨 현재 입력된 URL:', supabaseUrl);
+      return { statusCode: 500, headers, body: JSON.stringify({ error: 'DB 설정 오류' }) };
+    }
+
     const formattedData = data.map(r => {
       const match = r.period.match(/\["?(\d{4}-\d{2}-\d{2}) (\d{2}):\d{2}:\d{2}.*?,"?(\d{4}-\d{2}-\d{2}) (\d{2}):\d{2}:\d{2}.*?\)/);
       let extractDate = "", times = [];
@@ -36,6 +43,6 @@ exports.handler = async (event) => {
     return { statusCode: 200, headers, body: JSON.stringify(formattedData) };
   } catch (error) {
     console.error('읽기 에러:', error);
-    return { statusCode: 500, headers, body: JSON.stringify({ error: 'DB 조회 실패' }) };
+    return { statusCode: 500, headers, body: JSON.stringify({ error: '서버 에러' }) };
   }
 };
