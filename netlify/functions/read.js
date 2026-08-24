@@ -1,3 +1,43 @@
+// PostgreSQL tstzrange (UTC) -> KST(한국 표준시) 날짜 및 시간 배열로 정확하게 변환
+function parsePeriodToKST(periodStr) {
+  if (!periodStr) return { date: '', times: [] };
+  
+  // 예: '["2026-08-15 00:00:00+00","2026-08-15 03:00:00+00")' 또는 '[2026-08-15 00:00:00+00, 2026-08-15 03:00:00+00)'
+  const clean = periodStr.replace(/[\[\)"']/g, '');
+  const parts = clean.split(',').map(s => s.trim());
+  if (parts.length < 2) return { date: '', times: [] };
+
+  const startRaw = parts[0].replace(' ', 'T');
+  const endRaw = parts[1].replace(' ', 'T');
+
+  const startDate = new Date(startRaw);
+  const endDate = new Date(endRaw);
+
+  if (isNaN(startDate.getTime()) || isNaN(endDate.getTime())) {
+    return { date: '', times: [] };
+  }
+
+  // KST는 UTC+9시간 (9 * 3600 * 1000 ms)
+  const kstOffsetMs = 9 * 60 * 60 * 1000;
+  const startKst = new Date(startDate.getTime() + kstOffsetMs);
+  const endKst = new Date(endDate.getTime() + kstOffsetMs);
+
+  const y = startKst.getUTCFullYear();
+  const m = String(startKst.getUTCMonth() + 1).padStart(2, '0');
+  const d = String(startKst.getUTCDate()).padStart(2, '0');
+  const extractDate = `${y}-${m}-${d}`;
+
+  const startHour = startKst.getUTCHours();
+  const endHour = endKst.getUTCHours();
+
+  const times = [];
+  for (let h = startHour; h < endHour; h++) {
+    times.push(`${String(h).padStart(2, '0')}:00-${String(h + 1).padStart(2, '0')}:00`);
+  }
+
+  return { date: extractDate, times };
+}
+
 exports.handler = async (event) => {
   const headers = {
     'Access-Control-Allow-Origin': '*',
@@ -27,34 +67,13 @@ exports.handler = async (event) => {
     const data = await response.json();
 
     const formattedData = data.map(r => {
-      let extractDate = "", times = [];
-      if (r.period) {
-        // [2026-08-25 10:00:00+09, 2026-08-25 12:00:00+09)
-        const parts = r.period.replace(/[\[\)"']/g, '').split(',');
-        if (parts.length >= 2) {
-          const startStr = parts[0].trim();
-          const endStr = parts[1].trim();
-          
-          const startMatch = startStr.match(/(\d{4}-\d{2}-\d{2})[ T](\d{2}):(\d{2})/);
-          const endMatch = endStr.match(/(\d{4}-\d{2}-\d{2})[ T](\d{2}):(\d{2})/);
-          
-          if (startMatch && endMatch) {
-            extractDate = startMatch[1];
-            const startHour = parseInt(startMatch[2], 10);
-            const endHour = parseInt(endMatch[2], 10);
-            for (let i = startHour; i < endHour; i++) {
-              times.push(`${String(i).padStart(2, '0')}:00-${String(i + 1).padStart(2, '0')}:00`);
-            }
-          }
-        }
-      }
-
-      const isW = Boolean(r.booker_name && r.booker_name.includes('[고정]'));
+      const { date, times } = parsePeriodToKST(r.period);
+      const isW = Boolean(r.booker_name && (r.booker_name.includes('[고정]') || r.booker_name.includes('[정기권]')));
 
       return {
         id: r.id,
         reservationNo: r.reservation_no,
-        date: extractDate,
+        date: date,
         times: times,
         teamName: r.booker_name || '이름없음',
         phone: r.booker_phone || '',

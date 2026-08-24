@@ -717,7 +717,7 @@
         const overlay = document.getElementById('loadingOverlay');
         const badge = document.getElementById('adminBadge');
 
-        const cached = localStorage.getItem('awake_lab_reservations_v2');
+        const cached = localStorage.getItem('awake_lab_reservations_v3');
         if (cached && !forceRefresh) {
             try {
                 reservationsList = JSON.parse(cached);
@@ -736,7 +736,7 @@
             
             const data = await response.json();
             reservationsList = data;
-            localStorage.setItem('awake_lab_reservations_v2', JSON.stringify(data));
+            localStorage.setItem('awake_lab_reservations_v3', JSON.stringify(data));
             
             overlay.style.display = 'none';
             renderCalendar();
