@@ -11,9 +11,9 @@ async function sendNotification({ to, text, templateCode, title, buttons }) {
   }
 
   // 1. Solapi / CoolSMS 지원 (알림톡 + SMS/LMS 대체)
-  const coolsmsKey = process.env.COOLSMS_API_KEY || process.env.SOLAPI_API_KEY;
-  const coolsmsSecret = process.env.COOLSMS_API_SECRET || process.env.SOLAPI_API_SECRET;
-  const sender = process.env.COOLSMS_SENDER_PHONE || process.env.SOLAPI_SENDER_PHONE || process.env.SENDER_PHONE;
+  const coolsmsKey = process.env.COOLSMS_API_KEY || process.env.SOLAPI_API_KEY || 'NCSVL2WDFJJSCETU';
+  const coolsmsSecret = process.env.COOLSMS_API_SECRET || process.env.SOLAPI_API_SECRET || '5XC5NBGUTT9DYPDXMPPQOC81K5JM9OGO';
+  const sender = process.env.COOLSMS_SENDER_PHONE || process.env.SOLAPI_SENDER_PHONE || process.env.SENDER_PHONE || '01062406569';
   const pfId = process.env.SOLAPI_PF_ID || process.env.KAKAO_PF_ID; // 카카오톡 채널 ID
 
   if (coolsmsKey && coolsmsSecret && sender) {
