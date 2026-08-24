@@ -134,10 +134,16 @@ exports.handler = async (event) => {
       apiUrl = `${supabaseUrl}/rest/v1/reservations?id=eq.${id}`;
       method = 'PATCH';
       body = JSON.stringify({ status: status || 'confirmed' });
+    } else if (action === 'approve_batch') {
+      // 같은 reservation_no인 정기권/고정팀 전체 일괄 승인
+      if (!reservationNo) return { statusCode: 400, headers, body: JSON.stringify({ error: '예약 번호가 필요합니다.' }) };
+      apiUrl = `${supabaseUrl}/rest/v1/reservations?reservation_no=eq.${reservationNo}`;
+      method = 'PATCH';
+      body = JSON.stringify({ status: 'confirmed' });
     } else if (action === 'delete') {
       method = 'DELETE';
       if (deleteBy === 'clear_all') {
-        apiUrl = `${supabaseUrl}/rest/v1/reservations?id=gt.0`;
+        apiUrl = `${supabaseUrl}/rest/v1/reservations?status=in.(pending,confirmed,cancelled)`;
       } else if (deleteBy === 'reservation_no' && reservationNo) {
         apiUrl = `${supabaseUrl}/rest/v1/reservations?reservation_no=eq.${reservationNo}`;
       } else if (deleteBy === 'team_name' && teamName) {
