@@ -1,17 +1,31 @@
 // PostgreSQL tstzrange (UTC) -> KST(한국 표준시) 날짜 및 시간 배열 변환
 function parsePeriodToKST(periodStr) {
   if (!periodStr) return { date: '', times: [] };
-  const clean = periodStr.replace(/[\[\)"']/g, '');
-  const parts = clean.split(',').map(s => s.trim());
-  if (parts.length < 2) return { date: '', times: [] };
+  
+  const dateTimes = periodStr.match(/\d{4}-\d{2}-\d{2}[T ]\d{2}:\d{2}:\d{2}(?:[\+\-]\d{2}(?::?\d{2})?|Z)?/g);
+  if (!dateTimes || dateTimes.length < 2) return { date: '', times: [] };
 
-  const startRaw = parts[0].replace(' ', 'T');
-  const endRaw = parts[1].replace(' ', 'T');
+  function parseISO(str) {
+    let s = str.replace(' ', 'T');
+    if (/[\+\-]\d{2}$/.test(s)) {
+      s = s + ':00';
+    } else if (!/[\+\-]\d{2}:?\d{2}$/.test(s) && !s.endsWith('Z')) {
+      s = s + '+00:00';
+    }
+    const d = new Date(s);
+    if (!isNaN(d.getTime())) return d;
 
-  const startDate = new Date(startRaw);
-  const endDate = new Date(endRaw);
+    const m = s.match(/(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2}):(\d{2})/);
+    if (m) {
+      return new Date(Date.UTC(Number(m[1]), Number(m[2]) - 1, Number(m[3]), Number(m[4]), Number(m[5]), Number(m[6])));
+    }
+    return null;
+  }
 
-  if (isNaN(startDate.getTime()) || isNaN(endDate.getTime())) {
+  const startDate = parseISO(dateTimes[0]);
+  const endDate = parseISO(dateTimes[1]);
+
+  if (!startDate || !endDate || isNaN(startDate.getTime()) || isNaN(endDate.getTime())) {
     return { date: '', times: [] };
   }
 

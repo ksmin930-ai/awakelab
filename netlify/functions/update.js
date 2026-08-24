@@ -2,19 +2,33 @@ const { sendNotification } = require('./notify-helper');
 
 // PostgreSQL tstzrange (UTC) -> KST(한국 표준시) 날짜 및 시간 문자열 변환
 function parsePeriodToKST(periodStr) {
-  if (!periodStr) return { dateStr: '', timeStr: '' };
-  const clean = periodStr.replace(/[\[\)"']/g, '');
-  const parts = clean.split(',').map(s => s.trim());
-  if (parts.length < 2) return { dateStr: '', timeStr: '' };
+  if (!periodStr) return { date: '', times: [], dateStr: '', timeStr: '' };
+  
+  const dateTimes = periodStr.match(/\d{4}-\d{2}-\d{2}[T ]\d{2}:\d{2}:\d{2}(?:[\+\-]\d{2}(?::?\d{2})?|Z)?/g);
+  if (!dateTimes || dateTimes.length < 2) return { date: '', times: [], dateStr: '', timeStr: '' };
 
-  const startRaw = parts[0].replace(' ', 'T');
-  const endRaw = parts[1].replace(' ', 'T');
+  function parseISO(str) {
+    let s = str.replace(' ', 'T');
+    if (/[\+\-]\d{2}$/.test(s)) {
+      s = s + ':00';
+    } else if (!/[\+\-]\d{2}:?\d{2}$/.test(s) && !s.endsWith('Z')) {
+      s = s + '+00:00';
+    }
+    const d = new Date(s);
+    if (!isNaN(d.getTime())) return d;
 
-  const startDate = new Date(startRaw);
-  const endDate = new Date(endRaw);
+    const m = s.match(/(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2}):(\d{2})/);
+    if (m) {
+      return new Date(Date.UTC(Number(m[1]), Number(m[2]) - 1, Number(m[3]), Number(m[4]), Number(m[5]), Number(m[6])));
+    }
+    return null;
+  }
 
-  if (isNaN(startDate.getTime()) || isNaN(endDate.getTime())) {
-    return { dateStr: '', timeStr: '' };
+  const startDate = parseISO(dateTimes[0]);
+  const endDate = parseISO(dateTimes[1]);
+
+  if (!startDate || !endDate || isNaN(startDate.getTime()) || isNaN(endDate.getTime())) {
+    return { date: '', times: [], dateStr: '', timeStr: '' };
   }
 
   const kstOffsetMs = 9 * 60 * 60 * 1000;
@@ -32,7 +46,7 @@ function parsePeriodToKST(periodStr) {
   const endMin = String(endKst.getUTCMinutes()).padStart(2, '0');
   const timeStr = `${startHour}:${startMin}~${endHour}:${endMin}`;
 
-  return { dateStr, timeStr };
+  return { date: dateStr, times: [], dateStr, timeStr };
 }
 
 exports.handler = async (event) => {
@@ -46,7 +60,7 @@ exports.handler = async (event) => {
 
   try {
     const { action, id, status, deleteBy, reservationNo, teamName } = JSON.parse(event.body);
-    const supabaseUrl = process.env.SUPABASE_URL;
+    const supabaseUrl = process.env.SUPABASE_URL || 'https://sbpczktyzfqpkhzcxydc.supabase.co';
     const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
     if (!supabaseUrl || !supabaseKey) {
@@ -54,7 +68,9 @@ exports.handler = async (event) => {
     }
 
     const adminSecret = process.env.ADMIN_SECRET_KEY || '1236580*';
-    const clientToken = event.headers['x-admin-token'] || event.headers['X-Admin-Token'];
+    const headerKeys = Object.keys(event.headers || {});
+    const tokenKey = headerKeys.find(k => k.toLowerCase() === 'x-admin-token');
+    const clientToken = tokenKey ? event.headers[tokenKey] : null;
     const isAuthorizedAdmin = (clientToken === adminSecret || clientToken === '1236' || clientToken === 'admin1234');
 
     let apiUrl = '';

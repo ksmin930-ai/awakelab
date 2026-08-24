@@ -1,23 +1,36 @@
 // PostgreSQL tstzrange (UTC) -> KST(한국 표준시) 날짜 및 시간 배열로 정확하게 변환
 function parsePeriodToKST(periodStr) {
-  if (!periodStr) return { date: '', times: [] };
+  if (!periodStr) return { date: '', times: [], dateStr: '', timeStr: '' };
   
-  // 예: '["2026-08-15 00:00:00+00","2026-08-15 03:00:00+00")' 또는 '[2026-08-15 00:00:00+00, 2026-08-15 03:00:00+00)'
-  const clean = periodStr.replace(/[\[\)"']/g, '');
-  const parts = clean.split(',').map(s => s.trim());
-  if (parts.length < 2) return { date: '', times: [] };
+  // 정규식으로 YYYY-MM-DD HH:MM:SS 패턴 추출
+  const dateTimes = periodStr.match(/\d{4}-\d{2}-\d{2}[T ]\d{2}:\d{2}:\d{2}(?:[\+\-]\d{2}(?::?\d{2})?|Z)?/g);
+  if (!dateTimes || dateTimes.length < 2) return { date: '', times: [], dateStr: '', timeStr: '' };
 
-  const startRaw = parts[0].replace(' ', 'T');
-  const endRaw = parts[1].replace(' ', 'T');
+  function parseISO(str) {
+    let s = str.replace(' ', 'T');
+    if (/[\+\-]\d{2}$/.test(s)) {
+      s = s + ':00';
+    } else if (!/[\+\-]\d{2}:?\d{2}$/.test(s) && !s.endsWith('Z')) {
+      s = s + '+00:00';
+    }
+    const d = new Date(s);
+    if (!isNaN(d.getTime())) return d;
 
-  const startDate = new Date(startRaw);
-  const endDate = new Date(endRaw);
-
-  if (isNaN(startDate.getTime()) || isNaN(endDate.getTime())) {
-    return { date: '', times: [] };
+    const m = s.match(/(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2}):(\d{2})/);
+    if (m) {
+      return new Date(Date.UTC(Number(m[1]), Number(m[2]) - 1, Number(m[3]), Number(m[4]), Number(m[5]), Number(m[6])));
+    }
+    return null;
   }
 
-  // KST는 UTC+9시간 (9 * 3600 * 1000 ms)
+  const startDate = parseISO(dateTimes[0]);
+  const endDate = parseISO(dateTimes[1]);
+
+  if (!startDate || !endDate || isNaN(startDate.getTime()) || isNaN(endDate.getTime())) {
+    return { date: '', times: [], dateStr: '', timeStr: '' };
+  }
+
+  // KST는 UTC+9시간
   const kstOffsetMs = 9 * 60 * 60 * 1000;
   const startKst = new Date(startDate.getTime() + kstOffsetMs);
   const endKst = new Date(endDate.getTime() + kstOffsetMs);
@@ -35,7 +48,15 @@ function parsePeriodToKST(periodStr) {
     times.push(`${String(h).padStart(2, '0')}:00-${String(h + 1).padStart(2, '0')}:00`);
   }
 
-  return { date: extractDate, times };
+  const startHourStr = String(startHour).padStart(2, '0') + ':00';
+  const endHourStr = String(endHour).padStart(2, '0') + ':00';
+
+  return {
+    date: extractDate,
+    times,
+    dateStr: extractDate,
+    timeStr: `${startHourStr}~${endHourStr}`
+  };
 }
 
 exports.handler = async (event) => {
@@ -48,7 +69,7 @@ exports.handler = async (event) => {
   if (event.httpMethod === 'OPTIONS') return { statusCode: 200, headers, body: '' };
 
   try {
-    const supabaseUrl = process.env.SUPABASE_URL;
+    const supabaseUrl = process.env.SUPABASE_URL || 'https://sbpczktyzfqpkhzcxydc.supabase.co';
     const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
     if (!supabaseUrl || !supabaseKey) {
@@ -56,7 +77,9 @@ exports.handler = async (event) => {
     }
 
     const adminSecret = process.env.ADMIN_SECRET_KEY || '1236580*';
-    const clientToken = event.headers['x-admin-token'] || event.headers['X-Admin-Token'];
+    const headerKeys = Object.keys(event.headers || {});
+    const tokenKey = headerKeys.find(k => k.toLowerCase() === 'x-admin-token');
+    const clientToken = tokenKey ? event.headers[tokenKey] : null;
     const isAdmin = (clientToken === adminSecret || clientToken === '1236' || clientToken === 'admin1234');
 
     const response = await fetch(`${supabaseUrl}/rest/v1/reservations?select=*&status=in.(pending,confirmed)&order=created_at.desc`, {

@@ -1777,14 +1777,15 @@
                 headers: { 'Content-Type': 'application/json', 'X-Admin-Token': getAdminToken() },
                 body: JSON.stringify({ action: 'update', id: id, status: 'confirmed' })
             });
-            if (!response.ok) throw new Error('승인 실패');
+            const resData = await response.json().catch(() => ({}));
+            if (!response.ok) throw new Error(resData.error || resData.message || '승인 실패');
 
             alert('✅ 예약이 승인되었으며 손님에게 확정 안내 문자가 발송되었습니다!');
             await loadReservations(true);
             openAdminListModal();
         } catch(e) {
             console.error(e);
-            alert('승인 처리 중 오류가 발생했습니다.');
+            alert(`승인 처리 실패: ${e.message}`);
         }
     }
 
@@ -1799,14 +1800,15 @@
                 headers: { 'Content-Type': 'application/json', 'X-Admin-Token': getAdminToken() },
                 body: JSON.stringify({ action: 'approve_batch', reservationNo: resNo })
             });
-            if (!response.ok) throw new Error('일괄 승인 실패');
+            const resData = await response.json().catch(() => ({}));
+            if (!response.ok) throw new Error(resData.error || resData.message || '일괄 승인 실패');
 
             alert(`✅ [${team}] 팀의 모든 일정이 일괄 승인되었으며 손님에게 확정 문자가 발송되었습니다!`);
             await loadReservations(true);
             openAdminListModal();
         } catch(e) {
             console.error(e);
-            alert('일괄 승인 처리 중 오류가 발생했습니다.');
+            alert(`일괄 승인 실패: ${e.message}`);
         }
     }
 
