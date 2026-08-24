@@ -96,9 +96,17 @@
         
         .checkbox-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 25px; }
         .checkbox-grid input[type="checkbox"] { display: none; }
-        .checkbox-grid label { display: block; text-align: center; font-size: 14px; padding: 18px 10px; background: #000; border: 1px solid #333; border-radius: 15px; cursor: pointer; color: #666; transition: 0.2s; font-weight: 500; }
+        .checkbox-grid label { display: block; text-align: center; font-size: 14px; padding: 18px 10px; background: #000; border: 1px solid #333; border-radius: 15px; cursor: pointer; color: #666; transition: 0.2s; font-weight: 500; position: relative; }
         .checkbox-grid input[type="checkbox"]:checked + label { border-color: #8a2be2; background: rgba(138, 43, 226, 0.2); color: #fff; font-weight: 800; box-shadow: 0 0 20px rgba(138, 43, 226, 0.4); }
+        .checkbox-grid input[type="checkbox"].is-range-start + label { border-color: #8a2be2 !important; background: linear-gradient(135deg, rgba(138, 43, 226, 0.45), rgba(74, 0, 224, 0.45)) !important; color: #fff !important; font-weight: 900 !important; box-shadow: 0 0 20px rgba(138, 43, 226, 0.8) !important; }
+        .checkbox-grid input[type="checkbox"].is-range-start + label::after { content: "시작"; position: absolute; top: -8px; right: 8px; background: #8a2be2; color: #fff; font-size: 10px; font-weight: 900; padding: 1px 6px; border-radius: 6px; letter-spacing: -0.5px; }
+        .checkbox-grid input[type="checkbox"].range-mid + label { background: rgba(138, 43, 226, 0.18) !important; border-color: rgba(138, 43, 226, 0.4) !important; color: #eee !important; }
+        .checkbox-grid input[type="checkbox"].range-end + label { background: linear-gradient(135deg, rgba(74, 0, 224, 0.45), rgba(138, 43, 226, 0.45)) !important; border-color: #8a2be2 !important; color: #fff !important; font-weight: 900 !important; box-shadow: 0 0 20px rgba(138, 43, 226, 0.8) !important; }
+        .checkbox-grid input[type="checkbox"].range-end + label::after { content: "종료"; position: absolute; top: -8px; right: 8px; background: #4a00e0; color: #fff; font-size: 10px; font-weight: 900; padding: 1px 6px; border-radius: 6px; letter-spacing: -0.5px; }
         .checkbox-grid input[type="checkbox"]:disabled + label { background: #151515; color: #444; border-color: #1a1a1a; cursor: not-allowed; text-decoration: line-through; opacity: 0.5; }
+
+        .range-guide-banner { background: rgba(138, 43, 226, 0.12); border: 1px dashed #8a2be2; border-radius: 12px; padding: 10px 14px; margin-bottom: 15px; font-size: 12px; color: #c49aee; text-align: center; font-weight: 600; line-height: 1.4; display: none; animation: fadeInPulse 1.5s infinite; }
+        @keyframes fadeInPulse { 0%, 100% { opacity: 0.85; transform: scale(1); } 50% { opacity: 1; transform: scale(1.01); } }
 
         .btn-group { display: flex; gap: 12px; }
         .btn { padding: 18px; border-radius: 15px; border: none; cursor: pointer; font-weight: 700; flex: 1; font-size: 15px; transition: 0.3s; }
@@ -503,6 +511,7 @@
                 </label>
             </div>
 
+            <div id="rangeGuideBanner" class="range-guide-banner"></div>
             <div class="checkbox-grid" id="timeGrid"></div>
             
             <!-- 실시간 요금 계산 바 -->
@@ -820,8 +829,11 @@
         document.getElementById('dur3').classList.toggle('active', mode === 3);
         document.getElementById('durCustom').classList.toggle('active', mode === 0);
         
-        // 시간 단위 변경 시 체크박스 초기화
-        document.querySelectorAll('input[name="timeSlot"]:checked').forEach(cb => cb.checked = false);
+        // 시간 단위 변경 시 상태 및 체크박스 초기화
+        resetRangeState();
+        if (mode === 0) {
+            updateRangeGuideText(`👉 원하시는 <strong>'시작 시간'</strong>을 먼저 클릭해 주세요.`);
+        }
         updateLivePrice();
     }
 
@@ -933,31 +945,68 @@
         priceEl.classList.add('price-flash');
     }
 
-    // 시간 버튼 클릭 시 2시간/3시간 단위 자동 선택 핸들러
+    // ==========================================
+    // [범위 선택 상태 관리 변수 및 헬퍼]
+    // ==========================================
+    let rangeStartIdx = null; // 시작 슬롯 인덱스 (0 ~ 10)
+    let isRangeSelecting = false; // 시작 슬롯 선택 후 종료 슬롯 대기 중 여부
+
+    // 전체 시간 슬롯 체크 및 클래스 초기화
+    function clearAllTimeSelections() {
+        document.querySelectorAll('input[name="timeSlot"]').forEach(cb => {
+            cb.checked = false;
+            cb.classList.remove('is-range-start', 'range-mid', 'range-end');
+        });
+    }
+
+    // 범위 상태 전면 리셋
+    function resetRangeState() {
+        rangeStartIdx = null;
+        isRangeSelecting = false;
+        clearAllTimeSelections();
+        updateRangeGuideText('');
+    }
+
+    // 상단 안내 텍스트 갱신
+    function updateRangeGuideText(msg) {
+        const guideEl = document.getElementById('rangeGuideBanner');
+        if (!guideEl) return;
+        if (msg) {
+            guideEl.innerHTML = msg;
+            guideEl.style.display = 'block';
+        } else {
+            guideEl.style.display = 'none';
+        }
+    }
+
+    // 시간 버튼 클릭 시 통합 핸들러
     function onTimeSlotClick(idx) {
-        const dur = durationPreset;
         const targetCb = document.getElementById(`s${idx}`);
         if (!targetCb || targetCb.disabled) return;
 
-        if (dur === 0) {
-            // 직접 선택 모드
-            targetCb.checked = !targetCb.checked;
-            updateLivePrice();
+        // 1) 고정 프리셋 모드 (2시간 / 3시간 / 정기권)
+        if (durationPreset > 0) {
+            handlePresetClick(idx, durationPreset);
             return;
         }
 
-        // 이미 체크되어 있는 시작점을 누르면 전체 해제
+        // 2) 직접 선택 모드 (Range Selection)
+        handleRangeSelection(idx);
+    }
+
+    // 프리셋 클릭 처리 (2h / 3h)
+    function handlePresetClick(idx, dur) {
+        const targetCb = document.getElementById(`s${idx}`);
+
+        // 이미 체크되어 있는 시작점을 다시 누르면 전체 해제
         if (targetCb.checked) {
-            for (let k = 0; k < dur; k++) {
-                const nextCb = document.getElementById(`s${idx + k}`);
-                if (nextCb) nextCb.checked = false;
-            }
+            resetRangeState();
             updateLivePrice();
             return;
         }
 
-        // 다른 모든 시간 초기화 (한 번에 1개의 연속 블록만 선택)
-        document.querySelectorAll('input[name="timeSlot"]:checked').forEach(cb => cb.checked = false);
+        // 다른 모든 시간 초기화
+        clearAllTimeSelections();
 
         // 연속 dur시간이 예약 가능한지 검사
         let canSelect = true;
@@ -970,17 +1019,94 @@
         }
 
         if (!canSelect) {
-            alert(`선택하신 시간부터 연속 ${dur}시간 예약이 불가능합니다.\n(다음 시간이 이미 예약되었거나 운영 종료 시간입니다)`);
+            alert(`선택하신 시간부터 연속 ${dur}시간 예약이 불가능합니다.\n(다음 시간이 이미 예약되었거나 운영 마감 시간입니다)`);
             updateLivePrice();
             return;
         }
 
-        // 연속 dur시간 자동 체크
+        // 연속 dur시간 자동 체크 및 스타일 적용
         for (let k = 0; k < dur; k++) {
             const nextCb = document.getElementById(`s${idx + k}`);
-            if (nextCb) nextCb.checked = true;
+            if (nextCb) {
+                nextCb.checked = true;
+                if (k === 0) nextCb.classList.add('is-range-start');
+                else if (k === dur - 1) nextCb.classList.add('range-end');
+                else nextCb.classList.add('range-mid');
+            }
         }
 
+        updateRangeGuideText(`⚡ [${timeSlots[idx].split('-')[0]} ~ ${timeSlots[idx + dur - 1].split('-')[1]}] ${dur}시간 선택됨`);
+        updateLivePrice();
+    }
+
+    // 시작 ➔ 종료 2-Step 범위 선택 및 재선택 자동 초기화 알고리즘
+    function handleRangeSelection(idx) {
+        const targetCb = document.getElementById(`s${idx}`);
+
+        // [상태 1] IDLE이거나 이미 범위 선택이 완료된 상태에서의 클릭 (새 시작점 지정)
+        if (rangeStartIdx === null || !isRangeSelecting) {
+            clearAllTimeSelections();
+            rangeStartIdx = idx;
+            isRangeSelecting = true;
+
+            targetCb.checked = true;
+            targetCb.classList.add('is-range-start');
+
+            updateRangeGuideText(`👉 <strong>[${timeSlots[idx].split('-')[0]}] 시작 시간</strong> 선택됨! '종료 시간' 버튼을 클릭해 주세요 (기본 2시간 이상)`);
+            updateLivePrice();
+            return;
+        }
+
+        // [상태 2] 시작 시간이 이미 선택된 상태 (isRangeSelecting === true)
+        const start = rangeStartIdx;
+        const end = idx;
+
+        // 2-1) 시작 시간과 동일한 슬롯을 다시 클릭한 경우 -> 선택 해제 (IDLE 복귀)
+        if (end === start) {
+            resetRangeState();
+            updateLivePrice();
+            return;
+        }
+
+        // 2-2) 시작 시간보다 앞선 슬롯을 클릭한 경우 (역방향 클릭) -> 앞선 슬롯을 새 시작 시간으로 전환
+        if (end < start) {
+            clearAllTimeSelections();
+            rangeStartIdx = end;
+            isRangeSelecting = true;
+
+            const newStartCb = document.getElementById(`s${end}`);
+            newStartCb.checked = true;
+            newStartCb.classList.add('is-range-start');
+
+            updateRangeGuideText(`👉 <strong>[${timeSlots[end].split('-')[0]}] 시작 시간</strong>으로 재지정됨! '종료 시간' 버튼을 클릭해 주세요`);
+            updateLivePrice();
+            return;
+        }
+
+        // 2-3) 정방향 종료 시간 클릭 (start < end) -> 중간 장애물(예약 슬롯) 연속성 검증
+        for (let i = start; i <= end; i++) {
+            const cb = document.getElementById(`s${i}`);
+            if (!cb || cb.disabled) {
+                alert(`⚠️ 선택하신 구간 사이에 이미 예약된 시간대(${timeSlots[i]})가 포함되어 있습니다.\n비어있는 연속된 시간대를 선택해 주세요.`);
+                return;
+            }
+        }
+
+        // 2-4) 장애물 없음 -> 시작부터 종료까지 전체 일괄 체크 및 스타일 적용
+        clearAllTimeSelections();
+        for (let i = start; i <= end; i++) {
+            const cb = document.getElementById(`s${i}`);
+            if (cb) {
+                cb.checked = true;
+                if (i === start) cb.classList.add('is-range-start');
+                else if (i === end) cb.classList.add('range-end');
+                else cb.classList.add('range-mid');
+            }
+        }
+
+        isRangeSelecting = false; // 범위 선택 완료 (다음 클릭 시 원클릭 재선택 모드로 진입)
+        const totalHours = end - start + 1;
+        updateRangeGuideText(`🎉 <strong>[${timeSlots[start].split('-')[0]} ~ ${timeSlots[end].split('-')[1]}]</strong> 총 ${totalHours}시간 선택 완료 (수정 시 새 시작 시간을 누르세요)`);
         updateLivePrice();
     }
 
@@ -1301,7 +1427,8 @@
             badgeElem.style.borderColor = "rgba(77, 148, 255, 0.3)";
         }
 
-        // 기본 카테고리는 일반 대관으로 초기화
+        // 기본 카테고리는 일반 대관으로 초기화 및 범위 선택 리셋
+        resetRangeState();
         setBookingCategory('general');
 
         if(isAdmin) {
@@ -1664,6 +1791,7 @@
     }
 
     function closeModal() { 
+        resetRangeState();
         document.getElementById('reservationModal').style.display = 'none'; 
     }
 
