@@ -1,76 +1,4 @@
-const crypto = require('crypto');
-
-// 문자(SMS) 발송 헬퍼 (CoolSMS/Solapi 또는 Aligo 지원)
-async function sendSmsNotification({ to, text }) {
-  const cleanTo = (to || '').replace(/[^0-9]/g, '');
-  if (!cleanTo || cleanTo.length < 10 || cleanTo === '01000000000') {
-    return { skipped: true, reason: 'INVALID_PHONE' };
-  }
-
-  const coolsmsKey = process.env.COOLSMS_API_KEY || process.env.SOLAPI_API_KEY;
-  const coolsmsSecret = process.env.COOLSMS_API_SECRET || process.env.SOLAPI_API_SECRET;
-  const sender = process.env.COOLSMS_SENDER_PHONE || process.env.SOLAPI_SENDER_PHONE || process.env.SENDER_PHONE;
-
-  if (coolsmsKey && coolsmsSecret && sender) {
-    try {
-      const date = new Date().toISOString();
-      const salt = crypto.randomBytes(16).toString('hex');
-      const signature = crypto.createHmac('sha256', coolsmsSecret).update(`${date}${salt}`).digest('hex');
-      const authHeader = `HMAC-SHA256 apiKey=${coolsmsKey}, date=${date}, salt=${salt}, signature=${signature}`;
-
-      const res = await fetch('https://api.coolsms.com/messages/v4/send', {
-        method: 'POST',
-        headers: {
-          'Authorization': authHeader,
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          message: {
-            to: cleanTo,
-            from: sender.replace(/[^0-9]/g, ''),
-            text: text
-          }
-        })
-      });
-      const data = await res.json();
-      console.log('CoolSMS Confirmation Sent:', data);
-      return { success: res.ok, provider: 'coolsms', data };
-    } catch (e) {
-      console.error('CoolSMS Error:', e);
-      return { success: false, error: e.message };
-    }
-  }
-
-  const aligoKey = process.env.ALIGO_API_KEY;
-  const aligoUser = process.env.ALIGO_USER_ID;
-  const aligoSender = process.env.ALIGO_SENDER_PHONE || sender;
-
-  if (aligoKey && aligoUser && aligoSender) {
-    try {
-      const formData = new URLSearchParams();
-      formData.append('key', aligoKey);
-      formData.append('user_id', aligoUser);
-      formData.append('sender', aligoSender.replace(/[^0-9]/g, ''));
-      formData.append('receiver', cleanTo);
-      formData.append('msg', text);
-
-      const res = await fetch('https://apis.aligo.in/send/', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-        body: formData.toString()
-      });
-      const data = await res.json();
-      console.log('Aligo Confirmation Sent:', data);
-      return { success: res.ok, provider: 'aligo', data };
-    } catch (e) {
-      console.error('Aligo Error:', e);
-      return { success: false, error: e.message };
-    }
-  }
-
-  console.log('SMS API 환경변수 미설정 (발송 스킵)');
-  return { skipped: true, reason: 'NO_ENV_KEYS' };
-}
+const { sendNotification } = require('./notify-helper');
 
 // PostgreSQL tstzrange (UTC) -> KST(한국 표준시) 날짜 및 시간 문자열 변환
 function parsePeriodToKST(periodStr) {
@@ -217,9 +145,14 @@ exports.handler = async (event) => {
 감사합니다!`;
 
       try {
-        await sendSmsNotification({ to: phone, text: confirmMsg });
+        await sendNotification({ 
+          to: phone, 
+          text: confirmMsg,
+          title: '[AWAKE LAB] 예약 확정 안내',
+          templateCode: process.env.KAKAO_CONFIRM_TEMPLATE_CODE 
+        });
       } catch (err) {
-        console.error('확정 SMS 발송 에러:', err);
+        console.error('확정 알림 발송 에러:', err);
       }
     }
 
