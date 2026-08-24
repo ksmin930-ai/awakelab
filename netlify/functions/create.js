@@ -72,7 +72,7 @@ exports.handler = async (event) => {
 
     const cleanPhone = (phone || '').replace(/[^0-9]/g, '');
 
-    const supabaseUrl = process.env.SUPABASE_URL || 'https://sbpczktyzfqpkhzcxydc.supabase.co';
+    const supabaseUrl = process.env.SUPABASE_URL || 'https://feuodsqkcwoperitoiqk.supabase.co';
     const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNicGN6a3R5emZxcGtoemN4eWRjIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc4NzU0MTI2MCwiZXhwIjoyMTAzMTE3MjYwfQ.js6xyw_zd6ntliOOx4wjE3OgxA6tobGs_jx9x0IJlzw';
 
     if (!supabaseUrl || !supabaseKey) {
