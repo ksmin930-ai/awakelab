@@ -1699,26 +1699,79 @@
         }
     }
 
-    // [관리자 전용] 전체 예약 목록 모달 열기
+    // [관리자 전용] 전체 예약 목록 모달 열기 (정기권/고정팀 4회 일괄 그룹핑 뷰)
     function openAdminListModal() {
-        document.getElementById('modalResCount').textContent = reservationsList.length;
         const container = document.getElementById('adminResTableContainer');
 
         if (!reservationsList || reservationsList.length === 0) {
+            document.getElementById('modalResCount').textContent = '0';
             container.innerHTML = `<div style="text-align:center; color:#888; padding:30px;">현재 DB에 등록된 예약이 없습니다. (깨끗한 상태)</div>`;
             document.getElementById('adminListModal').style.display = 'flex';
             return;
         }
 
-        const sorted = [...reservationsList].sort((a, b) => (a.date || '').localeCompare(b.date || ''));
+        // 정기권/고정팀 패키지 단위로 묶기
+        const groups = [];
+        const batchMap = new Map();
+
+        reservationsList.forEach(r => {
+            const isBatch = r.reservationNo && (r.reservationNo.startsWith('PASS-') || r.reservationNo.startsWith('FIXED-'));
+            if (isBatch) {
+                const batchKey = r.reservationNo.split('-W')[0];
+                if (!batchMap.has(batchKey)) {
+                    const entry = {
+                        key: batchKey,
+                        isBatch: true,
+                        isPass: r.reservationNo.startsWith('PASS-'),
+                        isFixed: r.reservationNo.startsWith('FIXED-'),
+                        teamName: r.teamName,
+                        reservationNo: r.reservationNo,
+                        batchKey: batchKey,
+                        dates: [r.date],
+                        times: r.times,
+                        allConfirmed: r.status === 'confirmed',
+                        hasPending: r.status === 'pending',
+                        items: [r]
+                    };
+                    batchMap.set(batchKey, entry);
+                    groups.push(entry);
+                } else {
+                    const entry = batchMap.get(batchKey);
+                    entry.dates.push(r.date);
+                    if (r.status !== 'confirmed') entry.allConfirmed = false;
+                    if (r.status === 'pending') entry.hasPending = true;
+                    entry.items.push(r);
+                }
+            } else {
+                // 단건 일반 예약
+                groups.push({
+                    key: r.id,
+                    isBatch: false,
+                    isPass: false,
+                    isFixed: false,
+                    teamName: r.teamName,
+                    reservationNo: r.reservationNo,
+                    id: r.id,
+                    date: r.date,
+                    dates: [r.date],
+                    times: r.times,
+                    status: r.status,
+                    allConfirmed: r.status === 'confirmed',
+                    hasPending: r.status === 'pending',
+                    items: [r]
+                });
+            }
+        });
+
+        document.getElementById('modalResCount').textContent = `${groups.length}건 (총 ${reservationsList.length}슬롯)`;
 
         let html = `
             <table style="width:100%; border-collapse:collapse; font-size:13px; text-align:left;">
                 <thead>
                     <tr style="border-bottom:1px solid #333; color:#4d94ff;">
-                        <th style="padding:10px 8px;">날짜</th>
+                        <th style="padding:10px 8px;">날짜 / 기간</th>
                         <th style="padding:10px 8px;">시간</th>
-                        <th style="padding:10px 8px;">팀 이름</th>
+                        <th style="padding:10px 8px;">예약 패키지 / 팀명</th>
                         <th style="padding:10px 8px;">상태</th>
                         <th style="padding:10px 8px; text-align:center;">관리</th>
                     </tr>
@@ -1726,31 +1779,55 @@
                 <tbody>
         `;
 
-        sorted.forEach(r => {
-            const timeStr = r.times && r.times.length ? `${r.times[0].split('-')[0]}~${r.times[r.times.length-1].split('-')[1]}` : (r.date || '-');
-            const isConfirmed = r.status === 'confirmed';
-            const isBatch = r.reservationNo && (r.reservationNo.startsWith('PASS-') || r.reservationNo.startsWith('FIXED-'));
-            const statusBadge = isConfirmed 
-                ? '<span style="color:#2ecc71; font-weight:bold;">✅ 승인완료</span>' 
-                : '<span style="color:#f39c12; font-weight:bold;">⏳ 입금대기</span>';
+        groups.forEach(g => {
+            const timeStr = g.times && g.times.length ? `${g.times[0].split('-')[0]}~${g.times[g.times.length-1].split('-')[1]}` : '-';
+            const count = g.items.length;
+            
+            let dateDisplay = '';
+            let teamDisplay = '';
+
+            if (g.isBatch) {
+                const sortedDates = [...g.dates].filter(Boolean).sort();
+                const firstDate = sortedDates[0] || '-';
+                dateDisplay = `${firstDate} <span style="font-size:11px; color:#c49aee; font-weight:bold;">(${count}주간)</span>`;
+                
+                const cleanName = (g.teamName || '').replace(/\[정기권\]|\[고정\]/g, '').trim();
+                if (g.isPass) {
+                    teamDisplay = `<span style="font-size:11px; padding:2px 6px; border-radius:6px; background:rgba(138,43,226,0.25); color:#c49aee; font-weight:bold; margin-right:4px;">🎁 정기권 ${count}회</span><strong>${cleanName}</strong>`;
+                } else {
+                    teamDisplay = `<span style="font-size:11px; padding:2px 6px; border-radius:6px; background:rgba(39,174,96,0.25); color:#2ecc71; font-weight:bold; margin-right:4px;">👑 고정팀 ${count}회</span><strong>${cleanName}</strong>`;
+                }
+            } else {
+                dateDisplay = g.date || '-';
+                teamDisplay = `<strong>${g.teamName || '고객님'}</strong>`;
+            }
+
+            const statusBadge = g.allConfirmed 
+                ? `<span style="color:#2ecc71; font-weight:bold;">✅ 승인완료 ${g.isBatch ? `(${count}회)` : ''}</span>` 
+                : `<span style="color:#f39c12; font-weight:bold;">⏳ 입금대기 ${g.isBatch ? `(${count}회)` : ''}</span>`;
             
             let actionBtns = '';
-            if (!isConfirmed) {
-                actionBtns += `<button type="button" onclick="approveResDirect('${r.id}', '${encodeURIComponent(r.teamName)}')" style="background:#27ae60; color:#fff; border:none; padding:5px 9px; border-radius:6px; font-size:11px; font-weight:bold; cursor:pointer; margin-right:4px;">승인 (문자발송)</button>`;
-                if (isBatch) {
-                    actionBtns += `<button type="button" onclick="approveBatchDirect('${r.reservationNo}', '${encodeURIComponent(r.teamName)}')" style="background:#1abc9c; color:#fff; border:none; padding:5px 9px; border-radius:6px; font-size:11px; font-weight:bold; cursor:pointer; margin-right:4px;">팀일괄승인</button>`;
+            if (!g.allConfirmed) {
+                if (g.isBatch) {
+                    actionBtns += `<button type="button" onclick="approveBatchDirect('${g.batchKey}', '${encodeURIComponent(g.teamName)}')" style="background:#27ae60; color:#fff; border:none; padding:6px 12px; border-radius:8px; font-size:12px; font-weight:bold; cursor:pointer; margin-right:6px; box-shadow:0 0 10px rgba(39,174,96,0.4);">✅ 정기권 ${count}회 일괄 승인</button>`;
+                } else {
+                    actionBtns += `<button type="button" onclick="approveResDirect('${g.id}', '${encodeURIComponent(g.teamName)}')" style="background:#27ae60; color:#fff; border:none; padding:6px 12px; border-radius:8px; font-size:12px; font-weight:bold; cursor:pointer; margin-right:6px;">✅ 승인 (문자발송)</button>`;
                 }
             }
-            actionBtns += `<button type="button" onclick="deleteResDirect('${r.id}')" style="background:#c0392b; color:#fff; border:none; padding:5px 9px; border-radius:6px; font-size:11px; font-weight:bold; cursor:pointer; margin-right:4px;">삭제</button>`;
-            actionBtns += `<button type="button" onclick="deleteTeamDirect('${encodeURIComponent(r.teamName)}')" style="background:#8e44ad; color:#fff; border:none; padding:5px 9px; border-radius:6px; font-size:11px; font-weight:bold; cursor:pointer;">팀전체삭제</button>`;
+
+            if (g.isBatch) {
+                actionBtns += `<button type="button" onclick="deleteTeamDirect('${encodeURIComponent(g.teamName)}')" style="background:#c0392b; color:#fff; border:none; padding:6px 10px; border-radius:8px; font-size:12px; font-weight:bold; cursor:pointer;">🗑️ 전체 삭제</button>`;
+            } else {
+                actionBtns += `<button type="button" onclick="deleteResDirect('${g.id}')" style="background:#c0392b; color:#fff; border:none; padding:6px 10px; border-radius:8px; font-size:12px; font-weight:bold; cursor:pointer;">🗑️ 삭제</button>`;
+            }
 
             html += `
                 <tr style="border-bottom:1px solid #181d2c;">
-                    <td style="padding:10px 8px; color:#fff; font-weight:bold;">${r.date || '-'}</td>
-                    <td style="padding:10px 8px; color:#aaa;">${timeStr}</td>
-                    <td style="padding:10px 8px; color:#fff;">${r.teamName}</td>
-                    <td style="padding:10px 8px;">${statusBadge}</td>
-                    <td style="padding:10px 8px; text-align:center; white-space:nowrap;">
+                    <td style="padding:12px 8px; color:#fff; font-weight:bold;">${dateDisplay}</td>
+                    <td style="padding:12px 8px; color:#aaa;">${timeStr}</td>
+                    <td style="padding:12px 8px; color:#fff;">${teamDisplay}</td>
+                    <td style="padding:12px 8px;">${statusBadge}</td>
+                    <td style="padding:12px 8px; text-align:center; white-space:nowrap;">
                         ${actionBtns}
                     </td>
                 </tr>
@@ -1777,14 +1854,15 @@
                 headers: { 'Content-Type': 'application/json', 'X-Admin-Token': getAdminToken() },
                 body: JSON.stringify({ action: 'update', id: id, status: 'confirmed' })
             });
-            if (!response.ok) throw new Error('승인 실패');
+            const resData = await response.json().catch(() => ({}));
+            if (!response.ok) throw new Error(resData.error || resData.message || '승인 실패');
 
             alert('✅ 예약이 승인되었으며 손님에게 확정 안내 문자가 발송되었습니다!');
             await loadReservations(true);
             openAdminListModal();
         } catch(e) {
             console.error(e);
-            alert('승인 처리 중 오류가 발생했습니다.');
+            alert(`승인 처리 실패: ${e.message}`);
         }
     }
 
@@ -1799,14 +1877,15 @@
                 headers: { 'Content-Type': 'application/json', 'X-Admin-Token': getAdminToken() },
                 body: JSON.stringify({ action: 'approve_batch', reservationNo: resNo })
             });
-            if (!response.ok) throw new Error('일괄 승인 실패');
+            const resData = await response.json().catch(() => ({}));
+            if (!response.ok) throw new Error(resData.error || resData.message || '일괄 승인 실패');
 
             alert(`✅ [${team}] 팀의 모든 일정이 일괄 승인되었으며 손님에게 확정 문자가 발송되었습니다!`);
             await loadReservations(true);
             openAdminListModal();
         } catch(e) {
             console.error(e);
-            alert('일괄 승인 처리 중 오류가 발생했습니다.');
+            alert(`일괄 승인 실패: ${e.message}`);
         }
     }
 
