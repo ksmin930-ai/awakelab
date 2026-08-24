@@ -109,14 +109,14 @@ exports.handler = async (event) => {
   if (event.httpMethod === 'OPTIONS') return { statusCode: 200, headers, body: '' };
 
   try {
-    const { date, times, teamName, phone, isWeekly } = JSON.parse(event.body);
+    const { date, times, teamName, phone, isWeekly, category, passPlan } = JSON.parse(event.body);
     
     if (!date || !times || !times.length || !teamName) {
       return { statusCode: 400, headers, body: JSON.stringify({ error: '필수 예약 정보가 누락되었습니다.' }) };
     }
 
     // 일반 예약인 경우 기본 2시간 이상 체크
-    if (!isWeekly && times.length < 2) {
+    if (!isWeekly && category !== 'pass' && times.length < 2) {
       return { statusCode: 400, headers, body: JSON.stringify({ error: '합주실 대관은 기본 2시간 이상부터 가능합니다.' }) };
     }
 
@@ -125,8 +125,6 @@ exports.handler = async (event) => {
     const startTime = sortedTimes[0].split('-')[0].trim();
     const endTime = sortedTimes[sortedTimes.length - 1].split('-')[1].trim();
 
-    // 요금 상세표 기준 정확한 금액 계산 (1원 단위 붙이지 않음)
-    const exactAmount = calculateBookingPrice(date, times);
     const cleanPhone = (phone || '010-0000-0000').trim();
 
     const supabaseUrl = process.env.SUPABASE_URL;
@@ -141,6 +139,7 @@ exports.handler = async (event) => {
       const rows = [];
       const [year, month, day] = date.split('-').map(Number);
       const baseDate = new Date(year, month - 1, day);
+      const exactAmount = calculateBookingPrice(date, times);
 
       for (let w = 0; w < 24; w++) {
         const targetDate = new Date(baseDate);
@@ -197,7 +196,94 @@ exports.handler = async (event) => {
       };
     }
 
-    // 3. 일반 사용자 단건 예약 신청
+    // 3. 정기권 (월 4회 정기 우대) 신청인 경우 -> 4주간 동일 요일/시간 일괄 선점 등록
+    if (category === 'pass') {
+      const passPriceMap = {
+        'church_a': { name: '교회형 정기권 A (주말 2h)', amount: 200000 },
+        'church_b': { name: '교회형 정기권 B (주말 3h)', amount: 290000 },
+        'work_a': { name: '직장형 정기권 A (주중 2h)', amount: 160000 },
+        'work_b': { name: '직장형 정기권 B (주중 3h)', amount: 276000 }
+      };
+
+      const selectedPlan = passPriceMap[passPlan] || passPriceMap['work_a'];
+      const passAmount = selectedPlan.amount;
+      const singleWeekAmount = Math.round(passAmount / 4);
+
+      const rows = [];
+      const [year, month, day] = date.split('-').map(Number);
+      const baseDate = new Date(year, month - 1, day);
+
+      for (let w = 0; w < 4; w++) {
+        const targetDate = new Date(baseDate);
+        targetDate.setDate(baseDate.getDate() + (w * 7));
+        
+        const y = targetDate.getFullYear();
+        const m = String(targetDate.getMonth() + 1).padStart(2, '0');
+        const d = String(targetDate.getDate()).padStart(2, '0');
+        const dateStr = `${y}-${m}-${d}`;
+        const periodStr = `[${dateStr} ${startTime}:00+09, ${dateStr} ${endTime}:00+09)`;
+        const resNo = Math.random().toString(36).substring(2, 12).toUpperCase();
+
+        rows.push({
+          reservation_no: resNo,
+          room_id: 1,
+          period: periodStr,
+          status: 'pending',
+          booker_name: teamName.includes('[정기권]') ? teamName : `[정기권] ${teamName}`,
+          booker_phone: cleanPhone,
+          base_amount: singleWeekAmount,
+          amount: w === 0 ? passAmount : 0 // 첫 주에 총 입금액 기록
+        });
+      }
+
+      const response = await fetch(`${supabaseUrl}/rest/v1/reservations`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'apikey': supabaseKey,
+          'Authorization': `Bearer ${supabaseKey}`,
+          'Prefer': 'return=minimal'
+        },
+        body: JSON.stringify(rows)
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        if (errorData.code === '23P01') {
+          return { statusCode: 409, headers, body: JSON.stringify({ error: '정기권 4주 일정 중 이미 다른 예약이 있는 날짜가 포함되어 있습니다. 다른 시간을 선택해주세요.' }) };
+        }
+        throw new Error('Supabase 정기권 일괄 저장 실패');
+      }
+
+      // 정기권 신청 접수 문자 발송
+      const passSms = `[AWAKE LAB] 정기권 예약 신청 접수
+• 예약팀: [정기권] ${teamName}
+• 플랜: ${selectedPlan.name}
+• 시작일시: ${date} (${startTime}~${endTime}) (월 4회)
+• 총 대관료: ${passAmount.toLocaleString()}원
+• 입금 계좌: 케이뱅크 100-111-300282 (예금주: 민경선)
+
+* 2시간 이내에 입금해 주시면 확인 후 즉시 정기권 예약 확정 및 출입문 비밀번호 안내를 보내드립니다.`;
+
+      sendSmsNotification({ to: cleanPhone, text: passSms }).catch(err => console.error('SMS 발송 에러:', err));
+
+      return {
+        statusCode: 200,
+        headers,
+        body: JSON.stringify({
+          success: true,
+          isPass: true,
+          amount: passAmount,
+          baseAmount: passAmount,
+          planName: selectedPlan.name,
+          date: date,
+          timeRange: `${startTime}~${endTime}`
+        })
+      };
+    }
+
+    // 4. 일반 사용자 단건 예약 신청
+    const exactAmount = calculateBookingPrice(date, times);
     const periodStr = `[${date} ${startTime}:00+09, ${date} ${endTime}:00+09)`;
     const reservationNo = Math.random().toString(36).substring(2, 12).toUpperCase();
 
@@ -229,7 +315,7 @@ exports.handler = async (event) => {
       throw new Error('Supabase 예약 저장 실패');
     }
 
-    // 4. 예약 신청 접수 문자 발송 (입금 계좌 및 금액 안내)
+    // 예약 신청 접수 문자 발송 (입금 계좌 및 금액 안내)
     const smsMsg = `[AWAKE LAB] 합주실 예약 신청 접수
 • 예약팀: ${teamName}
 • 일시: ${date} (${startTime}~${endTime})

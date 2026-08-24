@@ -118,6 +118,16 @@
         .price-table tr:last-child td { border-bottom: none; }
         .badge-cost { font-weight: 900; font-size: 15px; color: #2ecc71; }
         .badge-save { color: #4d94ff; font-weight: 700; font-size: 13px; }
+
+        /* 카테고리 탭 & 단위시간 선택 */
+        .cat-tab { background: #151515; border: 1px solid #333; color: #888; padding: 13px 10px; border-radius: 14px; font-weight: 700; font-size: 13px; cursor: pointer; transition: 0.2s; text-align: center; }
+        .cat-tab.active { background: rgba(138, 43, 226, 0.2); border-color: #8a2be2; color: #fff; box-shadow: 0 0 15px rgba(138, 43, 226, 0.35); font-weight: 800; }
+        
+        .dur-btn { background: #111; border: 1px solid #282828; color: #777; padding: 10px 5px; border-radius: 12px; font-weight: 600; font-size: 12px; cursor: pointer; transition: 0.2s; }
+        .dur-btn.active { background: rgba(77, 148, 255, 0.15); border-color: #4d94ff; color: #64b5f6; font-weight: 800; }
+
+        .pass-plan-card { background: #0c0e17; border: 1px solid #242c44; border-radius: 14px; padding: 14px 16px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; transition: 0.2s; }
+        .pass-plan-card:hover, .pass-plan-card.active { border-color: #2ecc71; background: rgba(46, 204, 113, 0.12); box-shadow: 0 0 15px rgba(46, 204, 113, 0.25); }
     </style>
 </head>
 <body>
@@ -364,17 +374,44 @@
             <button type="button" onclick="closeModal(); showTab('price');" style="background:none; border:none; color:#8a2be2; font-size:12px; font-weight:bold; cursor:pointer; text-decoration:underline;">📋 전체 요금표</button>
         </div>
         
-        <div id="dateRateBadge" style="display:inline-block; font-size:12px; font-weight:700; padding:6px 14px; border-radius:20px; margin-bottom:18px; background:rgba(77,148,255,0.12); color:#64b5f6; border:1px solid rgba(77,148,255,0.3);">주중 일반 요금 (25,000원 / 시간)</div>
+        <div id="dateRateBadge" style="display:inline-block; font-size:12px; font-weight:700; padding:6px 14px; border-radius:20px; margin-bottom:14px; background:rgba(77,148,255,0.12); color:#64b5f6; border:1px solid rgba(77,148,255,0.3);">주중 일반 요금 (25,000원 / 시간)</div>
+
+        <!-- 1. 예약 카테고리 선택 (일반 vs 정기권) -->
+        <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 14px;">
+            <button type="button" id="catGeneralBtn" class="cat-tab active" onclick="setBookingCategory('general')">🎵 일반 대관 (1회)</button>
+            <button type="button" id="catPassBtn" class="cat-tab" onclick="setBookingCategory('pass')">🎁 정기권 (월4회 할인)</button>
+        </div>
+
+        <!-- 2. 정기권 플랜 선택 (정기권 탭 활성화 시) -->
+        <div id="passPlanContainer" style="display:none; background:#121524; border:1px solid #323d60; border-radius:16px; padding:14px; margin-bottom:16px;">
+            <div style="font-size:13px; color:#64b5f6; font-weight:bold; margin-bottom:10px; display:flex; justify-content:space-between;">
+                <span>🌟 정기권 플랜 선택</span>
+                <span style="font-size:11px; color:#aaa;">(월 4회 정기 이용)</span>
+            </div>
+            <div id="passPlanOptions" style="display:flex; flex-direction:column; gap:8px;"></div>
+        </div>
+
+        <!-- 3. 예약 시간 단위 프리셋 (일반 대관 시) -->
+        <div id="durationPresetBox" style="margin-bottom:14px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+                <span style="font-size:12px; color:#aaa; font-weight:600;">⏱️ 이용 시간 선택 (시작 시간 원클릭):</span>
+            </div>
+            <div style="display:grid; grid-template-columns: 1.2fr 1fr 1fr; gap: 6px;">
+                <button type="button" class="dur-btn active" id="dur2" onclick="setDurationMode(2)">⚡ 2시간 (기본)</button>
+                <button type="button" class="dur-btn" id="dur3" onclick="setDurationMode(3)">🕒 3시간</button>
+                <button type="button" class="dur-btn" id="durCustom" onclick="setDurationMode(0)">✏️ 직접 선택</button>
+            </div>
+        </div>
 
         <div class="schedule-box" id="dailySchedule">
-            <strong style="color:#8a2be2; font-size:14px;">🗓️ 예약 현황</strong>
-            <div id="scheduleList" style="margin-top:10px; color:#999; font-size:13px; line-height: 1.8;"></div>
+            <strong style="color:#8a2be2; font-size:14px;">🗓️ 현재 예약 현황</strong>
+            <div id="scheduleList" style="margin-top:8px; color:#999; font-size:13px; line-height: 1.8;"></div>
         </div>
         
         <form id="reservationForm">
-            <div id="adminCreateWeekly" style="display:none; margin-bottom: 20px; padding: 15px; background: rgba(39, 174, 96, 0.1); border: 1px solid #27ae60; border-radius: 14px;">
+            <div id="adminCreateWeekly" style="display:none; margin-bottom: 16px; padding: 14px; background: rgba(39, 174, 96, 0.1); border: 1px solid #27ae60; border-radius: 14px;">
                 <label style="color:#2ecc71; font-weight:bold; font-size:14px; display:flex; align-items:center; cursor:pointer;">
-                    <input type="checkbox" id="createWeeklyToggle" style="margin-right:10px; width:18px; height:18px;"> 👑 [관리자] 정기권/고정팀 등록 (향후 24주 일괄 등록)
+                    <input type="checkbox" id="createWeeklyToggle" style="margin-right:10px; width:18px; height:18px;"> 👑 [관리자] 향후 24주 매주 고정팀 일괄 등록
                 </label>
             </div>
 
@@ -382,7 +419,7 @@
             
             <!-- 실시간 요금 계산 바 -->
             <div id="livePriceBox" style="background:#0a0a0a; border:1px solid #222; border-radius:14px; padding:14px 18px; margin-bottom:18px; display:flex; justify-content:space-between; align-items:center; font-size:14px;">
-                <span>선택 시간: <strong id="selectedHoursCount" style="color:#8a2be2;">0시간</strong> <span style="font-size:12px; color:#888;">(기본 2시간~)</span></span>
+                <span>선택 시간: <strong id="selectedHoursCount" style="color:#8a2be2;">0시간</strong> <span id="hoursNotice" style="font-size:12px; color:#888;">(기본 2시간~)</span></span>
                 <span>총 대관료: <strong id="livePriceAmount" style="color:#fff; font-size:16px;">0원</strong></span>
             </div>
             
@@ -414,8 +451,8 @@
 <div id="resultModal" class="modal">
     <div class="modal-content" style="text-align:center;">
         <div style="font-size:46px; margin-bottom:8px;">🎉</div>
-        <h3 style="margin-top:0; color:#fff; font-size:22px; letter-spacing:-0.5px;">예약 신청 완료</h3>
-        <p style="color:#aaa; font-size:14px; margin-bottom:20px;">
+        <h3 id="resultTitle" style="margin-top:0; color:#fff; font-size:22px; letter-spacing:-0.5px;">예약 신청 완료</h3>
+        <p id="resultDesc" style="color:#aaa; font-size:14px; margin-bottom:20px;">
             예약 신청이 정상 접수되었습니다.<br>아래 계좌로 입금해 주시면 입금 확인 즉시 확정됩니다.
         </p>
 
@@ -466,6 +503,98 @@
     let currentId = null;
     const timeSlots = ["09:00-10:00", "10:00-11:00", "11:00-12:00", "12:00-13:00", "13:00-14:00", "14:00-15:00", "15:00-16:00", "16:00-17:00", "17:00-18:00", "18:00-19:00", "19:00-20:00"];
 
+    let currentBookingCategory = 'general'; // 'general' | 'pass'
+    let currentPassPlan = 'church_a'; // 'church_a' | 'church_b' | 'work_a' | 'work_b'
+    let durationPreset = 2; // 2: 2시간 기본, 3: 3시간, 0: 직접선택
+
+    function setBookingCategory(cat) {
+        currentBookingCategory = cat;
+        document.getElementById('catGeneralBtn').classList.toggle('active', cat === 'general');
+        document.getElementById('catPassBtn').classList.toggle('active', cat === 'pass');
+
+        const passBox = document.getElementById('passPlanContainer');
+        const durBox = document.getElementById('durationPresetBox');
+
+        if (cat === 'pass') {
+            passBox.style.display = 'block';
+            durBox.style.display = 'none';
+            renderPassPlans();
+        } else {
+            passBox.style.display = 'none';
+            durBox.style.display = 'block';
+            setDurationMode(2);
+        }
+        updateLivePrice();
+    }
+
+    function setDurationMode(mode) {
+        durationPreset = mode;
+        document.getElementById('dur2').classList.toggle('active', mode === 2);
+        document.getElementById('dur3').classList.toggle('active', mode === 3);
+        document.getElementById('durCustom').classList.toggle('active', mode === 0);
+        
+        // 시간 단위 변경 시 체크박스 초기화
+        document.querySelectorAll('input[name="timeSlot"]:checked').forEach(cb => cb.checked = false);
+        updateLivePrice();
+    }
+
+    function renderPassPlans() {
+        const d = window.selectedDate || '';
+        const [y, m, dayNum] = d.split('-').map(Number);
+        const day = new Date(y, m - 1, dayNum).getDay();
+        const isHoliday = !!holidayData[d];
+        const isWeekendRate = (day === 0 || day === 6 || isHoliday);
+
+        const planBox = document.getElementById('passPlanOptions');
+        planBox.innerHTML = '';
+
+        let plans = [];
+        if (isWeekendRate) {
+            plans = [
+                { id: 'church_a', name: '⛪ 교회형 정기권 A (주말)', desc: '월 4회 (회당 2시간 / 총 8시간)', price: 200000, duration: 2, save: '4만원 할인' },
+                { id: 'church_b', name: '⛪ 교회형 정기권 B (주말)', desc: '월 4회 (회당 3시간 / 총 12시간)', price: 290000, duration: 3, save: '7만원 할인' }
+            ];
+        } else {
+            plans = [
+                { id: 'work_a', name: '🏢 직장형 정기권 A (주중)', desc: '월 4회 (회당 2시간 / 총 8시간)', price: 160000, duration: 2, save: '4만원 할인' },
+                { id: 'work_b', name: '🏢 직장형 정기권 B (주중)', desc: '월 4회 (회당 3시간 / 총 12시간)', price: 276000, duration: 3, save: '7만원 할인' },
+                { id: 'church_a', name: '⛪ 교회형 정기권 A (주말)', desc: '월 4회 (회당 2시간 / 총 8시간)', price: 200000, duration: 2, save: '4만원 할인' },
+                { id: 'church_b', name: '⛪ 교회형 정기권 B (주말)', desc: '월 4회 (회당 3시간 / 총 12시간)', price: 290000, duration: 3, save: '7만원 할인' }
+            ];
+        }
+
+        if (!currentPassPlan || !plans.find(p => p.id === currentPassPlan)) {
+            currentPassPlan = plans[0].id;
+        }
+
+        plans.forEach(p => {
+            const isSel = p.id === currentPassPlan;
+            const div = document.createElement('div');
+            div.className = `pass-plan-card ${isSel ? 'active' : ''}`;
+            div.innerHTML = `
+                <div>
+                    <div style="color:#fff; font-weight:800; font-size:13px;">${p.name}</div>
+                    <div style="color:#888; font-size:12px; margin-top:2px;">${p.desc}</div>
+                </div>
+                <div style="text-align:right;">
+                    <div style="color:#2ecc71; font-weight:900; font-size:15px;">${p.price.toLocaleString()}원</div>
+                    <div style="color:#4d94ff; font-size:11px; font-weight:bold;">${p.save}</div>
+                </div>
+            `;
+            div.onclick = () => {
+                currentPassPlan = p.id;
+                durationPreset = p.duration;
+                renderPassPlans();
+                document.querySelectorAll('input[name="timeSlot"]:checked').forEach(cb => cb.checked = false);
+                updateLivePrice();
+            };
+            planBox.appendChild(div);
+        });
+
+        const activeP = plans.find(p => p.id === currentPassPlan);
+        if (activeP) durationPreset = activeP.duration;
+    }
+
     // 요금 계산 함수 (주중 25,000원 / 주말·공휴일·금18시이후 30,000원)
     function calculatePrice(dateStr, timesArray) {
         if (!dateStr || !timesArray || !timesArray.length) return 0;
@@ -491,10 +620,75 @@
         const checkedBoxes = Array.from(document.querySelectorAll('input[name="timeSlot"]:checked'));
         const times = checkedBoxes.map(cb => cb.value);
         const count = times.length;
-        const price = calculatePrice(window.selectedDate, times);
 
-        document.getElementById('selectedHoursCount').textContent = `${count}시간`;
-        document.getElementById('livePriceAmount').textContent = `${price.toLocaleString()}원`;
+        if (currentBookingCategory === 'pass') {
+            const passPrices = {
+                'church_a': 200000,
+                'church_b': 290000,
+                'work_a': 160000,
+                'work_b': 276000
+            };
+            const price = passPrices[currentPassPlan] || 200000;
+            document.getElementById('selectedHoursCount').textContent = `회당 ${count}시간`;
+            document.getElementById('hoursNotice').textContent = `(월 4회 정기 우대)`;
+            document.getElementById('livePriceAmount').textContent = `${price.toLocaleString()}원`;
+        } else {
+            const price = calculatePrice(window.selectedDate, times);
+            document.getElementById('selectedHoursCount').textContent = `${count}시간`;
+            document.getElementById('hoursNotice').textContent = `(기본 2시간~)`;
+            document.getElementById('livePriceAmount').textContent = `${price.toLocaleString()}원`;
+        }
+    }
+
+    // 시간 버튼 클릭 시 2시간/3시간 단위 자동 선택 핸들러
+    function onTimeSlotClick(idx) {
+        const dur = durationPreset;
+        const targetCb = document.getElementById(`s${idx}`);
+        if (!targetCb || targetCb.disabled) return;
+
+        if (dur === 0) {
+            // 직접 선택 모드
+            targetCb.checked = !targetCb.checked;
+            updateLivePrice();
+            return;
+        }
+
+        // 이미 체크되어 있는 시작점을 누르면 전체 해제
+        if (targetCb.checked) {
+            for (let k = 0; k < dur; k++) {
+                const nextCb = document.getElementById(`s${idx + k}`);
+                if (nextCb) nextCb.checked = false;
+            }
+            updateLivePrice();
+            return;
+        }
+
+        // 다른 모든 시간 초기화 (한 번에 1개의 연속 블록만 선택)
+        document.querySelectorAll('input[name="timeSlot"]:checked').forEach(cb => cb.checked = false);
+
+        // 연속 dur시간이 예약 가능한지 검사
+        let canSelect = true;
+        for (let k = 0; k < dur; k++) {
+            const nextCb = document.getElementById(`s${idx + k}`);
+            if (!nextCb || nextCb.disabled) {
+                canSelect = false;
+                break;
+            }
+        }
+
+        if (!canSelect) {
+            alert(`선택하신 시간부터 연속 ${dur}시간 예약이 불가능합니다.\n(다음 시간이 이미 예약되었거나 운영 종료 시간입니다)`);
+            updateLivePrice();
+            return;
+        }
+
+        // 연속 dur시간 자동 체크
+        for (let k = 0; k < dur; k++) {
+            const nextCb = document.getElementById(`s${idx + k}`);
+            if (nextCb) nextCb.checked = true;
+        }
+
+        updateLivePrice();
     }
 
     // 전화번호 자동 하이픈 포맷팅
@@ -582,7 +776,7 @@
             reservationsList.forEach(r => {
                 if (r.date === dStr) {
                     const b = document.createElement('div');
-                    const isFixed = r.isWeekly || (r.teamName && r.teamName.includes('[고정]'));
+                    const isFixed = r.isWeekly || (r.teamName && (r.teamName.includes('[고정]') || r.teamName.includes('[정기권]')));
                     b.className = `res-badge ${isFixed ? 'badge-fixed' : (r.status === 'pending' ? 'badge-pending' : 'badge-approved')}`;
                     b.textContent = r.teamName;
                     if(isAdmin) { 
@@ -630,6 +824,9 @@
             badgeElem.style.borderColor = "rgba(77, 148, 255, 0.3)";
         }
 
+        // 기본 카테고리는 일반 대관으로 초기화
+        setBookingCategory('general');
+
         if(isAdmin) {
             document.getElementById('adminCreateWeekly').style.display = 'block';
             document.getElementById('createWeeklyToggle').checked = false;
@@ -643,8 +840,8 @@
                 const sortedTimes = [...r.times].sort(); 
                 const startTime = sortedTimes[0].split('-')[0].replace(/\s/g, ''); 
                 const endTime = sortedTimes[sortedTimes.length - 1].split('-')[1].replace(/\s/g, ''); 
-                const isFixed = r.isWeekly || (r.teamName && r.teamName.includes('[고정]'));
-                const fixedBadge = isFixed ? `<span style="color:#27ae60; font-size:11px; font-weight:bold; margin-left:4px;">(고정팀)</span>` : '';
+                const isFixed = r.isWeekly || (r.teamName && (r.teamName.includes('[고정]') || r.teamName.includes('[정기권]')));
+                const fixedBadge = isFixed ? `<span style="color:#27ae60; font-size:11px; font-weight:bold; margin-left:4px;">(고정/정기권)</span>` : '';
                 
                 listHTML += `<div style="margin-bottom:6px;">• ${startTime}~${endTime} : ${r.teamName} ${fixedBadge}</div>`;
                 r.times.forEach(s => cleanOccupied.push(s.replace(/\s/g, '')));
@@ -659,7 +856,7 @@
         timeSlots.forEach((s, i) => {
             const cleanS = s.replace(/\s/g, ''); 
             const isBlocked = cleanOccupied.includes(cleanS); 
-            grid.innerHTML += `<input type="checkbox" id="s${i}" name="timeSlot" value="${s}" onchange="updateLivePrice()" ${isBlocked ? 'disabled' : ''}><label for="s${i}">${s}</label>`;
+            grid.innerHTML += `<input type="checkbox" id="s${i}" name="timeSlot" value="${s}" ${isBlocked ? 'disabled' : ''}><label for="s${i}" onclick="event.preventDefault(); onTimeSlotClick(${i});">${s}</label>`;
         });
 
         updateLivePrice();
@@ -676,9 +873,9 @@
         
         const isWeeklyVal = isAdmin && document.getElementById('createWeeklyToggle').checked;
 
-        // 일반 사용자의 경우 기본 2시간 이상 필수
-        if (!isAdmin && !isWeeklyVal && times.length < 2) {
-            return alert('합주실 대관은 기본 2시간 이상부터 가능합니다. 시간을 2개 이상 선택해 주세요!');
+        // 일반 예약인 경우 기본 2시간 이상 체크
+        if (!isAdmin && !isWeeklyVal && currentBookingCategory !== 'pass' && times.length < 2) {
+            return alert('합주실 대관은 기본 2시간 이상부터 가능합니다. 2시간 이상 선택해 주세요!');
         }
 
         const teamNameVal = document.getElementById('teamName').value.trim();
@@ -700,7 +897,9 @@
                     times: times,
                     teamName: teamNameVal,
                     phone: phoneVal,
-                    isWeekly: isWeeklyVal
+                    isWeekly: isWeeklyVal,
+                    category: currentBookingCategory,
+                    passPlan: currentPassPlan
                 })
             });
 
@@ -717,7 +916,7 @@
             if (isWeeklyVal) {
                 alert(`👑 [관리자] 고정팀 일정이 향후 24주간 성공적으로 일괄 등록되었습니다!`);
             } else {
-                showResultModal(resData.amount);
+                showResultModal(resData.amount, resData.isPass, resData.planName);
             }
 
         } catch (err) {
@@ -729,8 +928,15 @@
         }
     };
 
-    function showResultModal(amount) {
+    function showResultModal(amount, isPass = false, planName = '') {
         document.getElementById('resultAmount').textContent = amount ? amount.toLocaleString() + '원' : '금액 계산 완료';
+        if (isPass) {
+            document.getElementById('resultTitle').textContent = "정기권 신청 완료 🎁";
+            document.getElementById('resultDesc').innerHTML = `<strong>${planName || '정기권'}</strong> 신청이 정상 접수되었습니다.<br>4주간 동일 요일/시간 선점 처리되며, 입금 확인 즉시 확정됩니다.`;
+        } else {
+            document.getElementById('resultTitle').textContent = "예약 신청 완료";
+            document.getElementById('resultDesc').innerHTML = `예약 신청이 정상 접수되었습니다.<br>아래 계좌로 입금해 주시면 입금 확인 즉시 확정됩니다.`;
+        }
         document.getElementById('resultModal').style.display = 'flex';
     }
 
