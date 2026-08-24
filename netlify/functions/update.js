@@ -135,9 +135,10 @@ exports.handler = async (event) => {
       method = 'PATCH';
       body = JSON.stringify({ status: status || 'confirmed' });
     } else if (action === 'approve_batch') {
-      // 같은 reservation_no인 정기권/고정팀 전체 일괄 승인
+      // 같은 batchCode를 공유하는 정기권/고정팀 전체 일괄 승인 (예: PASS-ABCDEF%)
       if (!reservationNo) return { statusCode: 400, headers, body: JSON.stringify({ error: '예약 번호가 필요합니다.' }) };
-      apiUrl = `${supabaseUrl}/rest/v1/reservations?reservation_no=eq.${reservationNo}`;
+      const batchPrefix = reservationNo.includes('-W') ? reservationNo.split('-W')[0] + '%' : reservationNo;
+      apiUrl = `${supabaseUrl}/rest/v1/reservations?reservation_no=like.${encodeURIComponent(batchPrefix)}`;
       method = 'PATCH';
       body = JSON.stringify({ status: 'confirmed' });
     } else if (action === 'delete') {
@@ -145,7 +146,8 @@ exports.handler = async (event) => {
       if (deleteBy === 'clear_all') {
         apiUrl = `${supabaseUrl}/rest/v1/reservations?status=in.(pending,confirmed,cancelled)`;
       } else if (deleteBy === 'reservation_no' && reservationNo) {
-        apiUrl = `${supabaseUrl}/rest/v1/reservations?reservation_no=eq.${reservationNo}`;
+        const batchPrefix = reservationNo.includes('-W') ? reservationNo.split('-W')[0] + '%' : reservationNo;
+        apiUrl = `${supabaseUrl}/rest/v1/reservations?reservation_no=like.${encodeURIComponent(batchPrefix)}`;
       } else if (deleteBy === 'team_name' && teamName) {
         apiUrl = `${supabaseUrl}/rest/v1/reservations?booker_name=eq.${encodeURIComponent(teamName)}`;
       } else if (id) {

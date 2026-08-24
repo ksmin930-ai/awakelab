@@ -140,7 +140,7 @@ exports.handler = async (event) => {
       const [year, month, day] = date.split('-').map(Number);
       const baseDate = new Date(year, month - 1, day);
       const exactAmount = calculateBookingPrice(date, times);
-      const batchResNo = 'FIXED-' + Math.random().toString(36).substring(2, 10).toUpperCase();
+      const batchCode = Math.random().toString(36).substring(2, 8).toUpperCase();
 
       for (let w = 0; w < 24; w++) {
         const targetDate = new Date(baseDate);
@@ -154,7 +154,7 @@ exports.handler = async (event) => {
         const weekPrice = calculateBookingPrice(dateStr, times);
 
         rows.push({
-          reservation_no: batchResNo,
+          reservation_no: `FIXED-${batchCode}-W${String(w+1).padStart(2, '0')}`,
           room_id: 1,
           period: periodStr,
           status: 'confirmed', // 고정팀은 관리자 직접 등록이므로 확정 상태
@@ -230,7 +230,7 @@ exports.handler = async (event) => {
       const rows = [];
       const [year, month, day] = date.split('-').map(Number);
       const baseDate = new Date(year, month - 1, day);
-      const batchResNo = 'PASS-' + Math.random().toString(36).substring(2, 10).toUpperCase();
+      const batchCode = Math.random().toString(36).substring(2, 8).toUpperCase();
 
       for (let w = 0; w < 4; w++) {
         const targetDate = new Date(baseDate);
@@ -247,7 +247,7 @@ exports.handler = async (event) => {
         const periodStr = `[${dateStr} ${startTime}:00+09, ${dateStr} ${endTime}:00+09)`;
 
         rows.push({
-          reservation_no: batchResNo,
+          reservation_no: `PASS-${batchCode}-W${String(w+1).padStart(2, '0')}`,
           room_id: 1,
           period: periodStr,
           status: 'pending',
