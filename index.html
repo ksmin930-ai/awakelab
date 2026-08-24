@@ -63,7 +63,7 @@
         .spinner { width: 40px; height: 40px; border: 4px solid rgba(138, 43, 226, 0.3); border-top-color: #8a2be2; border-radius: 50%; animation: spin 1s linear infinite; margin-bottom: 15px; }
         @keyframes spin { 100% { transform: rotate(360deg); } }
 
-        /* 가이드 탭 */
+        /* 가이드 탭 등 기존 스타일 유지 */
         .guide-container { width: 100%; max-width: 1000px; margin: 0 auto; display: flex; flex-direction: column; gap: 15px; }
         .guide-header-box { background: linear-gradient(135deg, #0b0c16, #16182a); padding: 50px 40px; border-radius: 20px; border: 1px solid #222; margin-bottom: 15px; text-align: left; }
         .guide-header-box h2 { font-size: 46px; font-weight: 900; margin: 0; letter-spacing: -2px; color: #fff; }
@@ -127,8 +127,13 @@
         <div class="info-panel">
             <div class="info-card">
                 <h3>⏰ Studio Info</h3>
-                <ul><li>매일 10:00 ~ 20:00</li><li>시간당 25,000원</li></ul>
-                <div class="bank-info"><strong>[입금 계좌]</strong><br>카카오뱅크 7979-36-58974<br>예금주: 민경환</div>
+                <ul>
+                    <li>매일 10:00 ~ 20:00</li>
+                    <li>주중 25,000원 / 주말 30,000원</li>
+                    <li style="color:#f39c12; font-size:12px; margin-top:5px;">* 금요일 18시 이후는 주말 요금 적용</li>
+                    <li style="color:#f39c12; font-size:12px;">* 기본 2시간 이상 예약 필수</li>
+                </ul>
+                <div class="bank-info"><strong>[입금 계좌]</strong><br>케이뱅크 110-111-300282<br>예금주: 민경선</div>
             </div>
             <div class="info-card">
                 <h3>📍 Location</h3>
@@ -251,12 +256,6 @@
         </div>
         
         <form id="reservationForm">
-            <div id="adminCreateWeekly" style="display:none; margin-bottom: 20px; padding: 15px; background: rgba(39, 174, 96, 0.1); border: 1px solid #27ae60; border-radius: 12px;">
-                <label style="color:#2ecc71; font-weight:bold; font-size:14px; display:flex; align-items:center; cursor:pointer;">
-                    <input type="checkbox" id="createWeeklyToggle" style="margin-right:10px; width:18px; height:18px;"> 👑 [관리자] 매주 고정팀으로 바로 등록
-                </label>
-            </div>
-
             <div class="checkbox-grid" id="timeGrid"></div>
             <input type="text" id="teamName" placeholder="합주팀 이름을 입력하세요" style="width:100%; padding:20px; background:#000; border:1px solid #333; color:#fff; border-radius:18px; margin-bottom:25px; font-size: 15px;" required>
             <div class="btn-group">
@@ -279,21 +278,19 @@
 </div>
 
 <script>
-    // [새로운 두뇌] 방금 만든 Netlify 서버의 주소로 연결합니다.
     const API_READ = "/.netlify/functions/read";
     const API_CREATE = "/.netlify/functions/create";
-    const API_UPDATE = "/.netlify/functions/update"; // 새로 추가된 업데이트 통신 경로
+    const API_UPDATE = "/.netlify/functions/update";
 
     const urlParams = new URLSearchParams(window.location.search);
     const isAdmin = urlParams.get('mode') === 'admin';
     if(isAdmin) document.getElementById('adminBadge').style.display = 'block';
 
     let currentDate = new Date();
-    // 공휴일 데이터
     const holidayData = { "2026-01-01": "신정", "2026-02-16": "설날", "2026-02-17": "설날", "2026-02-18": "설날", "2026-03-01": "삼일절", "2026-05-05": "어린이날", "2026-05-24": "부처님오신날", "2026-06-06": "현충일", "2026-08-15": "광복절", "2026-09-24": "추석", "2026-09-25": "추석", "2026-09-26": "추석", "2026-10-03": "개천절", "2026-10-09": "한글날", "2026-12-25": "성탄절" };
     
     let reservationsList = [];
-    let currentId = null; // 관리자 모드에서 수정/삭제할 때 쓰는 임시 ID
+    let currentId = null; 
     const timeSlots = ["09:00-10:00", "10:00-11:00", "11:00-12:00", "12:00-13:00", "13:00-14:00", "14:00-15:00", "15:00-16:00", "16:00-17:00", "17:00-18:00", "18:00-19:00", "19:00-20:00"];
 
     function showTab(t) {
@@ -303,7 +300,6 @@
         document.getElementById(t + 'Btn').classList.add('active');
     }
 
-    // [서버에서 데이터 읽어오기] read.js 와 통신
     async function loadReservations(forceRefresh = false) {
         const overlay = document.getElementById('loadingOverlay');
         const badge = document.getElementById('adminBadge');
@@ -364,11 +360,6 @@
         window.selectedDate = d; document.getElementById('modalTitle').textContent = d + " 예약 신청";
         document.getElementById('adminArea').style.display = 'none'; 
         document.getElementById('reservationForm').style.display = 'block';
-        
-        if(isAdmin) {
-            document.getElementById('adminCreateWeekly').style.display = 'block';
-            document.getElementById('createWeeklyToggle').checked = false;
-        }
 
         let listHTML = ''; 
         const cleanOccupied = []; 
@@ -399,11 +390,12 @@
         document.getElementById('reservationModal').style.display = 'flex';
     }
 
-    // [서버로 예약 신청 보내기] create.js 와 통신
     document.getElementById('reservationForm').onsubmit = async (e) => {
         e.preventDefault(); 
         const times = Array.from(document.querySelectorAll('input[name="timeSlot"]:checked')).map(cb => cb.value);
-        if(!times.length) return alert('시간을 하나 이상 선택해주세요!');
+        
+        // ★ 2시간 이상 필수 체크 로직 추가 ★
+        if(times.length < 2) return alert('기본 2시간 이상부터 예약 가능합니다!');
         
         const submitBtn = document.getElementById('submitBtn');
         submitBtn.disabled = true;
@@ -417,19 +409,17 @@
                     date: window.selectedDate,
                     times: times,
                     teamName: document.getElementById('teamName').value,
-                    phone: '010-0000-0000' // 알림톡 연동 전 임시 번호
+                    phone: '010-0000-0000' 
                 })
             });
 
             const resData = await response.json();
 
-            // 중복 예약 시(DB에서 튕겨냄)
             if (!response.ok) {
                 alert(resData.error || '예약 처리 중 오류가 발생했습니다.');
                 return;
             }
 
-            // 완벽하게 성공 시
             alert(`✅ 예약이 성공적으로 접수되었습니다!\n\n빠른 확인을 위해 [ ${resData.amount.toLocaleString()}원 ]을 끝자리까지 정확히 입금해 주세요.`);
             closeModal(); 
             loadReservations(true); 
@@ -445,7 +435,7 @@
 
     function openAdmin(res) {
         if(!isAdmin) return;
-        currentId = res.id; // 클릭한 예약의 고유 ID 저장
+        currentId = res.id; 
         document.getElementById('modalTitle').textContent = "[관리] " + res.teamName;
         document.getElementById('reservationForm').style.display = 'none'; 
         document.getElementById('adminArea').style.display = 'block';
@@ -453,7 +443,6 @@
         document.getElementById('reservationModal').style.display = 'flex';
     }
 
-    // [관리자 전용] 진짜 승인 기능
     async function updateStatus(s) { 
         if(!confirm('입금이 확인되었습니까? 예약을 확정(승인) 처리합니다.')) return;
         
@@ -470,14 +459,13 @@
             
             alert('✅ 성공적으로 승인되었습니다!');
             closeModal(); 
-            loadReservations(true); // 달력 새로고침
+            loadReservations(true); 
         } catch (err) { 
             console.error(err); 
             alert('오류가 발생했습니다.');
         } finally { approveBtn.textContent = '예약 승인'; }
     }
 
-    // [관리자 전용] 진짜 삭제 기능
     async function deleteRes() { 
         if(!confirm('정말 이 예약을 완전히 삭제하시겠습니까?')) return;
         
@@ -494,7 +482,7 @@
             
             alert('🗑️ 성공적으로 삭제되었습니다.');
             closeModal(); 
-            loadReservations(true); // 달력 새로고침
+            loadReservations(true); 
         } catch (err) { 
             console.error(err); 
             alert('오류가 발생했습니다.');
@@ -503,7 +491,6 @@
 
     function closeModal() { document.getElementById('reservationModal').style.display = 'none'; }
     
-    // 페이지 접속 시 데이터 로드 시작
     loadReservations();
 </script>
 </body>
