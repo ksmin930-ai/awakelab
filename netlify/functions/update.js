@@ -72,6 +72,41 @@ async function sendSmsNotification({ to, text }) {
   return { skipped: true, reason: 'NO_ENV_KEYS' };
 }
 
+// PostgreSQL tstzrange (UTC) -> KST(한국 표준시) 날짜 및 시간 문자열 변환
+function parsePeriodToKST(periodStr) {
+  if (!periodStr) return { dateStr: '', timeStr: '' };
+  const clean = periodStr.replace(/[\[\)"']/g, '');
+  const parts = clean.split(',').map(s => s.trim());
+  if (parts.length < 2) return { dateStr: '', timeStr: '' };
+
+  const startRaw = parts[0].replace(' ', 'T');
+  const endRaw = parts[1].replace(' ', 'T');
+
+  const startDate = new Date(startRaw);
+  const endDate = new Date(endRaw);
+
+  if (isNaN(startDate.getTime()) || isNaN(endDate.getTime())) {
+    return { dateStr: '', timeStr: '' };
+  }
+
+  const kstOffsetMs = 9 * 60 * 60 * 1000;
+  const startKst = new Date(startDate.getTime() + kstOffsetMs);
+  const endKst = new Date(endDate.getTime() + kstOffsetMs);
+
+  const y = startKst.getUTCFullYear();
+  const m = String(startKst.getUTCMonth() + 1).padStart(2, '0');
+  const d = String(startKst.getUTCDate()).padStart(2, '0');
+  const dateStr = `${y}-${m}-${d}`;
+
+  const startHour = String(startKst.getUTCHours()).padStart(2, '0');
+  const startMin = String(startKst.getUTCMinutes()).padStart(2, '0');
+  const endHour = String(endKst.getUTCHours()).padStart(2, '0');
+  const endMin = String(endKst.getUTCMinutes()).padStart(2, '0');
+  const timeStr = `${startHour}:${startMin}~${endHour}:${endMin}`;
+
+  return { dateStr, timeStr };
+}
+
 exports.handler = async (event) => {
   const headers = {
     'Access-Control-Allow-Origin': '*',
@@ -82,7 +117,7 @@ exports.handler = async (event) => {
   if (event.httpMethod === 'OPTIONS') return { statusCode: 200, headers, body: '' };
 
   try {
-    const { action, id, status } = JSON.parse(event.body);
+    const { action, id, status, deleteBy, reservationNo, teamName } = JSON.parse(event.body);
     const supabaseUrl = process.env.SUPABASE_URL;
     const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
@@ -90,19 +125,28 @@ exports.handler = async (event) => {
       throw new Error('Supabase 환경 변수가 설정되지 않았습니다.');
     }
 
-    if (!id) {
-      return { statusCode: 400, headers, body: JSON.stringify({ error: '예약 ID가 필요합니다.' }) };
-    }
-
-    let apiUrl = `${supabaseUrl}/rest/v1/reservations?id=eq.${id}`;
+    let apiUrl = '';
     let method = '';
     let body = null;
 
     if (action === 'update') {
+      if (!id) return { statusCode: 400, headers, body: JSON.stringify({ error: '예약 ID가 필요합니다.' }) };
+      apiUrl = `${supabaseUrl}/rest/v1/reservations?id=eq.${id}`;
       method = 'PATCH';
       body = JSON.stringify({ status: status || 'confirmed' });
     } else if (action === 'delete') {
       method = 'DELETE';
+      if (deleteBy === 'clear_all') {
+        apiUrl = `${supabaseUrl}/rest/v1/reservations?id=gt.0`;
+      } else if (deleteBy === 'reservation_no' && reservationNo) {
+        apiUrl = `${supabaseUrl}/rest/v1/reservations?reservation_no=eq.${reservationNo}`;
+      } else if (deleteBy === 'team_name' && teamName) {
+        apiUrl = `${supabaseUrl}/rest/v1/reservations?booker_name=eq.${encodeURIComponent(teamName)}`;
+      } else if (id) {
+        apiUrl = `${supabaseUrl}/rest/v1/reservations?id=eq.${id}`;
+      } else {
+        return { statusCode: 400, headers, body: JSON.stringify({ error: '삭제할 대상 정보가 누락되었습니다.' }) };
+      }
     } else {
       return { statusCode: 400, headers, body: JSON.stringify({ error: '유효하지 않은 요청(action)입니다.' }) };
     }
@@ -121,33 +165,20 @@ exports.handler = async (event) => {
     if (!response.ok) {
       const err = await response.text();
       console.error('DB Update Error:', err);
-      throw new Error('DB 업데이트 실패');
+      throw new Error('DB 작업 실패');
     }
 
     const resultData = await response.json().catch(() => null);
 
-    // 예약 승인 시 손님에게 확정 및 비밀번호 안내 문자 자동 발송
+    // 예약 승인 시 손님에게 확정 및 비밀번호 안내 문자 자동 발송 (한국 시간 변환)
     if (action === 'update' && (status === 'confirmed' || !status) && Array.isArray(resultData) && resultData.length > 0) {
       const item = resultData[0];
       const phone = item.booker_phone;
-      const teamName = item.booker_name || '고객님';
-      
-      let dateStr = '';
-      let timeStr = '';
-      if (item.period) {
-        const parts = item.period.replace(/[\[\)"']/g, '').split(',');
-        if (parts.length >= 2) {
-          const startMatch = parts[0].trim().match(/(\d{4}-\d{2}-\d{2})[ T](\d{2}:\d{2})/);
-          const endMatch = parts[1].trim().match(/(\d{4}-\d{2}-\d{2})[ T](\d{2}:\d{2})/);
-          if (startMatch && endMatch) {
-            dateStr = startMatch[1];
-            timeStr = `${startMatch[2]}~${endMatch[2]}`;
-          }
-        }
-      }
+      const team = item.booker_name || '고객님';
+      const { dateStr, timeStr } = parsePeriodToKST(item.period);
 
       const confirmMsg = `[AWAKE LAB] 입금 확인 및 예약이 확정되었습니다!
-• 예약팀: ${teamName}
+• 예약팀: ${team}
 • 예약일시: ${dateStr} (${timeStr})
 
 [시설 이용 및 출입 안내]

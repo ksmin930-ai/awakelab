@@ -140,6 +140,7 @@ exports.handler = async (event) => {
       const [year, month, day] = date.split('-').map(Number);
       const baseDate = new Date(year, month - 1, day);
       const exactAmount = calculateBookingPrice(date, times);
+      const batchResNo = 'FIXED-' + Math.random().toString(36).substring(2, 10).toUpperCase();
 
       for (let w = 0; w < 24; w++) {
         const targetDate = new Date(baseDate);
@@ -150,11 +151,10 @@ exports.handler = async (event) => {
         const d = String(targetDate.getDate()).padStart(2, '0');
         const dateStr = `${y}-${m}-${d}`;
         const periodStr = `[${dateStr} ${startTime}:00+09, ${dateStr} ${endTime}:00+09)`;
-        const resNo = Math.random().toString(36).substring(2, 12).toUpperCase();
         const weekPrice = calculateBookingPrice(dateStr, times);
 
         rows.push({
-          reservation_no: resNo,
+          reservation_no: batchResNo,
           room_id: 1,
           period: periodStr,
           status: 'confirmed', // 고정팀은 관리자 직접 등록이므로 확정 상태
@@ -212,6 +212,7 @@ exports.handler = async (event) => {
       const rows = [];
       const [year, month, day] = date.split('-').map(Number);
       const baseDate = new Date(year, month - 1, day);
+      const batchResNo = 'PASS-' + Math.random().toString(36).substring(2, 10).toUpperCase();
 
       for (let w = 0; w < 4; w++) {
         const targetDate = new Date(baseDate);
@@ -222,10 +223,9 @@ exports.handler = async (event) => {
         const d = String(targetDate.getDate()).padStart(2, '0');
         const dateStr = `${y}-${m}-${d}`;
         const periodStr = `[${dateStr} ${startTime}:00+09, ${dateStr} ${endTime}:00+09)`;
-        const resNo = Math.random().toString(36).substring(2, 12).toUpperCase();
 
         rows.push({
-          reservation_no: resNo,
+          reservation_no: batchResNo,
           room_id: 1,
           period: periodStr,
           status: 'pending',
@@ -250,7 +250,7 @@ exports.handler = async (event) => {
       if (!response.ok) {
         const errorData = await response.json();
         if (errorData.code === '23P01') {
-          return { statusCode: 409, headers, body: JSON.stringify({ error: '정기권 4주 일정 중 이미 다른 예약이 있는 날짜가 포함되어 있습니다. 다른 시간을 선택해주세요.' }) };
+          return { statusCode: 409, headers, body: JSON.stringify({ error: '선택하신 시간(또는 정기권 4주 일정 중 일부)에 이미 등록된 예약이 존재합니다.\n\n이전에 테스트하신 예약이라면 관리자 모드(?mode=admin)에서 해당 예약을 클릭 후 [삭제하기]를 진행해 주세요.' }) };
         }
         throw new Error('Supabase 정기권 일괄 저장 실패');
       }
