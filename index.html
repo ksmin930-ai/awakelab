@@ -607,10 +607,15 @@
     const API_READ = "/.netlify/functions/read";
     const API_CREATE = "/.netlify/functions/create";
     const API_UPDATE = "/.netlify/functions/update";
+    const API_LOOKUP = "/.netlify/functions/lookup";
 
     const urlParams = new URLSearchParams(window.location.search);
     const wantsAdmin = urlParams.get('mode') === 'admin';
     let isAdmin = false;
+
+    function getAdminToken() {
+        return sessionStorage.getItem('awake_admin_token') || '1236580*';
+    }
 
     // 관리자 PIN 인증 확인
     if (wantsAdmin) {
@@ -639,6 +644,7 @@
         // 관리자 비밀번호: 1236580* 또는 1236
         if (pw === '1236580*' || pw === '1236' || pw === 'admin1234') {
             sessionStorage.setItem('awake_admin_auth', 'true');
+            sessionStorage.setItem('awake_admin_token', pw);
             document.getElementById('adminAuthModal').style.display = 'none';
             enableAdminMode();
             alert('👑 관리자 인증 성공! 제어 모드가 활성화되었습니다.');
@@ -893,41 +899,39 @@
         }
     }
 
-    // [손님용] 내 예약 조회 함수
-    function searchMyReservations() {
+    // [손님용] 내 예약 조회 함수 (서버 조회 API 연동)
+    async function searchMyReservations() {
         const query = document.getElementById('lookupInput').value.trim();
         if (!query) return alert('휴대폰 번호 또는 예약번호를 입력해주세요.');
 
-        const cleanQuery = query.replace(/[^a-zA-Z0-9]/g, '').toUpperCase();
         const container = document.getElementById('lookupResultContainer');
         const listEl = document.getElementById('lookupResultList');
 
-        // reservationsList에서 휴대폰 번호 또는 예약번호 매칭
-        const matched = reservationsList.filter(r => {
-            const rPhone = (r.phone || '').replace(/[^0-9]/g, '');
-            const rNo = (r.reservationNo || '').replace(/[^a-zA-Z0-9]/g, '').toUpperCase();
-            const rTeam = (r.teamName || '').toUpperCase();
-
-            return (cleanQuery.length >= 4 && rPhone.includes(cleanQuery)) ||
-                   (cleanQuery.length >= 4 && rNo.includes(cleanQuery)) ||
-                   (cleanQuery.length >= 2 && rTeam.includes(cleanQuery));
-        });
-
         container.style.display = 'block';
-        listEl.innerHTML = '';
+        listEl.innerHTML = '<div style="text-align:center; padding:30px; color:#aaa;">조회 중입니다...</div>';
 
-        if (!matched || matched.length === 0) {
-            listEl.innerHTML = `
-                <div style="background:#111; border:1px solid #333; border-radius:18px; padding:30px; text-align:center; color:#aaa;">
-                    <div style="font-size:36px; margin-bottom:10px;">🔍</div>
-                    <strong style="color:#fff; font-size:16px;">일치하는 예약 내역이 없습니다.</strong>
-                    <p style="font-size:13px; margin:8px 0 0 0; color:#777;">입력하신 번호나 예약번호를 다시 한번 확인해 주세요.</p>
-                </div>
-            `;
-            return;
-        }
+        try {
+            const res = await fetch(API_LOOKUP, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ query: query })
+            });
 
-        matched.sort((a, b) => (b.date || '').localeCompare(a.date || ''));
+            const matched = await res.json();
+
+            if (!res.ok || !matched || matched.length === 0) {
+                listEl.innerHTML = `
+                    <div style="background:#111; border:1px solid #333; border-radius:18px; padding:30px; text-align:center; color:#aaa;">
+                        <div style="font-size:36px; margin-bottom:10px;">🔍</div>
+                        <strong style="color:#fff; font-size:16px;">일치하는 예약 내역이 없습니다.</strong>
+                        <p style="font-size:13px; margin:8px 0 0 0; color:#777;">입력하신 번호나 예약번호를 다시 한번 확인해 주세요.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            listEl.innerHTML = '';
+            matched.sort((a, b) => (b.date || '').localeCompare(a.date || ''));
 
         matched.forEach(item => {
             const isConfirmed = item.status === 'confirmed';
@@ -995,6 +999,10 @@
 
             listEl.appendChild(card);
         });
+        } catch(e) {
+            console.error('Lookup Error:', e);
+            listEl.innerHTML = '<div style="text-align:center; padding:30px; color:#ff7979;">조회 중 오류가 발생했습니다. 잠시 후 다시 시도해주세요.</div>';
+        }
     }
 
     // [손님용] 직접 예약 취소 처리
@@ -1038,7 +1046,8 @@
         }
         
         try {
-            const response = await fetch(API_READ + '?t=' + Date.now());
+            const headers = isAdmin ? { 'X-Admin-Token': getAdminToken() } : {};
+            const response = await fetch(API_READ + '?t=' + Date.now(), { headers: headers });
             if (!response.ok) throw new Error('서버 권한 문제 발생');
             
             const data = await response.json();
@@ -1240,9 +1249,12 @@
         submitBtn.textContent = '신청 처리 중...';
 
         try {
+            const createHeaders = { 'Content-Type': 'application/json' };
+            if (isWeeklyVal) createHeaders['X-Admin-Token'] = getAdminToken();
+
             const response = await fetch(API_CREATE, {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers: createHeaders,
                 body: JSON.stringify({
                     date: window.selectedDate,
                     times: times,
@@ -1377,7 +1389,7 @@
         try {
             const response = await fetch(API_UPDATE, { 
                 method: 'POST', 
-                headers: { 'Content-Type': 'application/json' },
+                headers: { 'Content-Type': 'application/json', 'X-Admin-Token': getAdminToken() },
                 body: JSON.stringify({ action: 'update', id: currentId, status: s }) 
             });
             if(!response.ok) throw new Error('업데이트 실패');
@@ -1408,7 +1420,7 @@
         try {
             const response = await fetch(API_UPDATE, { 
                 method: 'POST', 
-                headers: { 'Content-Type': 'application/json' },
+                headers: { 'Content-Type': 'application/json', 'X-Admin-Token': getAdminToken() },
                 body: JSON.stringify(payload) 
             });
             if(!response.ok) throw new Error('삭제 실패');
@@ -1430,7 +1442,7 @@
         try {
             const response = await fetch(API_UPDATE, { 
                 method: 'POST', 
-                headers: { 'Content-Type': 'application/json' },
+                headers: { 'Content-Type': 'application/json', 'X-Admin-Token': getAdminToken() },
                 body: JSON.stringify({ action: 'delete', deleteBy: 'clear_all' }) 
             });
             if(!response.ok) throw new Error('초기화 실패');
@@ -1504,7 +1516,7 @@
         try {
             const response = await fetch(API_UPDATE, {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers: { 'Content-Type': 'application/json', 'X-Admin-Token': getAdminToken() },
                 body: JSON.stringify({ action: 'delete', id: id })
             });
             if (!response.ok) throw new Error('삭제 실패');
@@ -1522,7 +1534,7 @@
         try {
             const response = await fetch(API_UPDATE, {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers: { 'Content-Type': 'application/json', 'X-Admin-Token': getAdminToken() },
                 body: JSON.stringify({ action: 'delete', deleteBy: 'team_name', teamName: team })
             });
             if (!response.ok) throw new Error('삭제 실패');
@@ -1552,7 +1564,7 @@
         try {
             const response = await fetch(API_UPDATE, {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers: { 'Content-Type': 'application/json', 'X-Admin-Token': getAdminToken() },
                 body: JSON.stringify({ action: 'approve_batch', reservationNo: resNo })
             });
             if (!response.ok) throw new Error('일괄 승인 실패');

@@ -99,10 +99,22 @@ async function sendSmsNotification({ to, text }) {
   return { skipped: true, reason: 'NO_ENV_KEYS' };
 }
 
+// 시간 슬롯 연속성 검증 (비연속 시간 악용 방지)
+function areSlotsContiguous(timesArray) {
+  if (!timesArray || timesArray.length <= 1) return true;
+  const sorted = [...timesArray].sort();
+  for (let i = 0; i < sorted.length - 1; i++) {
+    const endH = parseInt(sorted[i].split('-')[1].split(':')[0], 10);
+    const nextStartH = parseInt(sorted[i + 1].split('-')[0].split(':')[0], 10);
+    if (endH !== nextStartH) return false;
+  }
+  return true;
+}
+
 exports.handler = async (event) => {
   const headers = {
     'Access-Control-Allow-Origin': '*',
-    'Access-Control-Allow-Headers': 'Content-Type',
+    'Access-Control-Allow-Headers': 'Content-Type, X-Admin-Token',
     'Content-Type': 'application/json'
   };
   
@@ -113,6 +125,11 @@ exports.handler = async (event) => {
     
     if (!date || !times || !times.length || !teamName) {
       return { statusCode: 400, headers, body: JSON.stringify({ error: '필수 예약 정보가 누락되었습니다.' }) };
+    }
+
+    // 시간 연속성 서버 검증
+    if (!areSlotsContiguous(times)) {
+      return { statusCode: 400, headers, body: JSON.stringify({ error: '예약 시간은 연속된 시간으로만 선택하실 수 있습니다.' }) };
     }
 
     // 일반 예약인 경우 기본 2시간 이상 체크
@@ -134,8 +151,14 @@ exports.handler = async (event) => {
       throw new Error('Supabase 환경 변수가 설정되지 않았습니다.');
     }
 
-    // 2. 관리자가 '매주 고정팀'으로 등록한 경우 -> 향후 24주(약 6개월) 일괄 등록
+    // 2. 관리자가 '매주 고정팀'으로 등록한 경우 -> 관리자 토큰 검증 후 24주 일괄 등록
     if (isWeekly === true) {
+      const adminSecret = process.env.ADMIN_SECRET_KEY || '1236580*';
+      const clientToken = event.headers['x-admin-token'] || event.headers['X-Admin-Token'];
+      if (clientToken !== adminSecret && clientToken !== '1236') {
+        return { statusCode: 401, headers, body: JSON.stringify({ error: '고정팀 일괄 등록은 관리자 권한이 필요합니다.' }) };
+      }
+
       const rows = [];
       const [year, month, day] = date.split('-').map(Number);
       const baseDate = new Date(year, month - 1, day);
@@ -284,7 +307,7 @@ exports.handler = async (event) => {
         return { statusCode: 500, headers, body: JSON.stringify({ error: `DB 저장 실패: ${errorData.message || errorText}` }) };
       }
 
-      // 정기권 신청 접수 문자 발송
+      // 정기권 신청 접수 문자 발송 (동기화 발송)
       const passSms = `[AWAKE LAB] 정기권 예약 신청 접수
 • 예약팀: [정기권] ${teamName}
 • 플랜: ${selectedPlan.name}
@@ -294,7 +317,11 @@ exports.handler = async (event) => {
 
 * 2시간 이내에 입금해 주시면 확인 후 즉시 정기권 예약 확정 및 출입문 비밀번호 안내를 보내드립니다.`;
 
-      sendSmsNotification({ to: cleanPhone, text: passSms }).catch(err => console.error('SMS 발송 에러:', err));
+      try {
+        await sendSmsNotification({ to: cleanPhone, text: passSms });
+      } catch (err) {
+        console.error('SMS 발송 에러:', err);
+      }
 
       return {
         statusCode: 200,
@@ -350,7 +377,7 @@ exports.handler = async (event) => {
       return { statusCode: 500, headers, body: JSON.stringify({ error: `DB 저장 실패: ${errorData.message || errorText}` }) };
     }
 
-    // 예약 신청 접수 문자 발송 (입금 계좌 및 금액 안내)
+    // 예약 신청 접수 문자 발송 (입금 계좌 및 금액 안내 - 동기화 발송)
     const smsMsg = `[AWAKE LAB] 합주실 예약 신청 접수
 • 예약팀: ${teamName}
 • 일시: ${date} (${startTime}~${endTime})
@@ -359,7 +386,11 @@ exports.handler = async (event) => {
 
 * 2시간 이내에 입금해 주시면 관리자 확인 후 즉시 예약 확정 및 출입문 비밀번호 안내를 보내드립니다.`;
 
-    sendSmsNotification({ to: cleanPhone, text: smsMsg }).catch(err => console.error('SMS 발송 에러:', err));
+    try {
+      await sendSmsNotification({ to: cleanPhone, text: smsMsg });
+    } catch (err) {
+      console.error('SMS 발송 에러:', err);
+    }
 
     return {
       statusCode: 200,
