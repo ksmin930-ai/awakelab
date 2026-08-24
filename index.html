@@ -1727,20 +1727,31 @@
         `;
 
         sorted.forEach(r => {
-            const timeStr = r.times && r.times.length ? `${r.times[0].split('-')[0]}~${r.times[r.times.length-1].split('-')[1]}` : '-';
-            const statusBadge = r.status === 'confirmed' 
-                ? '<span style="color:#2ecc71; font-weight:bold;">승인</span>' 
-                : '<span style="color:#f39c12; font-weight:bold;">대기</span>';
+            const timeStr = r.times && r.times.length ? `${r.times[0].split('-')[0]}~${r.times[r.times.length-1].split('-')[1]}` : (r.date || '-');
+            const isConfirmed = r.status === 'confirmed';
+            const isBatch = r.reservationNo && (r.reservationNo.startsWith('PASS-') || r.reservationNo.startsWith('FIXED-'));
+            const statusBadge = isConfirmed 
+                ? '<span style="color:#2ecc71; font-weight:bold;">✅ 승인완료</span>' 
+                : '<span style="color:#f39c12; font-weight:bold;">⏳ 입금대기</span>';
             
+            let actionBtns = '';
+            if (!isConfirmed) {
+                actionBtns += `<button type="button" onclick="approveResDirect('${r.id}', '${encodeURIComponent(r.teamName)}')" style="background:#27ae60; color:#fff; border:none; padding:5px 9px; border-radius:6px; font-size:11px; font-weight:bold; cursor:pointer; margin-right:4px;">승인 (문자발송)</button>`;
+                if (isBatch) {
+                    actionBtns += `<button type="button" onclick="approveBatchDirect('${r.reservationNo}', '${encodeURIComponent(r.teamName)}')" style="background:#1abc9c; color:#fff; border:none; padding:5px 9px; border-radius:6px; font-size:11px; font-weight:bold; cursor:pointer; margin-right:4px;">팀일괄승인</button>`;
+                }
+            }
+            actionBtns += `<button type="button" onclick="deleteResDirect('${r.id}')" style="background:#c0392b; color:#fff; border:none; padding:5px 9px; border-radius:6px; font-size:11px; font-weight:bold; cursor:pointer; margin-right:4px;">삭제</button>`;
+            actionBtns += `<button type="button" onclick="deleteTeamDirect('${encodeURIComponent(r.teamName)}')" style="background:#8e44ad; color:#fff; border:none; padding:5px 9px; border-radius:6px; font-size:11px; font-weight:bold; cursor:pointer;">팀전체삭제</button>`;
+
             html += `
                 <tr style="border-bottom:1px solid #181d2c;">
-                    <td style="padding:10px 8px; color:#fff; font-weight:bold;">${r.date}</td>
+                    <td style="padding:10px 8px; color:#fff; font-weight:bold;">${r.date || '-'}</td>
                     <td style="padding:10px 8px; color:#aaa;">${timeStr}</td>
                     <td style="padding:10px 8px; color:#fff;">${r.teamName}</td>
                     <td style="padding:10px 8px;">${statusBadge}</td>
                     <td style="padding:10px 8px; text-align:center; white-space:nowrap;">
-                        <button type="button" onclick="deleteResDirect('${r.id}')" style="background:#c0392b; color:#fff; border:none; padding:5px 9px; border-radius:6px; font-size:11px; font-weight:bold; cursor:pointer; margin-right:4px;">삭제</button>
-                        <button type="button" onclick="deleteTeamDirect('${encodeURIComponent(r.teamName)}')" style="background:#8e44ad; color:#fff; border:none; padding:5px 9px; border-radius:6px; font-size:11px; font-weight:bold; cursor:pointer;">팀전체삭제</button>
+                        ${actionBtns}
                     </td>
                 </tr>
             `;
@@ -1753,6 +1764,50 @@
 
     function closeAdminListModal() {
         document.getElementById('adminListModal').style.display = 'none';
+    }
+
+    // [관리자 전용] 목록에서 즉시 단건 승인 & 문자 발송
+    async function approveResDirect(id, encodedTeam) {
+        const team = decodeURIComponent(encodedTeam);
+        if (!confirm(`[${team}] 예약을 승인하시겠습니까?\n승인 즉시 고객에게 도어락 비밀번호가 담긴 확정 문자가 발송됩니다.`)) return;
+
+        try {
+            const response = await fetch(API_UPDATE, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'X-Admin-Token': getAdminToken() },
+                body: JSON.stringify({ action: 'update', id: id, status: 'confirmed' })
+            });
+            if (!response.ok) throw new Error('승인 실패');
+
+            alert('✅ 예약이 승인되었으며 손님에게 확정 안내 문자가 발송되었습니다!');
+            await loadReservations(true);
+            openAdminListModal();
+        } catch(e) {
+            console.error(e);
+            alert('승인 처리 중 오류가 발생했습니다.');
+        }
+    }
+
+    // [관리자 전용] 목록에서 즉시 팀 전체 일괄 승인 & 문자 발송
+    async function approveBatchDirect(resNo, encodedTeam) {
+        const team = decodeURIComponent(encodedTeam);
+        if (!confirm(`[${team}] 팀의 예약번호 ${resNo} 에 해당하는 모든 일정을 일괄 승인하시겠습니까?\n(정기권 4주 전체 동시 승인 + 고객 확정 문자 발송)`)) return;
+
+        try {
+            const response = await fetch(API_UPDATE, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'X-Admin-Token': getAdminToken() },
+                body: JSON.stringify({ action: 'approve_batch', reservationNo: resNo })
+            });
+            if (!response.ok) throw new Error('일괄 승인 실패');
+
+            alert(`✅ [${team}] 팀의 모든 일정이 일괄 승인되었으며 손님에게 확정 문자가 발송되었습니다!`);
+            await loadReservations(true);
+            openAdminListModal();
+        } catch(e) {
+            console.error(e);
+            alert('일괄 승인 처리 중 오류가 발생했습니다.');
+        }
     }
 
     async function deleteResDirect(id) {
