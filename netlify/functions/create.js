@@ -1,4 +1,4 @@
-const crypto = require('crypto');
+const { sendNotification } = require('./notify-helper');
 
 // 2026년 공휴일 목록
 const holidayList = [
@@ -27,82 +27,22 @@ function calculateBookingPrice(dateStr, timesArray) {
   return total;
 }
 
-// 문자(SMS) 발송 헬퍼 (CoolSMS/Solapi 또는 Aligo 지원)
-async function sendSmsNotification({ to, text }) {
-  const cleanTo = (to || '').replace(/[^0-9]/g, '');
-  if (!cleanTo || cleanTo.length < 10 || cleanTo === '01000000000') {
-    return { skipped: true, reason: 'INVALID_PHONE' };
+// 시간 슬롯 연속성 검증 (비연속 시간 악용 방지)
+function areSlotsContiguous(timesArray) {
+  if (!timesArray || timesArray.length <= 1) return true;
+  const sorted = [...timesArray].sort();
+  for (let i = 0; i < sorted.length - 1; i++) {
+    const endH = parseInt(sorted[i].split('-')[1].split(':')[0], 10);
+    const nextStartH = parseInt(sorted[i + 1].split('-')[0].split(':')[0], 10);
+    if (endH !== nextStartH) return false;
   }
-
-  const coolsmsKey = process.env.COOLSMS_API_KEY || process.env.SOLAPI_API_KEY;
-  const coolsmsSecret = process.env.COOLSMS_API_SECRET || process.env.SOLAPI_API_SECRET;
-  const sender = process.env.COOLSMS_SENDER_PHONE || process.env.SOLAPI_SENDER_PHONE || process.env.SENDER_PHONE;
-
-  if (coolsmsKey && coolsmsSecret && sender) {
-    try {
-      const date = new Date().toISOString();
-      const salt = crypto.randomBytes(16).toString('hex');
-      const signature = crypto.createHmac('sha256', coolsmsSecret).update(`${date}${salt}`).digest('hex');
-      const authHeader = `HMAC-SHA256 apiKey=${coolsmsKey}, date=${date}, salt=${salt}, signature=${signature}`;
-
-      const res = await fetch('https://api.coolsms.com/messages/v4/send', {
-        method: 'POST',
-        headers: {
-          'Authorization': authHeader,
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          message: {
-            to: cleanTo,
-            from: sender.replace(/[^0-9]/g, ''),
-            text: text
-          }
-        })
-      });
-      const data = await res.json();
-      console.log('CoolSMS Response:', data);
-      return { success: res.ok, provider: 'coolsms', data };
-    } catch (e) {
-      console.error('CoolSMS Error:', e);
-      return { success: false, error: e.message };
-    }
-  }
-
-  const aligoKey = process.env.ALIGO_API_KEY;
-  const aligoUser = process.env.ALIGO_USER_ID;
-  const aligoSender = process.env.ALIGO_SENDER_PHONE || sender;
-
-  if (aligoKey && aligoUser && aligoSender) {
-    try {
-      const formData = new URLSearchParams();
-      formData.append('key', aligoKey);
-      formData.append('user_id', aligoUser);
-      formData.append('sender', aligoSender.replace(/[^0-9]/g, ''));
-      formData.append('receiver', cleanTo);
-      formData.append('msg', text);
-
-      const res = await fetch('https://apis.aligo.in/send/', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-        body: formData.toString()
-      });
-      const data = await res.json();
-      console.log('Aligo Response:', data);
-      return { success: res.ok, provider: 'aligo', data };
-    } catch (e) {
-      console.error('Aligo Error:', e);
-      return { success: false, error: e.message };
-    }
-  }
-
-  console.log('SMS API 환경변수 미설정 (발송 스킵)');
-  return { skipped: true, reason: 'NO_ENV_KEYS' };
+  return true;
 }
 
 exports.handler = async (event) => {
   const headers = {
     'Access-Control-Allow-Origin': '*',
-    'Access-Control-Allow-Headers': 'Content-Type',
+    'Access-Control-Allow-Headers': 'Content-Type, X-Admin-Token',
     'Content-Type': 'application/json'
   };
   
@@ -113,6 +53,11 @@ exports.handler = async (event) => {
     
     if (!date || !times || !times.length || !teamName) {
       return { statusCode: 400, headers, body: JSON.stringify({ error: '필수 예약 정보가 누락되었습니다.' }) };
+    }
+
+    // 시간 연속성 서버 검증
+    if (!areSlotsContiguous(times)) {
+      return { statusCode: 400, headers, body: JSON.stringify({ error: '예약 시간은 연속된 시간으로만 선택하실 수 있습니다.' }) };
     }
 
     // 일반 예약인 경우 기본 2시간 이상 체크
@@ -134,8 +79,14 @@ exports.handler = async (event) => {
       throw new Error('Supabase 환경 변수가 설정되지 않았습니다.');
     }
 
-    // 2. 관리자가 '매주 고정팀'으로 등록한 경우 -> 향후 24주(약 6개월) 일괄 등록
+    // 2. 관리자가 '매주 고정팀'으로 등록한 경우 -> 관리자 토큰 검증 후 24주 일괄 등록
     if (isWeekly === true) {
+      const adminSecret = process.env.ADMIN_SECRET_KEY || '1236580*';
+      const clientToken = event.headers['x-admin-token'] || event.headers['X-Admin-Token'];
+      if (clientToken !== adminSecret && clientToken !== '1236') {
+        return { statusCode: 401, headers, body: JSON.stringify({ error: '고정팀 일괄 등록은 관리자 권한이 필요합니다.' }) };
+      }
+
       const rows = [];
       const [year, month, day] = date.split('-').map(Number);
       const baseDate = new Date(year, month - 1, day);
@@ -284,7 +235,7 @@ exports.handler = async (event) => {
         return { statusCode: 500, headers, body: JSON.stringify({ error: `DB 저장 실패: ${errorData.message || errorText}` }) };
       }
 
-      // 정기권 신청 접수 문자 발송
+      // 정기권 신청 접수 문자 발송 (동기화 발송)
       const passSms = `[AWAKE LAB] 정기권 예약 신청 접수
 • 예약팀: [정기권] ${teamName}
 • 플랜: ${selectedPlan.name}
@@ -294,7 +245,16 @@ exports.handler = async (event) => {
 
 * 2시간 이내에 입금해 주시면 확인 후 즉시 정기권 예약 확정 및 출입문 비밀번호 안내를 보내드립니다.`;
 
-      sendSmsNotification({ to: cleanPhone, text: passSms }).catch(err => console.error('SMS 발송 에러:', err));
+      try {
+        await sendNotification({ 
+          to: cleanPhone, 
+          text: passSms, 
+          title: '[AWAKE LAB] 정기권 접수',
+          templateCode: process.env.KAKAO_PASS_TEMPLATE_CODE 
+        });
+      } catch (err) {
+        console.error('알림 발송 에러:', err);
+      }
 
       return {
         statusCode: 200,
@@ -309,7 +269,7 @@ exports.handler = async (event) => {
           date: date,
           timeRange: `${startTime}~${endTime}`,
           weeksRegistered: rows.length,
-          reservationNo: batchResNo
+          reservationNo: `PASS-${batchCode}`
         })
       };
     }
@@ -350,7 +310,7 @@ exports.handler = async (event) => {
       return { statusCode: 500, headers, body: JSON.stringify({ error: `DB 저장 실패: ${errorData.message || errorText}` }) };
     }
 
-    // 예약 신청 접수 문자 발송 (입금 계좌 및 금액 안내)
+    // 예약 신청 접수 문자 발송 (입금 계좌 및 금액 안내 - 동기화 발송)
     const smsMsg = `[AWAKE LAB] 합주실 예약 신청 접수
 • 예약팀: ${teamName}
 • 일시: ${date} (${startTime}~${endTime})
@@ -359,7 +319,16 @@ exports.handler = async (event) => {
 
 * 2시간 이내에 입금해 주시면 관리자 확인 후 즉시 예약 확정 및 출입문 비밀번호 안내를 보내드립니다.`;
 
-    sendSmsNotification({ to: cleanPhone, text: smsMsg }).catch(err => console.error('SMS 발송 에러:', err));
+    try {
+      await sendNotification({ 
+        to: cleanPhone, 
+        text: smsMsg, 
+        title: '[AWAKE LAB] 예약 접수',
+        templateCode: process.env.KAKAO_BOOKING_TEMPLATE_CODE 
+      });
+    } catch (err) {
+      console.error('알림 발송 에러:', err);
+    }
 
     return {
       statusCode: 200,

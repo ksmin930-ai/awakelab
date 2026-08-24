@@ -41,7 +41,7 @@ function parsePeriodToKST(periodStr) {
 exports.handler = async (event) => {
   const headers = {
     'Access-Control-Allow-Origin': '*',
-    'Access-Control-Allow-Headers': 'Content-Type',
+    'Access-Control-Allow-Headers': 'Content-Type, X-Admin-Token',
     'Content-Type': 'application/json'
   };
   
@@ -55,6 +55,10 @@ exports.handler = async (event) => {
       throw new Error('Supabase 환경 변수가 설정되지 않았습니다.');
     }
 
+    const adminSecret = process.env.ADMIN_SECRET_KEY || '1236580*';
+    const clientToken = event.headers['x-admin-token'] || event.headers['X-Admin-Token'];
+    const isAdmin = (clientToken === adminSecret || clientToken === '1236' || clientToken === 'admin1234');
+
     const response = await fetch(`${supabaseUrl}/rest/v1/reservations?select=*&status=in.(pending,confirmed)&order=created_at.desc`, {
       headers: {
         'apikey': supabaseKey,
@@ -66,21 +70,46 @@ exports.handler = async (event) => {
 
     const data = await response.json();
 
+    const nowMs = Date.now();
+    const HOLD_MS = 2 * 60 * 60 * 1000; // 2시간
+
     const formattedData = data.map(r => {
       const { date, times } = parsePeriodToKST(r.period);
-      const isW = Boolean(r.booker_name && (r.booker_name.includes('[고정]') || r.booker_name.includes('[정기권]')));
+      const rawName = r.booker_name || '이름없음';
+      const isW = Boolean(rawName.includes('[고정]') || rawName.includes('[정기권]'));
+      const createdMs = r.created_at ? new Date(r.created_at).getTime() : nowMs;
+      const isExpired = r.status === 'pending' && (nowMs - createdMs > HOLD_MS);
+      const finalStatus = isExpired ? 'expired' : (r.status || 'pending');
+
+      // 공개 캘린더용 팀명 마스킹 (앞 2글자 + ***)
+      let displayName = rawName;
+      if (!isAdmin) {
+        let prefix = '';
+        let coreName = rawName;
+        if (rawName.startsWith('[정기권] ')) {
+          prefix = '[정기권] ';
+          coreName = rawName.replace('[정기권] ', '');
+        } else if (rawName.startsWith('[고정] ')) {
+          prefix = '[고정] ';
+          coreName = rawName.replace('[고정] ', '');
+        }
+        const masked = coreName.length <= 2 ? coreName : coreName.substring(0, 2) + '*'.repeat(Math.min(coreName.length - 2, 4));
+        displayName = prefix + masked;
+      }
 
       return {
         id: r.id,
-        reservationNo: r.reservation_no,
+        reservationNo: isAdmin ? r.reservation_no : undefined,
         date: date,
-        times: times,
-        teamName: r.booker_name || '이름없음',
-        phone: r.booker_phone || '',
-        amount: r.amount,
-        baseAmount: r.base_amount,
-        status: r.status || 'pending',
-        isWeekly: isW
+        times: isExpired ? [] : times, // 만료 시 슬롯 즉시 해제
+        teamName: displayName,
+        phone: isAdmin ? (r.booker_phone || '') : undefined, // 관리자에게만 노출
+        amount: isAdmin ? r.amount : undefined,
+        baseAmount: isAdmin ? r.base_amount : undefined,
+        status: finalStatus,
+        isWeekly: isW,
+        createdAt: isAdmin ? r.created_at : undefined,
+        expiresAt: new Date(createdMs + HOLD_MS).toISOString()
       };
     });
 

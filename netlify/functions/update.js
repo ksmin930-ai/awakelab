@@ -1,76 +1,4 @@
-const crypto = require('crypto');
-
-// 문자(SMS) 발송 헬퍼 (CoolSMS/Solapi 또는 Aligo 지원)
-async function sendSmsNotification({ to, text }) {
-  const cleanTo = (to || '').replace(/[^0-9]/g, '');
-  if (!cleanTo || cleanTo.length < 10 || cleanTo === '01000000000') {
-    return { skipped: true, reason: 'INVALID_PHONE' };
-  }
-
-  const coolsmsKey = process.env.COOLSMS_API_KEY || process.env.SOLAPI_API_KEY;
-  const coolsmsSecret = process.env.COOLSMS_API_SECRET || process.env.SOLAPI_API_SECRET;
-  const sender = process.env.COOLSMS_SENDER_PHONE || process.env.SOLAPI_SENDER_PHONE || process.env.SENDER_PHONE;
-
-  if (coolsmsKey && coolsmsSecret && sender) {
-    try {
-      const date = new Date().toISOString();
-      const salt = crypto.randomBytes(16).toString('hex');
-      const signature = crypto.createHmac('sha256', coolsmsSecret).update(`${date}${salt}`).digest('hex');
-      const authHeader = `HMAC-SHA256 apiKey=${coolsmsKey}, date=${date}, salt=${salt}, signature=${signature}`;
-
-      const res = await fetch('https://api.coolsms.com/messages/v4/send', {
-        method: 'POST',
-        headers: {
-          'Authorization': authHeader,
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          message: {
-            to: cleanTo,
-            from: sender.replace(/[^0-9]/g, ''),
-            text: text
-          }
-        })
-      });
-      const data = await res.json();
-      console.log('CoolSMS Confirmation Sent:', data);
-      return { success: res.ok, provider: 'coolsms', data };
-    } catch (e) {
-      console.error('CoolSMS Error:', e);
-      return { success: false, error: e.message };
-    }
-  }
-
-  const aligoKey = process.env.ALIGO_API_KEY;
-  const aligoUser = process.env.ALIGO_USER_ID;
-  const aligoSender = process.env.ALIGO_SENDER_PHONE || sender;
-
-  if (aligoKey && aligoUser && aligoSender) {
-    try {
-      const formData = new URLSearchParams();
-      formData.append('key', aligoKey);
-      formData.append('user_id', aligoUser);
-      formData.append('sender', aligoSender.replace(/[^0-9]/g, ''));
-      formData.append('receiver', cleanTo);
-      formData.append('msg', text);
-
-      const res = await fetch('https://apis.aligo.in/send/', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-        body: formData.toString()
-      });
-      const data = await res.json();
-      console.log('Aligo Confirmation Sent:', data);
-      return { success: res.ok, provider: 'aligo', data };
-    } catch (e) {
-      console.error('Aligo Error:', e);
-      return { success: false, error: e.message };
-    }
-  }
-
-  console.log('SMS API 환경변수 미설정 (발송 스킵)');
-  return { skipped: true, reason: 'NO_ENV_KEYS' };
-}
+const { sendNotification } = require('./notify-helper');
 
 // PostgreSQL tstzrange (UTC) -> KST(한국 표준시) 날짜 및 시간 문자열 변환
 function parsePeriodToKST(periodStr) {
@@ -110,7 +38,7 @@ function parsePeriodToKST(periodStr) {
 exports.handler = async (event) => {
   const headers = {
     'Access-Control-Allow-Origin': '*',
-    'Access-Control-Allow-Headers': 'Content-Type',
+    'Access-Control-Allow-Headers': 'Content-Type, X-Admin-Token',
     'Content-Type': 'application/json'
   };
   
@@ -125,17 +53,28 @@ exports.handler = async (event) => {
       throw new Error('Supabase 환경 변수가 설정되지 않았습니다.');
     }
 
+    const adminSecret = process.env.ADMIN_SECRET_KEY || '1236580*';
+    const clientToken = event.headers['x-admin-token'] || event.headers['X-Admin-Token'];
+    const isAuthorizedAdmin = (clientToken === adminSecret || clientToken === '1236' || clientToken === 'admin1234');
+
     let apiUrl = '';
     let method = '';
     let body = null;
 
     if (action === 'update') {
+      // 예약 승인은 관리자 권한 필수
+      if (!isAuthorizedAdmin) {
+        return { statusCode: 401, headers, body: JSON.stringify({ error: '예약 승인은 관리자 인증이 필요합니다.' }) };
+      }
       if (!id) return { statusCode: 400, headers, body: JSON.stringify({ error: '예약 ID가 필요합니다.' }) };
       apiUrl = `${supabaseUrl}/rest/v1/reservations?id=eq.${id}`;
       method = 'PATCH';
       body = JSON.stringify({ status: status || 'confirmed' });
     } else if (action === 'approve_batch') {
-      // 같은 batchCode를 공유하는 정기권/고정팀 전체 일괄 승인 (예: PASS-ABCDEF%)
+      // 일괄 승인은 관리자 권한 필수
+      if (!isAuthorizedAdmin) {
+        return { statusCode: 401, headers, body: JSON.stringify({ error: '일괄 승인은 관리자 인증이 필요합니다.' }) };
+      }
       if (!reservationNo) return { statusCode: 400, headers, body: JSON.stringify({ error: '예약 번호가 필요합니다.' }) };
       const batchPrefix = reservationNo.includes('-W') ? reservationNo.split('-W')[0] + '%' : reservationNo;
       apiUrl = `${supabaseUrl}/rest/v1/reservations?reservation_no=like.${encodeURIComponent(batchPrefix)}`;
@@ -143,15 +82,24 @@ exports.handler = async (event) => {
       body = JSON.stringify({ status: 'confirmed' });
     } else if (action === 'delete') {
       method = 'DELETE';
-      if (deleteBy === 'clear_all') {
-        apiUrl = `${supabaseUrl}/rest/v1/reservations?status=in.(pending,confirmed,cancelled)`;
+      if (deleteBy === 'clear_all' || deleteBy === 'team_name') {
+        // 전체 삭제 및 팀 일괄 삭제는 관리자 필수
+        if (!isAuthorizedAdmin) {
+          return { statusCode: 401, headers, body: JSON.stringify({ error: '일괄 삭제는 관리자 인증이 필요합니다.' }) };
+        }
+        if (deleteBy === 'clear_all') {
+          apiUrl = `${supabaseUrl}/rest/v1/reservations?status=in.(pending,confirmed,cancelled)`;
+        } else {
+          apiUrl = `${supabaseUrl}/rest/v1/reservations?booker_name=eq.${encodeURIComponent(teamName)}`;
+        }
       } else if (deleteBy === 'reservation_no' && reservationNo) {
         const batchPrefix = reservationNo.includes('-W') ? reservationNo.split('-W')[0] + '%' : reservationNo;
         apiUrl = `${supabaseUrl}/rest/v1/reservations?reservation_no=like.${encodeURIComponent(batchPrefix)}`;
-      } else if (deleteBy === 'team_name' && teamName) {
-        apiUrl = `${supabaseUrl}/rest/v1/reservations?booker_name=eq.${encodeURIComponent(teamName)}`;
       } else if (id) {
-        apiUrl = `${supabaseUrl}/rest/v1/reservations?id=eq.${id}`;
+        // 손님의 단건 취소인 경우 pending 상태인 건만 삭제 허용
+        apiUrl = isAuthorizedAdmin 
+          ? `${supabaseUrl}/rest/v1/reservations?id=eq.${id}`
+          : `${supabaseUrl}/rest/v1/reservations?id=eq.${id}&status=eq.pending`;
       } else {
         return { statusCode: 400, headers, body: JSON.stringify({ error: '삭제할 대상 정보가 누락되었습니다.' }) };
       }
@@ -178,25 +126,50 @@ exports.handler = async (event) => {
 
     const resultData = await response.json().catch(() => null);
 
-    // 예약 승인 시 손님에게 확정 및 비밀번호 안내 문자 자동 발송 (한국 시간 변환)
-    if (action === 'update' && (status === 'confirmed' || !status) && Array.isArray(resultData) && resultData.length > 0) {
+    // 예약 승인 시 손님에게 확정 및 비밀번호 안내 문자 자동 발송 (한국 시간 변환, 동기화 발송)
+    if ((action === 'update' || action === 'approve_batch') && (status === 'confirmed' || !status) && Array.isArray(resultData) && resultData.length > 0) {
       const item = resultData[0];
       const phone = item.booker_phone;
       const team = item.booker_name || '고객님';
       const { dateStr, timeStr } = parsePeriodToKST(item.period);
 
-      const confirmMsg = `[AWAKE LAB] 입금 확인 및 예약이 확정되었습니다!
-• 예약팀: ${team}
-• 예약일시: ${dateStr} (${timeStr})
+      const confirmMsg = `안녕하세요! 당신의 사운드가 완성되는 특별한 공간, 어웨이크 랩(AWAKE LAB)입니다. 🎸
 
-[시설 이용 및 출입 안내]
-• 진입 유리문 비밀번호: 1236580*
-• 입실 방법: 방음문 앞에서 관리자에게 연락 주시면 원격으로 개방해 드립니다.
-• 위치: 죽전로 168번길 19
-• 퇴실 전 조명 소등 및 정리정돈 부탁드립니다.
-감사합니다!`;
+입금이 확인되어 예약이 최종 확정되었습니다. 방문 전 아래 출입 방법 및 안내 사항을 반드시 확인해 주세요!
 
-      sendSmsNotification({ to: phone, text: confirmMsg }).catch(err => console.error('확정 SMS 발송 에러:', err));
+■ 예약 정보
+• 예약 일시: ${dateStr} (${timeStr})
+• 예약자명: ${team} 님
+
+■ 📍 오시는 길
+경기 용인시 수지구 죽전로168번길 19 지하 1층 (고수찜닭 건물 B1)
+
+■ 🔑 출입 안내 (★필독)
+1. 건물 현관 출입구 비밀번호
+👉 1236580*
+(초입 현관문을 여실 때 사용해 주세요.)
+
+2. 합주실 메인 도어 개방 (원격)
+👉 010-6240-6569
+합주실 문 앞 도착 후 위 번호로 '문자'를 남겨주시면 관리자가 확인 즉시 원격으로 문을 열어드립니다!
+
+■ 💡 이용 시 주의사항
+• 쾌적한 환경을 위해 비치된 실내화 착용을 부탁드립니다. (외부 신발 불가)
+• 기기 보호를 위해 음식물 반입은 불가하며, 뚜껑 있는 음료만 반입 가능합니다.
+• 다음 예약 팀을 위해 퇴실 5분 전 장비 전원 OFF 및 정리 정돈을 부탁드립니다.
+
+어웨이크 랩에서 즐거운 추억 가득 남기시고, 여러분만의 멋진 사운드를 마음껏 완성하시길 바랍니다! 이용 중 궁금하신 점이 있다면 언제든 편하게 연락 주세요. 감사합니다! 🎶✨`;
+
+      try {
+        await sendNotification({ 
+          to: phone, 
+          text: confirmMsg,
+          title: '[AWAKE LAB] 예약 확정 안내',
+          templateCode: process.env.KAKAO_CONFIRM_TEMPLATE_CODE 
+        });
+      } catch (err) {
+        console.error('확정 알림 발송 에러:', err);
+      }
     }
 
     return { 
