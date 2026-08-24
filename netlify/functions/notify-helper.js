@@ -23,11 +23,13 @@ async function sendNotification({ to, text, templateCode, title, buttons }) {
       const signature = crypto.createHmac('sha256', coolsmsSecret).update(`${date}${salt}`).digest('hex');
       const authHeader = `HMAC-SHA256 apiKey=${coolsmsKey}, date=${date}, salt=${salt}, signature=${signature}`;
 
+      const isLMS = text.length > 70 || text.includes('\n');
       const messagePayload = {
         to: cleanTo,
         from: sender.replace(/[^0-9]/g, ''),
         text: text,
-        subject: title || '[AWAKE LAB]'
+        type: isLMS ? 'LMS' : 'SMS',
+        subject: title || '[AWAKE LAB] 예약 확정 안내'
       };
 
       // 카카오톡 알림톡 템플릿이 등록되어 있는 경우 알림톡 설정 추가
@@ -42,14 +44,27 @@ async function sendNotification({ to, text, templateCode, title, buttons }) {
         }
       }
 
-      const res = await fetch('https://api.coolsms.com/messages/v4/send', {
+      let res = await fetch('https://api.solapi.com/messages/v4/send', {
         method: 'POST',
         headers: {
           'Authorization': authHeader,
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({ message: messagePayload })
-      });
+      }).catch(() => null);
+
+      if (!res || !res.ok) {
+        // CoolSMS 도메인으로 fallback 시도
+        res = await fetch('https://api.coolsms.com/messages/v4/send', {
+          method: 'POST',
+          headers: {
+            'Authorization': authHeader,
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ message: messagePayload })
+        });
+      }
+
       const data = await res.json();
       console.log('Solapi/CoolSMS Sent:', data);
       return { success: res.ok, provider: 'solapi', data };
