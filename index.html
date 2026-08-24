@@ -108,6 +108,16 @@
         
         .admin-indicator { position: fixed; bottom: 25px; right: 25px; background: #27ae60; color: white; padding: 12px 25px; border-radius: 35px; font-weight: 900; font-size: 12px; box-shadow: 0 10px 30px rgba(39,174,96,0.5); z-index: 999; animation: pulse 2s infinite; cursor: pointer; transition: 0.3s; }
         @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); } }
+
+        /* 요금표 전용 스타일 */
+        .price-container { width: 100%; max-width: 1000px; margin: 0 auto; display: flex; flex-direction: column; gap: 15px; }
+        .price-table-card { background: #0c0e17; border: 1px solid #222; border-radius: 20px; overflow: hidden; box-shadow: 0 20px 50px rgba(0,0,0,0.6); }
+        .price-table { width: 100%; border-collapse: collapse; text-align: left; font-size: 14px; }
+        .price-table th { background: #151928; color: #4d94ff; font-weight: 800; padding: 16px 20px; border-bottom: 1px solid #252b40; font-size: 13px; letter-spacing: 0.5px; }
+        .price-table td { padding: 18px 20px; border-bottom: 1px solid #181d2c; color: #ccc; }
+        .price-table tr:last-child td { border-bottom: none; }
+        .badge-cost { font-weight: 900; font-size: 15px; color: #2ecc71; }
+        .badge-save { color: #4d94ff; font-weight: 700; font-size: 13px; }
     </style>
 </head>
 <body>
@@ -115,24 +125,29 @@
 <header>
     <div class="logo" onclick="showTab('home')">AWAKE<span>LAB</span></div>
     <div class="nav-links">
-        <button class="nav-btn active" id="homeBtn" onclick="showTab('home')">HOME</button>
-        <button class="nav-btn" id="guideBtn" onclick="showTab('guide')">GUIDE</button>
+        <button class="nav-btn active" id="homeBtn" onclick="showTab('home')">예약 (HOME)</button>
+        <button class="nav-btn" id="priceBtn" onclick="showTab('price')">요금표 (PRICE)</button>
+        <button class="nav-btn" id="guideBtn" onclick="showTab('guide')">이용가이드 (GUIDE)</button>
     </div>
 </header>
 
 <div id="adminBadge" class="admin-indicator" style="display:none;" onclick="loadReservations(true)">🔄 ADMIN: 강제 동기화</div>
 
 <div class="main-container">
+    <!-- 1. 예약 홈 탭 -->
     <div id="homeContent" class="tab-content active">
         <div class="info-panel">
             <div class="info-card">
-                <h3>⏰ Studio Info & 요금 안내</h3>
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
+                    <h3 style="margin:0; border:none; padding:0;">⏰ 대관 요금 안내</h3>
+                    <button type="button" onclick="showTab('price')" style="background:none; border:none; color:#8a2be2; font-size:12px; font-weight:bold; cursor:pointer; text-decoration:underline;">상세 요금표 ❯</button>
+                </div>
                 <div style="font-size:13px; color:#aaa; margin-bottom:15px;">
-                    <div style="display:flex; justify-content:space-between; margin-bottom:6px;">
+                    <div style="display:flex; justify-content:space-between; margin-bottom:8px;">
                         <span>• <strong>주중 일반</strong> (기본 2시간~)</span>
                         <span style="color:#fff; font-weight:bold;">25,000원 / 시간</span>
                     </div>
-                    <div style="display:flex; justify-content:space-between; margin-bottom:6px;">
+                    <div style="display:flex; justify-content:space-between; margin-bottom:8px;">
                         <span>• <strong>주말·공휴일·금18시~</strong></span>
                         <span style="color:#4d94ff; font-weight:bold;">30,000원 / 시간</span>
                     </div>
@@ -154,8 +169,8 @@
 
                 <div class="bank-info">
                     <strong>[입금 계좌]</strong><br>
-                    카카오뱅크 7979-36-58974<br>
-                    예금주: 민경환
+                    케이뱅크 100-111-300282<br>
+                    예금주: 민경선
                 </div>
             </div>
             <div class="info-card">
@@ -183,7 +198,79 @@
         </div>
     </div>
 
-    <!-- 가이드 탭 -->
+    <!-- 2. 요금 상세표 탭 (PRICE) -->
+    <div id="priceContent" class="tab-content">
+        <div class="price-container">
+            <div class="guide-header-box" style="background: linear-gradient(135deg, #0b112c, #071739);">
+                <h2>요금 상세표</h2>
+                <div class="guide-header-line" style="background: #4d94ff;"></div>
+                <p class="sub1" style="color: #64b5f6; font-weight: 700;">교회 찬양팀 / 인근 직장인 동아리 정기권 우대</p>
+                <p class="sub2">창작자를 위한 최적의 공간, 깨어있는 연구소 (Awake Lab)</p>
+            </div>
+
+            <div class="price-table-card">
+                <table class="price-table">
+                    <thead>
+                        <tr>
+                            <th>구분</th>
+                            <th>이용 기준</th>
+                            <th>이용 요금</th>
+                            <th>혜택 및 비고</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong style="color:#fff;">일반 대관 (주중)</strong></td>
+                            <td>시간당 (기본 2시간~)</td>
+                            <td><span class="badge-cost" style="color:#fff;">25,000원</span></td>
+                            <td>개인 및 일반 밴드 (월~금 18시 이전)</td>
+                        </tr>
+                        <tr>
+                            <td><strong style="color:#4d94ff;">일반 대관 (주말)</strong></td>
+                            <td>시간당 (기본 2시간~)</td>
+                            <td><span class="badge-cost" style="color:#4d94ff;">30,000원</span></td>
+                            <td>금요일 18시 이후 ~ 주말 / 공휴일</td>
+                        </tr>
+                        <tr>
+                            <td><strong style="color:#2ecc71;">교회형 정기권 A (주말)*</strong></td>
+                            <td>월 4회 (회당 2시간 / 총 8시간)</td>
+                            <td><span class="badge-cost">200,000원</span></td>
+                            <td><span class="badge-save">4만원 할인</span> (주말을 주중 요금으로!)</td>
+                        </tr>
+                        <tr>
+                            <td><strong style="color:#2ecc71;">교회형 정기권 B (주말)</strong></td>
+                            <td>월 4회 (회당 3시간 / 총 12시간)</td>
+                            <td><span class="badge-cost">290,000원</span></td>
+                            <td><span class="badge-save">7만원 할인</span> (시간당 약 2.4만 원꼴)</td>
+                        </tr>
+                        <tr>
+                            <td><strong style="color:#e67e22;">직장형 정기권 A (주중)*</strong></td>
+                            <td>월 4회 (회당 2시간 / 총 8시간)</td>
+                            <td><span class="badge-cost">160,000원</span></td>
+                            <td><span class="badge-save">4만원 할인</span> (시간당 2만 원꼴)</td>
+                        </tr>
+                        <tr>
+                            <td><strong style="color:#e67e22;">직장형 정기권 B (주중)</strong></td>
+                            <td>월 4회 (회당 3시간 / 총 12시간)</td>
+                            <td><span class="badge-cost">276,000원</span></td>
+                            <td><span class="badge-save">7만원 할인</span> (시간당 약 2.3만 원꼴)</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div style="font-size:13px; color:#888; margin-top:8px; line-height:1.6;">
+                • <strong>* 교회형과 직장형은 주말 / 주중으로 다릅니다.</strong><br>
+                • 정기권 등록 및 고정 시간 선점은 관리자에게 문의해 주시면 신속하게 배정해 드립니다.
+            </div>
+
+            <div style="margin-top:20px; display:flex; gap:12px;">
+                <button class="btn btn-submit" style="padding:16px;" onclick="showTab('home')">🗓️ 실시간 예약하러 가기</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 3. 가이드 탭 (GUIDE) -->
     <div id="guideContent" class="tab-content">
         <div class="guide-container">
             <div class="guide-header-box">
@@ -201,7 +288,7 @@
                 </div>
                 <div class="guide-info">
                     <div class="guide-item">
-                        <div class="guide-title">• <strong>진입 유리문 비밀번호</strong> <span class="pw-box">1236580*</span></div>
+                        <div class="guide-title">• <strong>진입 유리문 비밀번호</strong> <span class="pw-box" style="color:#c49aee; font-size:13px; font-weight:700;">예약 확정 시 문자로 자동 발송</span></div>
                     </div>
                     <div class="guide-item">
                         <div class="guide-title">• <strong>입실 방법</strong></div>
@@ -272,7 +359,13 @@
 
 <div id="reservationModal" class="modal">
     <div class="modal-content">
-        <h3 id="modalTitle" style="margin-top:0; font-size:20px; letter-spacing:-0.5px;">날짜 선택</h3>
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+            <h3 id="modalTitle" style="margin:0; font-size:20px; letter-spacing:-0.5px;">날짜 선택</h3>
+            <button type="button" onclick="closeModal(); showTab('price');" style="background:none; border:none; color:#8a2be2; font-size:12px; font-weight:bold; cursor:pointer; text-decoration:underline;">📋 전체 요금표</button>
+        </div>
+        
+        <div id="dateRateBadge" style="display:inline-block; font-size:12px; font-weight:700; padding:6px 14px; border-radius:20px; margin-bottom:18px; background:rgba(77,148,255,0.12); color:#64b5f6; border:1px solid rgba(77,148,255,0.3);">주중 일반 요금 (25,000원 / 시간)</div>
+
         <div class="schedule-box" id="dailySchedule">
             <strong style="color:#8a2be2; font-size:14px;">🗓️ 예약 현황</strong>
             <div id="scheduleList" style="margin-top:10px; color:#999; font-size:13px; line-height: 1.8;"></div>
@@ -281,7 +374,7 @@
         <form id="reservationForm">
             <div id="adminCreateWeekly" style="display:none; margin-bottom: 20px; padding: 15px; background: rgba(39, 174, 96, 0.1); border: 1px solid #27ae60; border-radius: 14px;">
                 <label style="color:#2ecc71; font-weight:bold; font-size:14px; display:flex; align-items:center; cursor:pointer;">
-                    <input type="checkbox" id="createWeeklyToggle" style="margin-right:10px; width:18px; height:18px;"> 👑 [관리자] 향후 24주 매주 고정팀으로 등록
+                    <input type="checkbox" id="createWeeklyToggle" style="margin-right:10px; width:18px; height:18px;"> 👑 [관리자] 정기권/고정팀 등록 (향후 24주 일괄 등록)
                 </label>
             </div>
 
@@ -329,14 +422,14 @@
         <div style="background:rgba(138,43,226,0.15); border:1px solid #8a2be2; border-radius:18px; padding:20px; margin-bottom:18px;">
             <span style="color:#bbb; font-size:13px;">입금하실 대관료</span>
             <div id="resultAmount" style="color:#fff; font-size:30px; font-weight:900; margin:6px 0; letter-spacing:0.5px;">0원</div>
-            <span style="color:#2ecc71; font-size:12px; font-weight:bold;">✅ 입금 확인 즉시 출입문 비밀번호(1236580*)가 문자로 자동 발송됩니다.</span>
+            <span style="color:#2ecc71; font-size:12px; font-weight:bold;">✅ 입금 확인 즉시 출입문 비밀번호 및 입실 안내가 문자로 자동 발송됩니다.</span>
         </div>
 
         <div style="background:#0a0a0a; border:1px solid #222; border-radius:16px; padding:16px; margin-bottom:20px; text-align:left; font-size:14px;">
             <div style="display:flex; justify-content:space-between; align-items:center;">
                 <div>
                     <span style="color:#888; font-size:12px;">입금 계좌</span><br>
-                    <strong id="accountText">카카오뱅크 7979-36-58974 (민경환)</strong>
+                    <strong id="accountText">케이뱅크 100-111-300282 (민경선)</strong>
                 </div>
                 <button type="button" onclick="copyAccount()" id="copyBtn" style="background:#8a2be2; color:#fff; border:none; padding:8px 14px; border-radius:8px; font-size:12px; font-weight:bold; cursor:pointer; transition:0.2s;">복사</button>
             </div>
@@ -517,6 +610,26 @@
         document.getElementById('adminArea').style.display = 'none'; 
         document.getElementById('reservationForm').style.display = 'block';
         
+        // 날짜별 적용 요금 배지 업데이트
+        const isHoliday = !!holidayData[d];
+        const badgeElem = document.getElementById('dateRateBadge');
+        if (day === 0 || day === 6 || isHoliday) {
+            badgeElem.textContent = "🎉 주말 / 공휴일 요금 적용 (30,000원 / 시간)";
+            badgeElem.style.color = "#ff7979";
+            badgeElem.style.background = "rgba(255, 77, 77, 0.12)";
+            badgeElem.style.borderColor = "rgba(255, 77, 77, 0.3)";
+        } else if (day === 5) {
+            badgeElem.textContent = "✨ 금요일 (18시 이전 25,000원 / 18시 이후 30,000원)";
+            badgeElem.style.color = "#e67e22";
+            badgeElem.style.background = "rgba(230, 126, 34, 0.12)";
+            badgeElem.style.borderColor = "rgba(230, 126, 34, 0.3)";
+        } else {
+            badgeElem.textContent = "🎵 주중 일반 요금 적용 (25,000원 / 시간)";
+            badgeElem.style.color = "#64b5f6";
+            badgeElem.style.background = "rgba(77, 148, 255, 0.12)";
+            badgeElem.style.borderColor = "rgba(77, 148, 255, 0.3)";
+        }
+
         if(isAdmin) {
             document.getElementById('adminCreateWeekly').style.display = 'block';
             document.getElementById('createWeeklyToggle').checked = false;
@@ -626,7 +739,7 @@
     }
 
     function copyAccount() {
-        const text = "79793658974"; // 계좌번호 숫자만 복사
+        const text = "100111300282"; // 케이뱅크 계좌번호 숫자만 복사
         navigator.clipboard.writeText(text).then(() => {
             const btn = document.getElementById('copyBtn');
             btn.innerText = '복사완료!';
@@ -636,7 +749,7 @@
                 btn.style.background = '#8a2be2';
             }, 2000);
         }).catch(() => {
-            alert('계좌번호: 카카오뱅크 7979-36-58974 (민경환)');
+            alert('계좌번호: 케이뱅크 100-111-300282 (민경선)');
         });
     }
 

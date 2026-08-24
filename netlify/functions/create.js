@@ -234,7 +234,7 @@ exports.handler = async (event) => {
 • 예약팀: ${teamName}
 • 일시: ${date} (${startTime}~${endTime})
 • 입금 금액: ${exactAmount.toLocaleString()}원
-• 입금 계좌: 카카오뱅크 7979-36-58974 (예금주: 민경환)
+• 입금 계좌: 케이뱅크 100-111-300282 (예금주: 민경선)
 
 * 2시간 이내에 입금해 주시면 관리자 확인 후 즉시 예약 확정 및 출입문 비밀번호 안내를 보내드립니다.`;
 
