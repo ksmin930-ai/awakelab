@@ -196,11 +196,17 @@ exports.handler = async (event) => {
       };
     }
 
-    // ── 이하 일반 사용자 예약: KST 기준 과거 날짜 차단 ──
-    const nowKST = new Date(Date.now() + (9 * 60 * 60 * 1000));
-    const todayKST = `${nowKST.getUTCFullYear()}-${String(nowKST.getUTCMonth() + 1).padStart(2, '0')}-${String(nowKST.getUTCDate()).padStart(2, '0')}`;
+    // ── 이하 일반 사용자 예약: KST 기준 오늘 날짜 계산 ──
+    const now = new Date();
+    const utcTime = now.getTime() + (now.getTimezoneOffset() * 60000);
+    const kstTime = new Date(utcTime + (9 * 60 * 60 * 1000));
+    const kstYear = kstTime.getFullYear();
+    const kstMonth = String(kstTime.getMonth() + 1).padStart(2, '0');
+    const kstDay = String(kstTime.getDate()).padStart(2, '0');
+    const todayKST = `${kstYear}-${kstMonth}-${kstDay}`;
+
     if (date < todayKST) {
-      return { statusCode: 400, headers, body: JSON.stringify({ error: '오늘 이전 날짜에는 예약할 수 없습니다.' }) };
+      return { statusCode: 400, headers, body: JSON.stringify({ error: `오늘(${todayKST}) 이전 날짜에는 예약할 수 없습니다.` }) };
     }
 
     // 전화번호 필수 검증
@@ -268,11 +274,14 @@ exports.handler = async (event) => {
       });
 
       if (!response.ok) {
-        const errorData = await response.json();
+        const errorText = await response.text();
+        let errorData = {};
+        try { errorData = JSON.parse(errorText); } catch(e) {}
         if (errorData.code === '23P01') {
           return { statusCode: 409, headers, body: JSON.stringify({ error: '선택하신 시간(또는 정기권 4주 일정 중 일부)에 이미 등록된 예약이 존재합니다.\n\n관리자 모드에서 [📋 전체 예약 목록]을 열어 [팀전체삭제]로 기존 데이터를 정리한 후 다시 신청해 주세요.' }) };
         }
-        throw new Error('Supabase 정기권 일괄 저장 실패');
+        console.error('Supabase 정기권 저장 실패:', errorText);
+        return { statusCode: 500, headers, body: JSON.stringify({ error: `DB 저장 실패: ${errorData.message || errorText}` }) };
       }
 
       // 정기권 신청 접수 문자 발송
@@ -331,11 +340,14 @@ exports.handler = async (event) => {
     });
 
     if (!response.ok) {
-      const errorData = await response.json();
+      const errorText = await response.text();
+      let errorData = {};
+      try { errorData = JSON.parse(errorText); } catch(e) {}
       if (errorData.code === '23P01') {
         return { statusCode: 409, headers, body: JSON.stringify({ error: '방금 다른 분이 해당 시간을 먼저 예약했습니다. 다른 시간을 선택해주세요.' }) };
       }
-      throw new Error('Supabase 예약 저장 실패');
+      console.error('Supabase 단건 저장 실패:', errorText);
+      return { statusCode: 500, headers, body: JSON.stringify({ error: `DB 저장 실패: ${errorData.message || errorText}` }) };
     }
 
     // 예약 신청 접수 문자 발송 (입금 계좌 및 금액 안내)
@@ -357,6 +369,7 @@ exports.handler = async (event) => {
         amount: exactAmount,
         baseAmount: exactAmount,
         reservationNo: reservationNo,
+        teamName: teamName,
         date: date,
         timeRange: `${startTime}~${endTime}`
       })
@@ -364,6 +377,6 @@ exports.handler = async (event) => {
 
   } catch (error) {
     console.error('서버 에러:', error);
-    return { statusCode: 500, headers, body: JSON.stringify({ error: '서버 처리 중 오류가 발생했습니다. 잠시 후 다시 시도해주세요.' }) };
+    return { statusCode: 500, headers, body: JSON.stringify({ error: `서버 처리 중 오류: ${error.message || error}` }) };
   }
 };
