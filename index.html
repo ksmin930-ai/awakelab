@@ -63,7 +63,7 @@
         .spinner { width: 40px; height: 40px; border: 4px solid rgba(138, 43, 226, 0.3); border-top-color: #8a2be2; border-radius: 50%; animation: spin 1s linear infinite; margin-bottom: 15px; }
         @keyframes spin { 100% { transform: rotate(360deg); } }
 
-        /* 가이드 탭 등 기존 스타일 유지 */
+        /* 가이드 탭 */
         .guide-container { width: 100%; max-width: 1000px; margin: 0 auto; display: flex; flex-direction: column; gap: 15px; }
         .guide-header-box { background: linear-gradient(135deg, #0b0c16, #16182a); padding: 50px 40px; border-radius: 20px; border: 1px solid #222; margin-bottom: 15px; text-align: left; }
         .guide-header-box h2 { font-size: 46px; font-weight: 900; margin: 0; letter-spacing: -2px; color: #fff; }
@@ -126,14 +126,37 @@
     <div id="homeContent" class="tab-content active">
         <div class="info-panel">
             <div class="info-card">
-                <h3>⏰ Studio Info</h3>
-                <ul>
-                    <li>매일 10:00 ~ 20:00</li>
-                    <li>주중 25,000원 / 주말 30,000원</li>
-                    <li style="color:#f39c12; font-size:12px; margin-top:5px;">* 금요일 18시 이후는 주말 요금 적용</li>
-                    <li style="color:#f39c12; font-size:12px;">* 기본 2시간 이상 예약 필수</li>
-                </ul>
-                <div class="bank-info"><strong>[입금 계좌]</strong><br>케이뱅크 110-111-300282<br>예금주: 민경선</div>
+                <h3>⏰ Studio Info & 요금 안내</h3>
+                <div style="font-size:13px; color:#aaa; margin-bottom:15px;">
+                    <div style="display:flex; justify-content:space-between; margin-bottom:6px;">
+                        <span>• <strong>주중 일반</strong> (기본 2시간~)</span>
+                        <span style="color:#fff; font-weight:bold;">25,000원 / 시간</span>
+                    </div>
+                    <div style="display:flex; justify-content:space-between; margin-bottom:6px;">
+                        <span>• <strong>주말·공휴일·금18시~</strong></span>
+                        <span style="color:#4d94ff; font-weight:bold;">30,000원 / 시간</span>
+                    </div>
+                </div>
+
+                <div style="background:rgba(255,255,255,0.03); border:1px solid #222; border-radius:14px; padding:14px; margin-bottom:15px; font-size:12px;">
+                    <div style="color:#8a2be2; font-weight:bold; margin-bottom:8px;">🎁 정기권 우대 할인 (교회/직장인)</div>
+                    <div style="margin-bottom:6px; line-height:1.5;">
+                        <span style="color:#2ecc71; font-weight:bold;">⛪ 교회형 (주말)</span><br>
+                        • A형(월 4회/회당 2h): <strong>200,000원</strong> (4만 할인)<br>
+                        • B형(월 4회/회당 3h): <strong>290,000원</strong> (7만 할인)
+                    </div>
+                    <div style="line-height:1.5;">
+                        <span style="color:#e67e22; font-weight:bold;">🏢 직장형 (주중)</span><br>
+                        • A형(월 4회/회당 2h): <strong>160,000원</strong> (4만 할인)<br>
+                        • B형(월 4회/회당 3h): <strong>276,000원</strong> (7만 할인)
+                    </div>
+                </div>
+
+                <div class="bank-info">
+                    <strong>[입금 계좌]</strong><br>
+                    카카오뱅크 7979-36-58974<br>
+                    예금주: 민경환
+                </div>
             </div>
             <div class="info-card">
                 <h3>📍 Location</h3>
@@ -178,7 +201,7 @@
                 </div>
                 <div class="guide-info">
                     <div class="guide-item">
-                        <div class="guide-title">• <strong>진입 유리문 비밀번호</strong> <span class="pw-box">123658*</span></div>
+                        <div class="guide-title">• <strong>진입 유리문 비밀번호</strong> <span class="pw-box">1236580*</span></div>
                     </div>
                     <div class="guide-item">
                         <div class="guide-title">• <strong>입실 방법</strong></div>
@@ -256,24 +279,75 @@
         </div>
         
         <form id="reservationForm">
+            <div id="adminCreateWeekly" style="display:none; margin-bottom: 20px; padding: 15px; background: rgba(39, 174, 96, 0.1); border: 1px solid #27ae60; border-radius: 14px;">
+                <label style="color:#2ecc71; font-weight:bold; font-size:14px; display:flex; align-items:center; cursor:pointer;">
+                    <input type="checkbox" id="createWeeklyToggle" style="margin-right:10px; width:18px; height:18px;"> 👑 [관리자] 향후 24주 매주 고정팀으로 등록
+                </label>
+            </div>
+
             <div class="checkbox-grid" id="timeGrid"></div>
-            <input type="text" id="teamName" placeholder="합주팀 이름을 입력하세요" style="width:100%; padding:20px; background:#000; border:1px solid #333; color:#fff; border-radius:18px; margin-bottom:25px; font-size: 15px;" required>
+            
+            <!-- 실시간 요금 계산 바 -->
+            <div id="livePriceBox" style="background:#0a0a0a; border:1px solid #222; border-radius:14px; padding:14px 18px; margin-bottom:18px; display:flex; justify-content:space-between; align-items:center; font-size:14px;">
+                <span>선택 시간: <strong id="selectedHoursCount" style="color:#8a2be2;">0시간</strong> <span style="font-size:12px; color:#888;">(기본 2시간~)</span></span>
+                <span>총 대관료: <strong id="livePriceAmount" style="color:#fff; font-size:16px;">0원</strong></span>
+            </div>
+            
+            <input type="text" id="teamName" placeholder="합주팀 이름 (예: 워십웨이커스)" style="width:100%; padding:16px; background:#000; border:1px solid #333; color:#fff; border-radius:14px; margin-bottom:12px; font-size: 15px;" required>
+            
+            <input type="tel" id="bookerPhone" placeholder="휴대폰 번호 (예: 010-1234-5678)" maxlength="13" style="width:100%; padding:16px; background:#000; border:1px solid #333; color:#fff; border-radius:14px; margin-bottom:22px; font-size: 15px;" required>
+            
             <div class="btn-group">
                 <button type="button" class="btn btn-back" onclick="closeModal()">취소</button>
                 <button type="submit" class="btn btn-submit" id="submitBtn">예약 신청</button>
             </div>
         </form>
 
-        <div id="adminArea" style="display:none; margin-top:30px; border-top:1px solid #333; padding-top:30px;">
+        <div id="adminArea" style="display:none; margin-top:25px; border-top:1px solid #222; padding-top:20px;">
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
                 <p style="color:#8a2be2; font-weight:bold; font-size:14px; margin:0;">[관리자 전용 설정]</p>
                 <button type="button" onclick="loadReservations(true)" style="background:#333; color:#fff; border:none; padding:6px 12px; border-radius:8px; font-size:12px; cursor:pointer;">🔄 데이터 갱신</button>
             </div>
+            <div id="adminDetailBox" style="background:#080808; border:1px solid #222; border-radius:12px; padding:15px; margin-bottom:15px; font-size:13px; line-height:1.8; color:#bbb;"></div>
             <div class="btn-group">
-                <button class="btn" style="background:#27ae60; color:#fff" onclick="updateStatus('confirmed')" id="approveBtn">예약 승인</button>
+                <button class="btn" style="background:#27ae60; color:#fff" onclick="updateStatus('confirmed')" id="approveBtn">예약 승인 (문자 발송)</button>
                 <button class="btn" style="background:#c0392b; color:#fff" onclick="deleteRes()" id="deleteBtn">삭제하기</button>
             </div>
         </div>
+    </div>
+</div>
+
+<!-- 예약 완료 팝업 모달 -->
+<div id="resultModal" class="modal">
+    <div class="modal-content" style="text-align:center;">
+        <div style="font-size:46px; margin-bottom:8px;">🎉</div>
+        <h3 style="margin-top:0; color:#fff; font-size:22px; letter-spacing:-0.5px;">예약 신청 완료</h3>
+        <p style="color:#aaa; font-size:14px; margin-bottom:20px;">
+            예약 신청이 정상 접수되었습니다.<br>아래 계좌로 입금해 주시면 입금 확인 즉시 확정됩니다.
+        </p>
+
+        <div style="background:rgba(138,43,226,0.15); border:1px solid #8a2be2; border-radius:18px; padding:20px; margin-bottom:18px;">
+            <span style="color:#bbb; font-size:13px;">입금하실 대관료</span>
+            <div id="resultAmount" style="color:#fff; font-size:30px; font-weight:900; margin:6px 0; letter-spacing:0.5px;">0원</div>
+            <span style="color:#2ecc71; font-size:12px; font-weight:bold;">✅ 입금 확인 즉시 출입문 비밀번호(1236580*)가 문자로 자동 발송됩니다.</span>
+        </div>
+
+        <div style="background:#0a0a0a; border:1px solid #222; border-radius:16px; padding:16px; margin-bottom:20px; text-align:left; font-size:14px;">
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+                <div>
+                    <span style="color:#888; font-size:12px;">입금 계좌</span><br>
+                    <strong id="accountText">카카오뱅크 7979-36-58974 (민경환)</strong>
+                </div>
+                <button type="button" onclick="copyAccount()" id="copyBtn" style="background:#8a2be2; color:#fff; border:none; padding:8px 14px; border-radius:8px; font-size:12px; font-weight:bold; cursor:pointer; transition:0.2s;">복사</button>
+            </div>
+        </div>
+
+        <div style="color:#777; font-size:12px; margin-bottom:22px; line-height:1.6; text-align:left; background:rgba(255,255,255,0.02); padding:12px; border-radius:12px;">
+            • 입금 기한: <strong>신청 후 2시간 이내</strong> (미입금 시 자동 취소)<br>
+            • 예약 신청 안내 문자가 고객님의 휴대폰으로 발송되었습니다.
+        </div>
+
+        <button type="button" class="btn btn-submit" style="width:100%;" onclick="closeResultModal()">확인 완료</button>
     </div>
 </div>
 
@@ -287,11 +361,62 @@
     if(isAdmin) document.getElementById('adminBadge').style.display = 'block';
 
     let currentDate = new Date();
-    const holidayData = { "2026-01-01": "신정", "2026-02-16": "설날", "2026-02-17": "설날", "2026-02-18": "설날", "2026-03-01": "삼일절", "2026-05-05": "어린이날", "2026-05-24": "부처님오신날", "2026-06-06": "현충일", "2026-08-15": "광복절", "2026-09-24": "추석", "2026-09-25": "추석", "2026-09-26": "추석", "2026-10-03": "개천절", "2026-10-09": "한글날", "2026-12-25": "성탄절" };
+    const holidayData = { 
+        "2026-01-01": "신정", "2026-02-16": "설날", "2026-02-17": "설날", "2026-02-18": "설날", 
+        "2026-03-01": "삼일절", "2026-03-02": "대체공휴일", "2026-05-05": "어린이날", "2026-05-24": "부처님오신날", 
+        "2026-05-25": "대체공휴일", "2026-06-06": "현충일", "2026-08-15": "광복절", "2026-08-17": "대체공휴일", 
+        "2026-09-24": "추석", "2026-09-25": "추석", "2026-09-26": "추석", "2026-10-03": "개천절", 
+        "2026-10-05": "대체공휴일", "2026-10-09": "한글날", "2026-12-25": "성탄절" 
+    };
     
     let reservationsList = [];
-    let currentId = null; 
+    let currentId = null;
     const timeSlots = ["09:00-10:00", "10:00-11:00", "11:00-12:00", "12:00-13:00", "13:00-14:00", "14:00-15:00", "15:00-16:00", "16:00-17:00", "17:00-18:00", "18:00-19:00", "19:00-20:00"];
+
+    // 요금 계산 함수 (주중 25,000원 / 주말·공휴일·금18시이후 30,000원)
+    function calculatePrice(dateStr, timesArray) {
+        if (!dateStr || !timesArray || !timesArray.length) return 0;
+        const [y, m, d] = dateStr.split('-').map(Number);
+        const day = new Date(y, m - 1, d).getDay();
+        const isHoliday = !!holidayData[dateStr];
+
+        let total = 0;
+        timesArray.forEach(slot => {
+            const startHour = parseInt(slot.split('-')[0].split(':')[0], 10);
+            if (day === 0 || day === 6 || isHoliday) {
+                total += 30000;
+            } else if (day === 5 && startHour >= 18) {
+                total += 30000;
+            } else {
+                total += 25000;
+            }
+        });
+        return total;
+    }
+
+    function updateLivePrice() {
+        const checkedBoxes = Array.from(document.querySelectorAll('input[name="timeSlot"]:checked'));
+        const times = checkedBoxes.map(cb => cb.value);
+        const count = times.length;
+        const price = calculatePrice(window.selectedDate, times);
+
+        document.getElementById('selectedHoursCount').textContent = `${count}시간`;
+        document.getElementById('livePriceAmount').textContent = `${price.toLocaleString()}원`;
+    }
+
+    // 전화번호 자동 하이픈 포맷팅
+    const phoneInput = document.getElementById('bookerPhone');
+    if (phoneInput) {
+        phoneInput.addEventListener('input', function(e) {
+            let val = e.target.value.replace(/[^0-9]/g, '');
+            if (val.length > 3 && val.length <= 7) {
+                val = val.slice(0, 3) + '-' + val.slice(3);
+            } else if (val.length > 7) {
+                val = val.slice(0, 3) + '-' + val.slice(3, 7) + '-' + val.slice(7, 11);
+            }
+            e.target.value = val;
+        });
+    }
 
     function showTab(t) {
         document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
@@ -300,17 +425,31 @@
         document.getElementById(t + 'Btn').classList.add('active');
     }
 
+    // [0.1초 초고속 로딩 SWR 캐시] 로컬 저장소 우선 렌더링 + 백그라운드 Supabase 동기화
     async function loadReservations(forceRefresh = false) {
         const overlay = document.getElementById('loadingOverlay');
         const badge = document.getElementById('adminBadge');
-        overlay.style.display = 'flex';
+
+        const cached = localStorage.getItem('awake_lab_reservations_v2');
+        if (cached && !forceRefresh) {
+            try {
+                reservationsList = JSON.parse(cached);
+                renderCalendar();
+                if(isAdmin) badge.innerText = '🔄 동기화 확인 중...';
+            } catch(e) {
+                console.error('캐시 파싱 에러:', e);
+            }
+        } else {
+            overlay.style.display = 'flex';
+        }
         
         try {
-            const response = await fetch(API_READ);
+            const response = await fetch(API_READ + '?t=' + Date.now());
             if (!response.ok) throw new Error('서버 권한 문제 발생');
             
             const data = await response.json();
             reservationsList = data;
+            localStorage.setItem('awake_lab_reservations_v2', JSON.stringify(data));
             
             overlay.style.display = 'none';
             renderCalendar();
@@ -320,20 +459,26 @@
             }
         } catch (error) {
             console.error(error);
-            overlay.innerHTML = `<div style="text-align:center; color:#ff4d4d;"><strong style="font-size:18px;">⚠️ 서버 연동 실패</strong></div>`;
+            if (!cached) {
+                overlay.innerHTML = `<div style="text-align:center; color:#ff4d4d;"><strong style="font-size:18px;">⚠️ 서버 연동 실패</strong></div>`;
+            }
             if(isAdmin) badge.innerText = '⚠️ 동기화 실패';
         }
     }
 
     function renderCalendar() {
-        const year = currentDate.getFullYear(); const month = currentDate.getMonth();
+        const year = currentDate.getFullYear(); 
+        const month = currentDate.getMonth();
         document.getElementById('monthYear').textContent = `${year}. ${String(month + 1).padStart(2, '0')}`;
-        const container = document.getElementById('dates'); container.innerHTML = '';
-        const firstDay = new Date(year, month, 1).getDay(); const lastDate = new Date(year, month + 1, 0).getDate();
+        const container = document.getElementById('dates'); 
+        container.innerHTML = '';
+        const firstDay = new Date(year, month, 1).getDay(); 
+        const lastDate = new Date(year, month + 1, 0).getDate();
 
         for (let i = 0; i < firstDay; i++) container.innerHTML += '<div class="date-cell empty"></div>';
         for (let i = 1; i <= lastDate; i++) {
-            const cell = document.createElement('div'); cell.className = 'date-cell';
+            const cell = document.createElement('div'); 
+            cell.className = 'date-cell';
             const dStr = `${year}-${String(month+1).padStart(2,'0')}-${String(i).padStart(2,'0')}`;
             const day = new Date(year, month, i).getDay();
             const hName = holidayData[dStr];
@@ -344,22 +489,38 @@
             reservationsList.forEach(r => {
                 if (r.date === dStr) {
                     const b = document.createElement('div');
-                    b.className = `res-badge ${r.status === 'pending' ? 'badge-pending' : 'badge-approved'}`;
+                    const isFixed = r.isWeekly || (r.teamName && r.teamName.includes('[고정]'));
+                    b.className = `res-badge ${isFixed ? 'badge-fixed' : (r.status === 'pending' ? 'badge-pending' : 'badge-approved')}`;
                     b.textContent = r.teamName;
-                    if(isAdmin) { b.onclick = (e) => { e.stopPropagation(); openAdmin(r); }; }
+                    if(isAdmin) { 
+                        b.onclick = (e) => { 
+                            e.stopPropagation(); 
+                            openAdmin(r); 
+                        }; 
+                    }
                     cell.appendChild(b);
                 }
             });
-            cell.onclick = () => openBooking(dStr, day); container.appendChild(cell);
+            cell.onclick = () => openBooking(dStr, day); 
+            container.appendChild(cell);
         }
     }
 
-    function changeMonth(s) { currentDate.setMonth(currentDate.getMonth() + s); renderCalendar(); }
+    function changeMonth(s) { 
+        currentDate.setMonth(currentDate.getMonth() + s); 
+        renderCalendar(); 
+    }
 
     function openBooking(d, day) {
-        window.selectedDate = d; document.getElementById('modalTitle').textContent = d + " 예약 신청";
+        window.selectedDate = d; 
+        document.getElementById('modalTitle').textContent = d + " 예약 신청";
         document.getElementById('adminArea').style.display = 'none'; 
         document.getElementById('reservationForm').style.display = 'block';
+        
+        if(isAdmin) {
+            document.getElementById('adminCreateWeekly').style.display = 'block';
+            document.getElementById('createWeeklyToggle').checked = false;
+        }
 
         let listHTML = ''; 
         const cleanOccupied = []; 
@@ -369,13 +530,15 @@
                 const sortedTimes = [...r.times].sort(); 
                 const startTime = sortedTimes[0].split('-')[0].replace(/\s/g, ''); 
                 const endTime = sortedTimes[sortedTimes.length - 1].split('-')[1].replace(/\s/g, ''); 
+                const isFixed = r.isWeekly || (r.teamName && r.teamName.includes('[고정]'));
+                const fixedBadge = isFixed ? `<span style="color:#27ae60; font-size:11px; font-weight:bold; margin-left:4px;">(고정팀)</span>` : '';
                 
-                listHTML += `<div style="margin-bottom:6px;">• ${startTime}~${endTime} : ${r.teamName}</div>`;
+                listHTML += `<div style="margin-bottom:6px;">• ${startTime}~${endTime} : ${r.teamName} ${fixedBadge}</div>`;
                 r.times.forEach(s => cleanOccupied.push(s.replace(/\s/g, '')));
             }
         });
         
-        if(!listHTML) listHTML = '현재 비어있어 예약 가능합니다.';
+        if(!listHTML) listHTML = '현재 비어있어 모든 시간 예약 가능합니다.';
         document.getElementById('scheduleList').innerHTML = listHTML;
 
         const grid = document.getElementById('timeGrid');
@@ -383,23 +546,37 @@
         timeSlots.forEach((s, i) => {
             const cleanS = s.replace(/\s/g, ''); 
             const isBlocked = cleanOccupied.includes(cleanS); 
-            grid.innerHTML += `<input type="checkbox" id="s${i}" name="timeSlot" value="${s}" ${isBlocked ? 'disabled' : ''}><label for="s${i}">${s}</label>`;
+            grid.innerHTML += `<input type="checkbox" id="s${i}" name="timeSlot" value="${s}" onchange="updateLivePrice()" ${isBlocked ? 'disabled' : ''}><label for="s${i}">${s}</label>`;
         });
 
+        updateLivePrice();
         document.getElementById('teamName').value = '';
+        document.getElementById('bookerPhone').value = '';
         document.getElementById('reservationModal').style.display = 'flex';
     }
 
+    // [예약 신청 전송]
     document.getElementById('reservationForm').onsubmit = async (e) => {
         e.preventDefault(); 
         const times = Array.from(document.querySelectorAll('input[name="timeSlot"]:checked')).map(cb => cb.value);
+        if(!times.length) return alert('예약할 시간을 선택해주세요!');
         
-        // ★ 2시간 이상 필수 체크 로직 추가 ★
-        if(times.length < 2) return alert('기본 2시간 이상부터 예약 가능합니다!');
-        
+        const isWeeklyVal = isAdmin && document.getElementById('createWeeklyToggle').checked;
+
+        // 일반 사용자의 경우 기본 2시간 이상 필수
+        if (!isAdmin && !isWeeklyVal && times.length < 2) {
+            return alert('합주실 대관은 기본 2시간 이상부터 가능합니다. 시간을 2개 이상 선택해 주세요!');
+        }
+
+        const teamNameVal = document.getElementById('teamName').value.trim();
+        const phoneVal = document.getElementById('bookerPhone').value.trim();
+
+        if (!teamNameVal) return alert('합주팀 이름을 입력해주세요.');
+        if (!phoneVal || phoneVal.length < 10) return alert('올바른 휴대폰 번호를 입력해주세요.');
+
         const submitBtn = document.getElementById('submitBtn');
         submitBtn.disabled = true;
-        submitBtn.textContent = '처리 중...';
+        submitBtn.textContent = '신청 처리 중...';
 
         try {
             const response = await fetch(API_CREATE, {
@@ -408,8 +585,9 @@
                 body: JSON.stringify({
                     date: window.selectedDate,
                     times: times,
-                    teamName: document.getElementById('teamName').value,
-                    phone: '010-0000-0000' 
+                    teamName: teamNameVal,
+                    phone: phoneVal,
+                    isWeekly: isWeeklyVal
                 })
             });
 
@@ -420,31 +598,80 @@
                 return;
             }
 
-            alert(`✅ 예약이 성공적으로 접수되었습니다!\n\n빠른 확인을 위해 [ ${resData.amount.toLocaleString()}원 ]을 끝자리까지 정확히 입금해 주세요.`);
-            closeModal(); 
-            loadReservations(true); 
+            closeModal();
+            loadReservations(true);
+
+            if (isWeeklyVal) {
+                alert(`👑 [관리자] 고정팀 일정이 향후 24주간 성공적으로 일괄 등록되었습니다!`);
+            } else {
+                showResultModal(resData.amount);
+            }
 
         } catch (err) {
             console.error(err);
-            alert('서버와 통신할 수 없습니다. 다시 시도해 주세요.');
+            alert('서버와 통신할 수 없습니다. 잠시 후 다시 시도해 주세요.');
         } finally {
             submitBtn.disabled = false;
             submitBtn.textContent = '예약 신청';
         }
     };
 
+    function showResultModal(amount) {
+        document.getElementById('resultAmount').textContent = amount ? amount.toLocaleString() + '원' : '금액 계산 완료';
+        document.getElementById('resultModal').style.display = 'flex';
+    }
+
+    function closeResultModal() {
+        document.getElementById('resultModal').style.display = 'none';
+    }
+
+    function copyAccount() {
+        const text = "79793658974"; // 계좌번호 숫자만 복사
+        navigator.clipboard.writeText(text).then(() => {
+            const btn = document.getElementById('copyBtn');
+            btn.innerText = '복사완료!';
+            btn.style.background = '#27ae60';
+            setTimeout(() => {
+                btn.innerText = '복사';
+                btn.style.background = '#8a2be2';
+            }, 2000);
+        }).catch(() => {
+            alert('계좌번호: 카카오뱅크 7979-36-58974 (민경환)');
+        });
+    }
+
     function openAdmin(res) {
         if(!isAdmin) return;
-        currentId = res.id; 
+        currentId = res.id;
         document.getElementById('modalTitle').textContent = "[관리] " + res.teamName;
         document.getElementById('reservationForm').style.display = 'none'; 
         document.getElementById('adminArea').style.display = 'block';
-        document.getElementById('scheduleList').innerHTML = `날짜: ${res.date}<br>시간: ${res.times ? res.times.join(', ') : ''}`;
+
+        const statusBadge = res.status === 'confirmed' 
+            ? '<span style="color:#2ecc71; font-weight:bold;">✅ 승인 완료</span>' 
+            : '<span style="color:#f39c12; font-weight:bold;">⏳ 입금 대기중</span>';
+
+        const phoneDisplay = res.phone 
+            ? `${res.phone} <a href="tel:${res.phone}" style="color:#8a2be2; margin-left:8px; text-decoration:none; font-weight:bold;">📞 전화</a> <a href="sms:${res.phone}" style="color:#27ae60; margin-left:8px; text-decoration:none; font-weight:bold;">💬 문자</a>` 
+            : '연락처 없음';
+
+        const amountDisplay = res.amount ? `${res.amount.toLocaleString()}원` : '-';
+
+        document.getElementById('adminDetailBox').innerHTML = `
+            <strong>• 예약팀:</strong> ${res.teamName}<br>
+            <strong>• 연락처:</strong> ${phoneDisplay}<br>
+            <strong>• 날짜:</strong> ${res.date}<br>
+            <strong>• 시간:</strong> ${res.times ? res.times.join(', ') : ''}<br>
+            <strong>• 입금금액:</strong> <span style="color:#fff; font-weight:bold;">${amountDisplay}</span><br>
+            <strong>• 상태:</strong> ${statusBadge}
+        `;
+
         document.getElementById('reservationModal').style.display = 'flex';
     }
 
+    // [관리자 전용] 승인 처리 (문자 발송)
     async function updateStatus(s) { 
-        if(!confirm('입금이 확인되었습니까? 예약을 확정(승인) 처리합니다.')) return;
+        if(!confirm('입금이 확인되었습니까? 예약을 승인하고 손님에게 비밀번호 안내 문자를 발송합니다.')) return;
         
         const approveBtn = document.getElementById('approveBtn');
         approveBtn.textContent = '처리 중...';
@@ -457,15 +684,18 @@
             });
             if(!response.ok) throw new Error('업데이트 실패');
             
-            alert('✅ 성공적으로 승인되었습니다!');
+            alert('✅ 성공적으로 승인되었으며 손님에게 안내 문자가 발송되었습니다!');
             closeModal(); 
-            loadReservations(true); 
+            loadReservations(true);
         } catch (err) { 
             console.error(err); 
             alert('오류가 발생했습니다.');
-        } finally { approveBtn.textContent = '예약 승인'; }
+        } finally { 
+            approveBtn.textContent = '예약 승인 (문자 발송)'; 
+        }
     }
 
+    // [관리자 전용] 삭제 처리
     async function deleteRes() { 
         if(!confirm('정말 이 예약을 완전히 삭제하시겠습니까?')) return;
         
@@ -482,15 +712,20 @@
             
             alert('🗑️ 성공적으로 삭제되었습니다.');
             closeModal(); 
-            loadReservations(true); 
+            loadReservations(true);
         } catch (err) { 
             console.error(err); 
             alert('오류가 발생했습니다.');
-        } finally { deleteBtn.textContent = '삭제하기'; }
+        } finally { 
+            deleteBtn.textContent = '삭제하기'; 
+        }
     }
 
-    function closeModal() { document.getElementById('reservationModal').style.display = 'none'; }
+    function closeModal() { 
+        document.getElementById('reservationModal').style.display = 'none'; 
+    }
     
+    // 페이지 접속 시 0.1초 캐시 로드 시작
     loadReservations();
 </script>
 </body>
