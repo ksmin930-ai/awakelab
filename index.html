@@ -1280,12 +1280,12 @@
             try {
                 reservationsList = JSON.parse(cached);
                 renderCalendar();
-                if(isAdmin) badge.innerText = '🔄 동기화 확인 중...';
+                if (isAdmin && badge) badge.innerText = '🔄 동기화 확인 중...';
             } catch(e) {
                 console.error('캐시 파싱 에러:', e);
             }
         } else {
-            overlay.style.display = 'flex';
+            if (overlay) overlay.style.display = 'flex';
         }
         
         try {
@@ -1297,19 +1297,22 @@
             reservationsList = data;
             localStorage.setItem('awake_lab_reservations_v3', JSON.stringify(data));
             
-            overlay.style.display = 'none';
+            if (overlay) overlay.style.display = 'none';
             renderCalendar();
-            if(isAdmin) {
-                document.getElementById('adminTotalCount').textContent = reservationsList.length;
-                badge.innerText = '✅ 최신화 완료';
-                setTimeout(() => { badge.innerText = '🔄 ADMIN: 강제 동기화'; }, 2000);
+            if (isAdmin) {
+                const countEl = document.getElementById('adminTotalCount');
+                if (countEl) countEl.textContent = reservationsList.length;
+                if (badge) {
+                    badge.innerText = '✅ 최신화 완료';
+                    setTimeout(() => { badge.innerText = '🔄 ADMIN: 강제 동기화'; }, 2000);
+                }
             }
         } catch (error) {
             console.error(error);
-            if (!cached) {
+            if (!cached && overlay) {
                 overlay.innerHTML = `<div style="text-align:center; color:#ff4d4d;"><strong style="font-size:18px;">⚠️ 서버 연동 실패</strong></div>`;
             }
-            if(isAdmin) badge.innerText = '⚠️ 동기화 실패';
+            if (isAdmin && badge) badge.innerText = '⚠️ 동기화 실패';
         }
     }
 
@@ -1382,17 +1385,22 @@
             const countEl = document.getElementById('adminTotalCount');
             if (countEl) countEl.textContent = reservationsList.length;
 
-            // 대기 건수 뱃지
-            let pendingBadge = document.getElementById('pendingCountBadge');
-            if (!pendingBadge) {
-                pendingBadge = document.createElement('span');
-                pendingBadge.id = 'pendingCountBadge';
-                pendingBadge.className = 'pending-count-badge';
-                const adminTopBar = document.getElementById('adminTopBar');
-                if (adminTopBar) adminTopBar.querySelector('div:first-child').appendChild(pendingBadge);
+            // 대기 건수 뱃지 (안전한 렌더링)
+            const adminTopBar = document.getElementById('adminTopBar');
+            if (adminTopBar) {
+                let pendingBadge = document.getElementById('pendingCountBadge');
+                if (!pendingBadge) {
+                    pendingBadge = document.createElement('span');
+                    pendingBadge.id = 'pendingCountBadge';
+                    pendingBadge.className = 'pending-count-badge';
+                    const targetContainer = adminTopBar.querySelector('div') || adminTopBar;
+                    targetContainer.appendChild(pendingBadge);
+                }
+                if (pendingBadge) {
+                    pendingBadge.textContent = pendingCount > 0 ? `⏳ ${pendingCount}건 대기` : '✅ 대기없음';
+                    pendingBadge.style.background = pendingCount > 0 ? '#f39c12' : '#27ae60';
+                }
             }
-            pendingBadge.textContent = pendingCount > 0 ? `⏳ ${pendingCount}건 대기` : '✅ 대기없음';
-            pendingBadge.style.background = pendingCount > 0 ? '#f39c12' : '#27ae60';
         }
     }
 
