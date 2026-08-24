@@ -128,6 +128,30 @@
 
         .pass-plan-card { background: #0c0e17; border: 1px solid #242c44; border-radius: 14px; padding: 14px 16px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; transition: 0.2s; }
         .pass-plan-card:hover, .pass-plan-card.active { border-color: #2ecc71; background: rgba(46, 204, 113, 0.12); box-shadow: 0 0 15px rgba(46, 204, 113, 0.25); }
+
+        /* 오늘 날짜 원형 강조 */
+        .today .date-num { position: relative; display: inline-flex; align-items: center; justify-content: center; }
+        .today .date-num::after { content: ''; position: absolute; width: 28px; height: 28px; background: rgba(138, 43, 226, 0.25); border: 2px solid #8a2be2; border-radius: 50%; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: -1; }
+        .today { background: rgba(138, 43, 226, 0.04); border-radius: 14px; }
+        
+        /* 과거 날짜 셀 */
+        .date-cell.past { opacity: 0.4; cursor: default; }
+        .date-cell.past:hover { background: none !important; }
+
+        /* 예약 배지 개선 */
+        .res-badge .badge-time { font-size: 9px; opacity: 0.8; margin-right: 3px; font-weight: 600; }
+
+        /* 금액 변화 애니메이션 */
+        @keyframes priceFlash { 0% { color: #8a2be2; transform: scale(1.1); } 100% { color: #fff; transform: scale(1); } }
+        .price-flash { animation: priceFlash 0.4s ease; }
+
+        /* 대기 건수 뱃지 */
+        .pending-count-badge { background: #f39c12; color: #000; font-size: 11px; font-weight: 900; padding: 2px 8px; border-radius: 20px; margin-left: 6px; animation: pulse 2s infinite; }
+
+        /* 예약 완료 카드 */
+        .result-summary-card { background: #0a0a0a; border: 1px solid #333; border-radius: 16px; padding: 16px; margin-bottom: 16px; text-align: left; font-size: 13px; line-height: 2; }
+        .result-summary-card .rs-label { color: #777; }
+        .result-summary-card .rs-val { color: #fff; font-weight: 700; }
     </style>
 </head>
 <body>
@@ -141,10 +165,24 @@
     </div>
 </header>
 
+<div id="adminTopBar" style="display:none; background: linear-gradient(135deg, #141b2d, #1a2238); border: 1px solid #3d4d7a; color: #fff; padding: 14px 20px; border-radius: 16px; margin: 15px auto 0; max-width: 1400px; justify-content: space-between; align-items: center; box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
+    <div style="font-weight: 800; font-size: 14px; display: flex; align-items: center; gap: 8px;">
+        <span style="color:#2ecc71;">👑 [ADMIN] 관리자 모드 접속 중</span>
+        <span style="font-size: 12px; color: #aaa;">(총 <strong id="adminTotalCount" style="color:#fff;">0</strong>건 등록됨)</span>
+    </div>
+    <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+        <button type="button" onclick="loadReservations(true)" style="background: #252d47; color: #fff; border: 1px solid #3d4d7a; padding: 8px 14px; border-radius: 10px; font-size: 12px; font-weight: bold; cursor: pointer;">🔄 데이터 동기화</button>
+        <button type="button" onclick="openAdminListModal()" style="background: #8a2be2; color: #fff; border: none; padding: 8px 14px; border-radius: 10px; font-size: 12px; font-weight: bold; cursor: pointer; box-shadow: 0 4px 15px rgba(138,43,226,0.3);">📋 전체 예약 목록 / 삭제 관리</button>
+        <button type="button" onclick="clearAllTestData()" style="background: #c0392b; color: #fff; border: none; padding: 8px 14px; border-radius: 10px; font-size: 12px; font-weight: bold; cursor: pointer;">🧹 DB 전체 초기화</button>
+    </div>
+</div>
+
 <div id="adminBadge" class="admin-indicator" style="display:none;">
     <span onclick="loadReservations(true)" style="cursor:pointer;">🔄 동기화</span>
     <span style="margin:0 8px; opacity:0.6;">|</span>
-    <span onclick="clearAllTestData()" style="cursor:pointer; color:#ffb8b8;">🧹 DB 전체 초기화</span>
+    <span onclick="openAdminListModal()" style="cursor:pointer; color:#c49aee;">📋 전체목록</span>
+    <span style="margin:0 8px; opacity:0.6;">|</span>
+    <span onclick="clearAllTestData()" style="cursor:pointer; color:#ffb8b8;">🧹 DB초기화</span>
 </div>
 
 <div class="main-container">
@@ -444,7 +482,8 @@
             </div>
             <div id="adminDetailBox" style="background:#080808; border:1px solid #222; border-radius:12px; padding:15px; margin-bottom:15px; font-size:13px; line-height:1.8; color:#bbb;"></div>
             <div style="display:flex; flex-direction:column; gap:10px;">
-                <button class="btn" style="background:#27ae60; color:#fff" onclick="updateStatus('confirmed')" id="approveBtn">✅ 예약 승인 (확정 문자 발송)</button>
+                <button class="btn" style="background:#27ae60; color:#fff" onclick="updateStatus('confirmed')" id="approveBtn">✅ 이 날짜 예약 승인 (확정 문자 발송)</button>
+                <button class="btn" style="background:#1a7a4a; color:#fff; font-size:13px;" onclick="approveBatchRes()" id="approveBatchBtn" style="display:none;">🔁 이 팀 전체 일정 일괄 승인 (정기권/고정팀)</button>
                 <div class="btn-group">
                     <button class="btn" style="background:#c0392b; color:#fff; font-size:13px;" onclick="deleteRes('single')" id="deleteBtn">🗑️ 이 날짜만 삭제</button>
                     <button class="btn" style="background:#8e44ad; color:#fff; font-size:13px;" onclick="deleteRes('team')" id="deleteTeamBtn">💥 이 팀 전체 일정 삭제</button>
@@ -469,6 +508,14 @@
             <span style="color:#2ecc71; font-size:12px; font-weight:bold;">✅ 입금 확인 즉시 출입문 비밀번호 및 입실 안내가 문자로 자동 발송됩니다.</span>
         </div>
 
+        <!-- 예약 요약 카드 -->
+        <div class="result-summary-card">
+            <div><span class="rs-label">📅 날짜</span> &nbsp;<span class="rs-val" id="resultDate">-</span></div>
+            <div><span class="rs-label">⏱️ 시간</span> &nbsp;<span class="rs-val" id="resultTime">-</span></div>
+            <div><span class="rs-label">🎵 팀명</span> &nbsp;<span class="rs-val" id="resultTeam">-</span></div>
+            <div id="resultPassWeeksRow" style="display:none;"><span class="rs-label">📋 일정</span> &nbsp;<span class="rs-val" id="resultPassWeeks">-</span></div>
+        </div>
+
         <div style="background:#0a0a0a; border:1px solid #222; border-radius:16px; padding:16px; margin-bottom:20px; text-align:left; font-size:14px;">
             <div style="display:flex; justify-content:space-between; align-items:center;">
                 <div>
@@ -488,6 +535,29 @@
     </div>
 </div>
 
+<!-- 4. 관리자 전체 예약 목록 관리 모달 -->
+<div id="adminListModal" class="modal">
+    <div class="modal-content" style="max-width: 720px; max-height: 90vh;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+            <h3 style="margin:0; font-size:20px; color:#fff;">📋 DB 전체 예약 목록 (<span id="modalResCount" style="color:#8a2be2;">0</span>건)</h3>
+            <button type="button" onclick="closeAdminListModal()" style="background:none; border:none; color:#888; font-size:24px; cursor:pointer;">✕</button>
+        </div>
+        
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; background:rgba(255,255,255,0.03); padding:10px 14px; border-radius:12px; border:1px solid #222;">
+            <span style="font-size:12px; color:#aaa;">DB에 등록된 모든 예약(정기권 4주/고정팀 포함)을 조회 및 삭제합니다.</span>
+            <button type="button" onclick="clearAllTestData()" style="background:#c0392b; color:#fff; border:none; padding:7px 14px; border-radius:8px; font-size:12px; font-weight:bold; cursor:pointer;">🧹 DB 전체 초기화</button>
+        </div>
+
+        <div id="adminResTableContainer" style="max-height: 420px; overflow-y: auto; background: #080808; border: 1px solid #222; border-radius: 14px; padding: 6px;">
+            <!-- 동적 렌더링 -->
+        </div>
+
+        <div style="margin-top: 18px; text-align: right;">
+            <button type="button" class="btn btn-back" style="padding: 12px 25px;" onclick="closeAdminListModal()">닫기</button>
+        </div>
+    </div>
+</div>
+
 <script>
     const API_READ = "/.netlify/functions/read";
     const API_CREATE = "/.netlify/functions/create";
@@ -495,7 +565,10 @@
 
     const urlParams = new URLSearchParams(window.location.search);
     const isAdmin = urlParams.get('mode') === 'admin';
-    if(isAdmin) document.getElementById('adminBadge').style.display = 'block';
+    if(isAdmin) {
+        document.getElementById('adminBadge').style.display = 'block';
+        document.getElementById('adminTopBar').style.display = 'flex';
+    }
 
     let currentDate = new Date();
     const holidayData = { 
@@ -645,6 +718,12 @@
             document.getElementById('hoursNotice').textContent = `(기본 2시간~)`;
             document.getElementById('livePriceAmount').textContent = `${price.toLocaleString()}원`;
         }
+
+        // 금액 변경 시 플래시 애니메이션
+        const priceEl = document.getElementById('livePriceAmount');
+        priceEl.classList.remove('price-flash');
+        void priceEl.offsetWidth; // reflow
+        priceEl.classList.add('price-flash');
     }
 
     // 시간 버튼 클릭 시 2시간/3시간 단위 자동 선택 핸들러
@@ -748,6 +827,7 @@
             overlay.style.display = 'none';
             renderCalendar();
             if(isAdmin) {
+                document.getElementById('adminTotalCount').textContent = reservationsList.length;
                 badge.innerText = '✅ 최신화 완료';
                 setTimeout(() => { badge.innerText = '🔄 ADMIN: 강제 동기화'; }, 2000);
             }
@@ -769,6 +849,10 @@
         const firstDay = new Date(year, month, 1).getDay(); 
         const lastDate = new Date(year, month + 1, 0).getDate();
 
+        // KST 오늘 날짜 계산
+        const nowKST = new Date(Date.now() + 9 * 60 * 60 * 1000);
+        const todayStr = `${nowKST.getUTCFullYear()}-${String(nowKST.getUTCMonth()+1).padStart(2,'0')}-${String(nowKST.getUTCDate()).padStart(2,'0')}`;
+
         for (let i = 0; i < firstDay; i++) container.innerHTML += '<div class="date-cell empty"></div>';
         for (let i = 1; i <= lastDate; i++) {
             const cell = document.createElement('div'); 
@@ -778,14 +862,28 @@
             const hName = holidayData[dStr];
             let dClass = day === 0 || hName ? "sun-text" : day === 6 ? "sat-text" : "";
             cell.innerHTML = `<span class="date-num ${dClass}">${hName ? `<span class="holiday-name">${hName}</span>` : ''}${i}</span>`;
-            if (year === new Date().getFullYear() && month === new Date().getMonth() && i === new Date().getDate()) cell.classList.add('today');
+
+            // 오늘 날짜 원형 강조
+            if (dStr === todayStr) cell.classList.add('today');
+
+            // 과거 날짜 dim처리
+            if (dStr < todayStr) cell.classList.add('past');
 
             reservationsList.forEach(r => {
                 if (r.date === dStr) {
                     const b = document.createElement('div');
                     const isFixed = r.isWeekly || (r.teamName && (r.teamName.includes('[고정]') || r.teamName.includes('[정기권]')));
                     b.className = `res-badge ${isFixed ? 'badge-fixed' : (r.status === 'pending' ? 'badge-pending' : 'badge-approved')}`;
-                    b.textContent = r.teamName;
+
+                    // 배지에 시간 표시
+                    let timePrefix = '';
+                    if (r.times && r.times.length > 0) {
+                        const st = r.times[0].split('-')[0];
+                        const et = r.times[r.times.length - 1].split('-')[1];
+                        timePrefix = `<span class="badge-time">${st}~${et}</span>`;
+                    }
+                    b.innerHTML = timePrefix + (r.teamName || '');
+
                     if(isAdmin) { 
                         b.onclick = (e) => { 
                             e.stopPropagation(); 
@@ -795,8 +893,33 @@
                     cell.appendChild(b);
                 }
             });
-            cell.onclick = () => openBooking(dStr, day); 
+
+            // 과거 날짜는 팝업 차단
+            if (dStr < todayStr && !isAdmin) {
+                cell.onclick = () => { /* 과거 날짜 클릭 무시 */ };
+            } else {
+                cell.onclick = () => openBooking(dStr, day);
+            }
             container.appendChild(cell);
+        }
+
+        // 관리자: 대기중 예약 건수 뱃지 업데이트
+        if (isAdmin) {
+            const pendingCount = reservationsList.filter(r => r.status === 'pending').length;
+            const countEl = document.getElementById('adminTotalCount');
+            if (countEl) countEl.textContent = reservationsList.length;
+
+            // 대기 건수 뱃지
+            let pendingBadge = document.getElementById('pendingCountBadge');
+            if (!pendingBadge) {
+                pendingBadge = document.createElement('span');
+                pendingBadge.id = 'pendingCountBadge';
+                pendingBadge.className = 'pending-count-badge';
+                const adminTopBar = document.getElementById('adminTopBar');
+                if (adminTopBar) adminTopBar.querySelector('div:first-child').appendChild(pendingBadge);
+            }
+            pendingBadge.textContent = pendingCount > 0 ? `⏳ ${pendingCount}건 대기` : '✅ 대기없음';
+            pendingBadge.style.background = pendingCount > 0 ? '#f39c12' : '#27ae60';
         }
     }
 
@@ -923,7 +1046,7 @@
             if (isWeeklyVal) {
                 alert(`👑 [관리자] 고정팀 일정이 향후 24주간 성공적으로 일괄 등록되었습니다!`);
             } else {
-                showResultModal(resData.amount, resData.isPass, resData.planName);
+                showResultModal(resData);
             }
 
         } catch (err) {
@@ -935,15 +1058,32 @@
         }
     };
 
-    function showResultModal(amount, isPass = false, planName = '') {
+    function showResultModal(resData = {}) {
+        const { amount, isPass, planName, date, timeRange, teamName, weeksRegistered } = resData;
+
         document.getElementById('resultAmount').textContent = amount ? amount.toLocaleString() + '원' : '금액 계산 완료';
+
         if (isPass) {
             document.getElementById('resultTitle').textContent = "정기권 신청 완료 🎁";
-            document.getElementById('resultDesc').innerHTML = `<strong>${planName || '정기권'}</strong> 신청이 정상 접수되었습니다.<br>4주간 동일 요일/시간 선점 처리되며, 입금 확인 즉시 확정됩니다.`;
+            document.getElementById('resultDesc').innerHTML = `<strong>${planName || '정기권'}</strong> 신청이 정상 접수되었습니다.<br>동일 요일/시간 ${weeksRegistered || 4}주간 선점 처리되며, 입금 확인 즉시 확정됩니다.`;
+            const rowEl = document.getElementById('resultPassWeeksRow');
+            const weeksEl = document.getElementById('resultPassWeeks');
+            if (rowEl && weeksEl) {
+                rowEl.style.display = 'block';
+                weeksEl.textContent = `${date} 시작, 매주 동일 요일/시간 (${weeksRegistered || 4}주)`;
+            }
         } else {
             document.getElementById('resultTitle').textContent = "예약 신청 완료";
             document.getElementById('resultDesc').innerHTML = `예약 신청이 정상 접수되었습니다.<br>아래 계좌로 입금해 주시면 입금 확인 즉시 확정됩니다.`;
+            const rowEl = document.getElementById('resultPassWeeksRow');
+            if (rowEl) rowEl.style.display = 'none';
         }
+
+        // 요약 카드 채우기
+        if (document.getElementById('resultDate')) document.getElementById('resultDate').textContent = date || '-';
+        if (document.getElementById('resultTime')) document.getElementById('resultTime').textContent = timeRange || '-';
+        if (document.getElementById('resultTeam')) document.getElementById('resultTeam').textContent = teamName || document.getElementById('teamName')?.value || '-';
+
         document.getElementById('resultModal').style.display = 'flex';
     }
 
@@ -993,7 +1133,15 @@
             <strong>• 시간:</strong> ${res.times ? res.times.join(', ') : ''}<br>
             <strong>• 입금금액:</strong> <span style="color:#fff; font-weight:bold;">${amountDisplay}</span><br>
             <strong>• 상태:</strong> ${statusBadge}
+            ${res.reservationNo ? `<br><strong>• 예약번호:</strong> <span style="color:#888; font-size:12px;">${res.reservationNo}</span>` : ''}
         `;
+
+        // 정기권/고정팀은 일괄 승인 버튼 노출
+        const batchBtn = document.getElementById('approveBatchBtn');
+        if (batchBtn) {
+            const isBatch = res.reservationNo && (res.reservationNo.startsWith('PASS-') || res.reservationNo.startsWith('FIXED-'));
+            batchBtn.style.display = isBatch ? 'block' : 'none';
+        }
 
         document.getElementById('reservationModal').style.display = 'flex';
     }
@@ -1020,7 +1168,7 @@
             console.error(err); 
             alert('오류가 발생했습니다.');
         } finally { 
-            approveBtn.textContent = '✅ 예약 승인 (확정 문자 발송)'; 
+            approveBtn.textContent = '✅ 이 날짜 예약 승인 (확정 문자 발송)'; 
         }
     }
 
@@ -1074,12 +1222,143 @@
         }
     }
 
+    // [관리자 전용] 전체 예약 목록 모달 열기
+    function openAdminListModal() {
+        document.getElementById('modalResCount').textContent = reservationsList.length;
+        const container = document.getElementById('adminResTableContainer');
+
+        if (!reservationsList || reservationsList.length === 0) {
+            container.innerHTML = `<div style="text-align:center; color:#888; padding:30px;">현재 DB에 등록된 예약이 없습니다. (깨끗한 상태)</div>`;
+            document.getElementById('adminListModal').style.display = 'flex';
+            return;
+        }
+
+        const sorted = [...reservationsList].sort((a, b) => (a.date || '').localeCompare(b.date || ''));
+
+        let html = `
+            <table style="width:100%; border-collapse:collapse; font-size:13px; text-align:left;">
+                <thead>
+                    <tr style="border-bottom:1px solid #333; color:#4d94ff;">
+                        <th style="padding:10px 8px;">날짜</th>
+                        <th style="padding:10px 8px;">시간</th>
+                        <th style="padding:10px 8px;">팀 이름</th>
+                        <th style="padding:10px 8px;">상태</th>
+                        <th style="padding:10px 8px; text-align:center;">관리</th>
+                    </tr>
+                </thead>
+                <tbody>
+        `;
+
+        sorted.forEach(r => {
+            const timeStr = r.times && r.times.length ? `${r.times[0].split('-')[0]}~${r.times[r.times.length-1].split('-')[1]}` : '-';
+            const statusBadge = r.status === 'confirmed' 
+                ? '<span style="color:#2ecc71; font-weight:bold;">승인</span>' 
+                : '<span style="color:#f39c12; font-weight:bold;">대기</span>';
+            
+            html += `
+                <tr style="border-bottom:1px solid #181d2c;">
+                    <td style="padding:10px 8px; color:#fff; font-weight:bold;">${r.date}</td>
+                    <td style="padding:10px 8px; color:#aaa;">${timeStr}</td>
+                    <td style="padding:10px 8px; color:#fff;">${r.teamName}</td>
+                    <td style="padding:10px 8px;">${statusBadge}</td>
+                    <td style="padding:10px 8px; text-align:center; white-space:nowrap;">
+                        <button type="button" onclick="deleteResDirect('${r.id}')" style="background:#c0392b; color:#fff; border:none; padding:5px 9px; border-radius:6px; font-size:11px; font-weight:bold; cursor:pointer; margin-right:4px;">삭제</button>
+                        <button type="button" onclick="deleteTeamDirect('${encodeURIComponent(r.teamName)}')" style="background:#8e44ad; color:#fff; border:none; padding:5px 9px; border-radius:6px; font-size:11px; font-weight:bold; cursor:pointer;">팀전체삭제</button>
+                    </td>
+                </tr>
+            `;
+        });
+
+        html += `</tbody></table>`;
+        container.innerHTML = html;
+        document.getElementById('adminListModal').style.display = 'flex';
+    }
+
+    function closeAdminListModal() {
+        document.getElementById('adminListModal').style.display = 'none';
+    }
+
+    async function deleteResDirect(id) {
+        if (!confirm('정말 이 예약을 삭제하시겠습니까?')) return;
+        try {
+            const response = await fetch(API_UPDATE, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ action: 'delete', id: id })
+            });
+            if (!response.ok) throw new Error('삭제 실패');
+            alert('🗑️ 삭제되었습니다.');
+            await loadReservations(true);
+            openAdminListModal();
+        } catch(e) {
+            alert('삭제 중 오류가 발생했습니다.');
+        }
+    }
+
+    async function deleteTeamDirect(encodedTeam) {
+        const team = decodeURIComponent(encodedTeam);
+        if (!confirm(`정말 [${team}] 팀의 모든 일정(정기권/고정팀 등)을 일괄 삭제하시겠습니까?`)) return;
+        try {
+            const response = await fetch(API_UPDATE, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ action: 'delete', deleteBy: 'team_name', teamName: team })
+            });
+            if (!response.ok) throw new Error('삭제 실패');
+            alert(`🗑️ [${team}] 팀의 모든 일정이 일괄 삭제되었습니다.`);
+            await loadReservations(true);
+            openAdminListModal();
+        } catch(e) {
+            alert('일괄 삭제 중 오류가 발생했습니다.');
+        }
+    }
+
     function closeModal() { 
         document.getElementById('reservationModal').style.display = 'none'; 
     }
-    
+
+    // [관리자 전용] 정기권/고정팀 전체 일정 일괄 승인
+    async function approveBatchRes() {
+        if (!currentAdminRes || !currentAdminRes.reservationNo) return;
+        const resNo = currentAdminRes.reservationNo;
+        const teamName = currentAdminRes.teamName;
+
+        if (!confirm(`[${teamName}] 팀의 예약번호 ${resNo} 에 해당하는 모든 날짜를 일괄 승인하시겠습니까?\n(정기권 4주 / 고정팀 전체 동시 확정 + 손님에게 확정 문자 발송)`)) return;
+
+        const batchBtn = document.getElementById('approveBatchBtn');
+        if (batchBtn) batchBtn.textContent = '처리 중...';
+
+        try {
+            const response = await fetch(API_UPDATE, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ action: 'approve_batch', reservationNo: resNo })
+            });
+            if (!response.ok) throw new Error('일괄 승인 실패');
+
+            alert(`✅ [${teamName}] 팀의 모든 일정이 일괄 승인되었습니다!\n확정 안내 문자는 첫 번째 예약 건에만 발송됩니다.`);
+            closeModal();
+            loadReservations(true);
+        } catch (err) {
+            console.error(err);
+            alert('일괄 승인 중 오류가 발생했습니다.');
+        } finally {
+            if (batchBtn) batchBtn.textContent = '🔁 이 팀 전체 일정 일괄 승인 (정기권/고정팀)';
+        }
+    }
+
     // 페이지 접속 시 0.1초 캐시 로드 시작
     loadReservations();
+
+    // 3분마다 백그라운드 자동 갱신 (사용자가 모달 열지 않은 상태에서만)
+    setInterval(() => {
+        const modalOpen = document.getElementById('reservationModal').style.display === 'flex';
+        const resultOpen = document.getElementById('resultModal').style.display === 'flex';
+        if (!modalOpen && !resultOpen) {
+            loadReservations(true);
+        }
+    }, 3 * 60 * 1000);
+
 </script>
 </body>
 </html>

@@ -125,7 +125,7 @@ exports.handler = async (event) => {
     const startTime = sortedTimes[0].split('-')[0].trim();
     const endTime = sortedTimes[sortedTimes.length - 1].split('-')[1].trim();
 
-    const cleanPhone = (phone || '010-0000-0000').trim();
+    const cleanPhone = (phone || '').replace(/[^0-9]/g, '');
 
     const supabaseUrl = process.env.SUPABASE_URL;
     const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
@@ -196,6 +196,18 @@ exports.handler = async (event) => {
       };
     }
 
+    // ── 이하 일반 사용자 예약: KST 기준 과거 날짜 차단 ──
+    const nowKST = new Date(Date.now() + (9 * 60 * 60 * 1000));
+    const todayKST = `${nowKST.getUTCFullYear()}-${String(nowKST.getUTCMonth() + 1).padStart(2, '0')}-${String(nowKST.getUTCDate()).padStart(2, '0')}`;
+    if (date < todayKST) {
+      return { statusCode: 400, headers, body: JSON.stringify({ error: '오늘 이전 날짜에는 예약할 수 없습니다.' }) };
+    }
+
+    // 전화번호 필수 검증
+    if (!cleanPhone || cleanPhone.length < 10) {
+      return { statusCode: 400, headers, body: JSON.stringify({ error: '올바른 휴대폰 번호를 입력해주세요.' }) };
+    }
+
     // 3. 정기권 (월 4회 정기 우대) 신청인 경우 -> 4주간 동일 요일/시간 일괄 선점 등록
     if (category === 'pass') {
       const passPriceMap = {
@@ -222,6 +234,10 @@ exports.handler = async (event) => {
         const m = String(targetDate.getMonth() + 1).padStart(2, '0');
         const d = String(targetDate.getDate()).padStart(2, '0');
         const dateStr = `${y}-${m}-${d}`;
+
+        // 과거 날짜 자동 스킵 (오늘 이후만 등록)
+        if (dateStr < todayKST) continue;
+
         const periodStr = `[${dateStr} ${startTime}:00+09, ${dateStr} ${endTime}:00+09)`;
 
         rows.push({
@@ -234,6 +250,10 @@ exports.handler = async (event) => {
           base_amount: singleWeekAmount,
           amount: w === 0 ? passAmount : 0 // 첫 주에 총 입금액 기록
         });
+      }
+
+      if (rows.length === 0) {
+        return { statusCode: 400, headers, body: JSON.stringify({ error: '선택하신 날짜를 포함한 4주 일정이 모두 과거입니다. 다시 날짜를 선택해주세요.' }) };
       }
 
       const response = await fetch(`${supabaseUrl}/rest/v1/reservations`, {
@@ -250,7 +270,7 @@ exports.handler = async (event) => {
       if (!response.ok) {
         const errorData = await response.json();
         if (errorData.code === '23P01') {
-          return { statusCode: 409, headers, body: JSON.stringify({ error: '선택하신 시간(또는 정기권 4주 일정 중 일부)에 이미 등록된 예약이 존재합니다.\n\n이전에 테스트하신 예약이라면 관리자 모드(?mode=admin)에서 해당 예약을 클릭 후 [삭제하기]를 진행해 주세요.' }) };
+          return { statusCode: 409, headers, body: JSON.stringify({ error: '선택하신 시간(또는 정기권 4주 일정 중 일부)에 이미 등록된 예약이 존재합니다.\n\n관리자 모드에서 [📋 전체 예약 목록]을 열어 [팀전체삭제]로 기존 데이터를 정리한 후 다시 신청해 주세요.' }) };
         }
         throw new Error('Supabase 정기권 일괄 저장 실패');
       }
@@ -259,7 +279,7 @@ exports.handler = async (event) => {
       const passSms = `[AWAKE LAB] 정기권 예약 신청 접수
 • 예약팀: [정기권] ${teamName}
 • 플랜: ${selectedPlan.name}
-• 시작일시: ${date} (${startTime}~${endTime}) (월 4회)
+• 시작일시: ${date} (${startTime}~${endTime}) (월 ${rows.length}회)
 • 총 대관료: ${passAmount.toLocaleString()}원
 • 입금 계좌: 케이뱅크 100-111-300282 (예금주: 민경선)
 
@@ -276,8 +296,11 @@ exports.handler = async (event) => {
           amount: passAmount,
           baseAmount: passAmount,
           planName: selectedPlan.name,
+          teamName: teamName,
           date: date,
-          timeRange: `${startTime}~${endTime}`
+          timeRange: `${startTime}~${endTime}`,
+          weeksRegistered: rows.length,
+          reservationNo: batchResNo
         })
       };
     }
