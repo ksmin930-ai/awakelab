@@ -1420,8 +1420,8 @@
 
             reservationsList.forEach(r => {
                 if (r.date === dStr) {
-                    // 토요일 9-12 워십웨이커스 중복 DB 건 제외하고 렌더링
-                    if (day === 6 && r.teamName && r.teamName.includes('워십웨이커스') && r.times && r.times.every(t => ['09:00-10:00','10:00-11:00','11:00-12:00'].includes(t.replace(/\s/g, '')))) {
+                    // 토요일 09:00~12:00 구간의 모든 DB 데이터는 상시 고정 1줄로 통합 표기
+                    if (day === 6 && r.times && r.times.length > 0 && r.times.every(t => ['09:00-10:00','10:00-11:00','11:00-12:00'].includes(t.replace(/\s/g, '')))) {
                         return;
                     }
 
@@ -1525,7 +1525,7 @@
         let listHTML = ''; 
         const cleanOccupied = []; 
 
-        // [상시 고정] 매주 토요일 09:00~12:00 워십웨이커스 고정 선점 처리
+        // [상시 고정] 매주 토요일 09:00~12:00 워십웨이커스 고정 선점 처리 (단 1줄로 표기)
         if (day === 6) {
             listHTML += `<div style="margin-bottom:6px;">• 09:00~12:00 : [고정] 워십웨이커스 <span style="color:#27ae60; font-size:11px; font-weight:bold; margin-left:4px;">(매주 정기 합주)</span></div>`;
             cleanOccupied.push('09:00-10:00', '10:00-11:00', '11:00-12:00');
@@ -1533,8 +1533,8 @@
         
         reservationsList.forEach(r => {
             if (r.date === d && r.times && r.times.length > 0) {
-                // 토요일 9-12 워십웨이커스 DB 중복 표시 방지
-                if (day === 6 && r.teamName && r.teamName.includes('워십웨이커스') && r.times.every(t => ['09:00-10:00','10:00-11:00','11:00-12:00'].includes(t.replace(/\s/g, '')))) {
+                // 토요일 09:00~12:00 구간의 모든 DB 데이터는 중복 2줄 노출 방지
+                if (day === 6 && r.times.every(t => ['09:00-10:00','10:00-11:00','11:00-12:00'].includes(t.replace(/\s/g, '')))) {
                     return;
                 }
 
