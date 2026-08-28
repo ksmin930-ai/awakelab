@@ -160,6 +160,17 @@
         .result-summary-card { background: #0a0a0a; border: 1px solid #333; border-radius: 16px; padding: 16px; margin-bottom: 16px; text-align: left; font-size: 13px; line-height: 2; }
         .result-summary-card .rs-label { color: #777; }
         .result-summary-card .rs-val { color: #fff; font-weight: 700; }
+
+        /* FAQ 아코디언 스타일 */
+        .faq-list { display: flex; flex-direction: column; gap: 14px; max-width: 1000px; margin: 0 auto; width: 100%; }
+        .faq-card { background: #0d111b; border: 1px solid #232b40; border-radius: 16px; overflow: hidden; transition: 0.3s; }
+        .faq-card:hover { border-color: #8a2be2; box-shadow: 0 4px 20px rgba(138,43,226,0.18); }
+        .faq-question { padding: 20px 24px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; font-size: 15.5px; font-weight: 700; color: #fff; user-select: none; }
+        .faq-question .q-tag { background: rgba(138,43,226,0.2); color: #c49aee; padding: 4px 10px; border-radius: 8px; font-size: 13px; font-weight: 800; margin-right: 12px; }
+        .faq-arrow { font-size: 14px; color: #8a2be2; transition: transform 0.3s; }
+        .faq-card.open .faq-arrow { transform: rotate(180deg); }
+        .faq-answer { display: none; padding: 0 24px 22px 24px; color: #cbd5e1; font-size: 14px; line-height: 1.8; border-top: 1px solid #1a2236; }
+        .faq-card.open .faq-answer { display: block; }
     </style>
 </head>
 <body>
@@ -170,6 +181,7 @@
         <button class="nav-btn active" id="homeBtn" onclick="showTab('home')">예약 (HOME)</button>
         <button class="nav-btn" id="priceBtn" onclick="showTab('price')">요금표 (PRICE)</button>
         <button class="nav-btn" id="guideBtn" onclick="showTab('guide')">가이드 (GUIDE)</button>
+        <button class="nav-btn" id="faqBtn" onclick="showTab('faq')">Q&A (FAQ)</button>
         <button class="nav-btn" id="lookupBtn" onclick="showTab('lookup')" style="color:#64b5f6; border-color:rgba(77,148,255,0.3);">🔍 내 예약 조회</button>
     </div>
 </header>
@@ -441,6 +453,158 @@
 
             <div id="lookupResultContainer" style="display:none; max-width:600px; margin:20px auto 0; width:100%;">
                 <div id="lookupResultList" style="display:flex; flex-direction:column; gap:16px;"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 5. 자주 묻는 질문 탭 (FAQ / Q&A) -->
+    <div id="faqContent" class="tab-content">
+        <div class="guide-container">
+            <div class="guide-header-box" style="background: linear-gradient(135deg, #0b0c16, #1e1b4b);">
+                <h2>자주 묻는 질문</h2>
+                <div class="guide-header-line" style="background: #c49aee;"></div>
+                <p class="sub1" style="color: #e9d5ff;">궁금하신 점을 빠르고 명쾌하게 해결해 드립니다</p>
+                <p class="sub2">어웨이크 랩(AWAKE LAB) 예약 및 시설 이용 관련 핵심 Q&A</p>
+            </div>
+
+            <div class="faq-list">
+                <!-- Q1 -->
+                <div class="faq-card open">
+                    <div class="faq-question" onclick="toggleFaq(this)">
+                        <div>
+                            <span class="q-tag">예약/확정</span>
+                            <span>Q1. 예약 신청 후 언제 최종 확정되며, 출입 비밀번호는 언제 받나요?</span>
+                        </div>
+                        <span class="faq-arrow">▼</span>
+                    </div>
+                    <div class="faq-answer" style="display: block;">
+                        달력에서 원하시는 날짜와 시간을 선택 후 신청하시면 즉시 <strong>'입금 대기'</strong> 상태로 선점됩니다.<br>
+                        안내된 계좌(케이뱅크 100-111-300282 민경선)로 대관료를 입금해 주시면, 관리자가 입금 확인 즉시 <strong>건물 현관 출입문 비밀번호 및 합주실 원격 개방 안내 문자가 고객님의 휴대폰으로 자동 발송</strong>되며 최종 확정됩니다!
+                    </div>
+                </div>
+
+                <!-- Q2 -->
+                <div class="faq-card">
+                    <div class="faq-question" onclick="toggleFaq(this)">
+                        <div>
+                            <span class="q-tag">출입/입실</span>
+                            <span>Q2. 합주실 도어락(출입문)은 어떻게 열고 들어가나요?</span>
+                        </div>
+                        <span class="faq-arrow">▼</span>
+                    </div>
+                    <div class="faq-answer">
+                        1. <strong>건물 1층 초입 현관문</strong>: 예약 확정 시 문자로 발송된 비밀번호를 입력하여 열고 지하 1층으로 내려오시면 됩니다.<br>
+                        2. <strong>합주실 메인 방음 도어</strong>: 합주실 문 앞 도착 후 관리자 번호(<code>010-6240-6569</code>)로 '도착했습니다' 문자를 남겨주시면 관리자가 확인 즉시 <strong>원격으로 문을 열어드립니다!</strong>
+                    </div>
+                </div>
+
+                <!-- Q3 -->
+                <div class="faq-card">
+                    <div class="faq-question" onclick="toggleFaq(this)">
+                        <div>
+                            <span class="q-tag">정기권 혜택</span>
+                            <span>Q3. 정기권(월 4회)과 매주 고정팀 혜택 및 신청 방법은 어떻게 되나요?</span>
+                        </div>
+                        <span class="faq-arrow">▼</span>
+                    </div>
+                    <div class="faq-answer">
+                        정기권은 <strong>월 4회 고정 시간 선점 + 최대 7만 원 파격 할인</strong> 혜택이 적용되는 특별 우대 상품입니다.<br>
+                        • <strong>⛪ 교회형 정기권 (주말)</strong>: A형(회당 2h) 20만 원(4만 할인) / B형(회당 3h) 29만 원(7만 할인)<br>
+                        • <strong>🏢 직장형 정기권 (주중)</strong>: A형(회당 2h) 16만 원(4만 할인) / B형(회당 3h) 27.6만 원(7만 할인)<br>
+                        👉 예약 신청 창에서 <strong>[🎁 정기권 (월 4회 할인)]</strong> 탭을 누르고 신청하시면 향후 4주간 동일 요일/시간이 자동으로 일괄 선점됩니다!
+                    </div>
+                </div>
+
+                <!-- Q4 -->
+                <div class="faq-card">
+                    <div class="faq-question" onclick="toggleFaq(this)">
+                        <div>
+                            <span class="q-tag">대관 기준</span>
+                            <span>Q4. 기본 대관 시간 및 최소 이용 기준이 있나요?</span>
+                        </div>
+                        <span class="faq-arrow">▼</span>
+                    </div>
+                    <div class="faq-answer">
+                        악기 세팅 및 쾌적하고 여유 있는 합주를 위해 일반 대관은 <strong>최소 2시간 이상부터</strong> 예약 가능합니다.<br>
+                        예약 창에서 <strong>합주 시작 시간과 종료 시간을 차례로 클릭</strong>하시면 중간 시간대가 자동으로 일괄 선택되어 아주 편리하게 신청하실 수 있습니다.
+                    </div>
+                </div>
+
+                <!-- Q5 -->
+                <div class="faq-card">
+                    <div class="faq-question" onclick="toggleFaq(this)">
+                        <div>
+                            <span class="q-tag">장비/음향</span>
+                            <span>Q5. 합주실 내 구비 장비(콘솔/건반/앰프/드럼) 스펙이 어떻게 되나요?</span>
+                        </div>
+                        <span class="faq-arrow">▼</span>
+                    </div>
+                    <div class="faq-answer">
+                        프로 밴드 및 워십 사운드를 위해 엄선된 전문 장비가 완비되어 있습니다:<br>
+                        • <strong>콘솔</strong>: Behringer X32 Compact + Midas DL32 (스테이지 랙 완비)<br>
+                        • <strong>메인 피아노</strong>: Yamaha P-225 (88건반)<br>
+                        • <strong>신디사이저</strong>: Yamaha Motif 7<br>
+                        • <strong>기타 앰프</strong>: Fender Champion II 100<br>
+                        • <strong>베이스 앰프</strong>: Ashdown Bass Amp<br>
+                        • <strong>드럼</strong>: TAMA Drum & Zildjian A Custom Set (차음 쉴드 완비)<br>
+                        • <strong>마이크/음향</strong>: 다이나믹 마이크 다수 (슈어 SM58 / TM58 등) + 메인 PA 시스템
+                    </div>
+                </div>
+
+                <!-- Q6 -->
+                <div class="faq-card">
+                    <div class="faq-question" onclick="toggleFaq(this)">
+                        <div>
+                            <span class="q-tag">주차/오시는길</span>
+                            <span>Q6. 주차 공간 및 무거운 악기 하차가 가능한가요?</span>
+                        </div>
+                        <span class="faq-arrow">▼</span>
+                    </div>
+                    <div class="faq-answer">
+                        • <strong>위치</strong>: 경기 용인시 수지구 죽전로168번길 19 지하 1층 (고수찜닭 건물 B1)<br>
+                        • <strong>주차</strong>: 건물 전면 주차 공간 또는 인근 골목/공영 주차 공간을 이용하실 수 있습니다.<br>
+                        • <strong>장비 하차</strong>: 드럼 스네어, 페달, 베이스/기타 앰프 등 무거운 장비 하차 시 건물 바로 앞 일시 정차가 가능합니다.
+                    </div>
+                </div>
+
+                <!-- Q7 -->
+                <div class="faq-card">
+                    <div class="faq-question" onclick="toggleFaq(this)">
+                        <div>
+                            <span class="q-tag">이용 수칙</span>
+                            <span>Q7. 실내화 착용 및 음식물/음료 반입 규정은 어떻게 되나요?</span>
+                        </div>
+                        <span class="faq-arrow">▼</span>
+                    </div>
+                    <div class="faq-answer">
+                        • <strong>실내화 착용 필수</strong>: 쾌적한 환경 유지를 위해 외부 신발 착용은 불가하며, 입구에 비치된 전용 실내화를 착용해 주세요.<br>
+                        • <strong>음식물 반입 불가</strong>: 고가 음향 장비 보호를 위해 음식물 및 취사는 엄격히 금지됩니다.<br>
+                        • <strong>음료</strong>: 뚜껑이 있는 텀블러나 생수병에 한해 반입 가능합니다.<br>
+                        • <strong>퇴실 매너</strong>: 다음 팀을 위해 퇴실 5분 전 장비 전원 OFF 및 조명 소등, 악보 정리를 부탁드립니다.
+                    </div>
+                </div>
+
+                <!-- Q8 -->
+                <div class="faq-card">
+                    <div class="faq-question" onclick="toggleFaq(this)">
+                        <div>
+                            <span class="q-tag">안전/보안</span>
+                            <span>Q8. 늦은 시간이나 야간 이용 시 안전/보안은 어떤가요?</span>
+                        </div>
+                        <span class="faq-arrow">▼</span>
+                    </div>
+                    <div class="faq-answer">
+                        어웨이크 랩은 <strong>ADT 캡스(SK쉴더스) 24시간 무인 출동 경비 시스템 및 실시간 CCTV 보안</strong>이 철저하게 가동 중입니다.<br>
+                        늦은 밤이나 새벽 시간대, 혹은 여성/청소년 밴드도 외부 침입이나 위험 걱정 없이 <strong>오직 음악과 합주에만 안심하고 집중</strong>하실 수 있습니다. 🛡️
+                    </div>
+                </div>
+            </div>
+
+            <!-- 하단 1:1 문의 배너 -->
+            <div style="background: linear-gradient(135deg, #181d2c, #1f273d); border: 1px solid #334155; border-radius: 18px; padding: 24px; text-align: center; margin-top: 15px;">
+                <h4 style="margin: 0 0 8px 0; color: #fff; font-size: 17px;">💬 더 궁금한 점이 있으신가요?</h4>
+                <p style="margin: 0 0 16px 0; color: #94a3b8; font-size: 13px;">관리자 연락처로 문자 남겨주시면 가장 빠르고 친절하게 답변해 드립니다.</p>
+                <a href="tel:010-6240-6569" style="display: inline-block; background: linear-gradient(135deg, #8a2be2, #4a00e0); color: #fff; text-decoration: none; padding: 12px 24px; border-radius: 12px; font-weight: 800; font-size: 14px; box-shadow: 0 4px 15px rgba(138,43,226,0.4);">📞 010-6240-6569 문자/전화 문의</a>
             </div>
         </div>
     </div>
@@ -1189,11 +1353,29 @@
         });
     }
 
+    // FAQ 아코디언 토글
+    function toggleFaq(el) {
+        const card = el.closest('.faq-card');
+        if (!card) return;
+        const answer = card.querySelector('.faq-answer');
+        const isOpen = card.classList.contains('open');
+
+        if (isOpen) {
+            card.classList.remove('open');
+            if (answer) answer.style.display = 'none';
+        } else {
+            card.classList.add('open');
+            if (answer) answer.style.display = 'block';
+        }
+    }
+
     function showTab(t) {
         document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
         document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-        document.getElementById(t + 'Content').classList.add('active');
-        document.getElementById(t + 'Btn').classList.add('active');
+        const targetContent = document.getElementById(t + 'Content');
+        const targetBtn = document.getElementById(t + 'Btn');
+        if (targetContent) targetContent.classList.add('active');
+        if (targetBtn) targetBtn.classList.add('active');
 
         // 조회 탭으로 진입 시 결과창 초기화
         if (t === 'lookup') {
