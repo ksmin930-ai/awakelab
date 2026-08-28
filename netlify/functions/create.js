@@ -165,6 +165,21 @@ exports.handler = async (event) => {
       return { statusCode: 400, headers, body: JSON.stringify({ error: '올바른 휴대폰 번호를 입력해주세요.' }) };
     }
 
+    // [상시 고정] 매주 토요일 09:00~12:00 워십웨이커스 고정 시간 검증
+    const [chkY, chkM, chkD] = (date || '').split('-').map(Number);
+    const dayOfWeek = new Date(chkY, chkM - 1, chkD).getDay();
+    if (dayOfWeek === 6 && !isAdmin) {
+      const fixedSlots = ['09:00-10:00', '10:00-11:00', '11:00-12:00'];
+      const hasConflict = times.some(t => fixedSlots.includes(t.replace(/\s/g, '')));
+      if (hasConflict) {
+        return { 
+          statusCode: 400, 
+          headers, 
+          body: JSON.stringify({ error: '매주 토요일 09:00~12:00는 워십웨이커스 정기 고정 합주 시간으로 예약이 불가합니다.' }) 
+        };
+      }
+    }
+
     // 3. 정기권 (월 4회 정기 우대) 신청인 경우 -> 4주간 동일 요일/시간 일괄 선점 등록
     if (category === 'pass') {
       const passPriceMap = {
