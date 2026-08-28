@@ -548,6 +548,71 @@
     </div>
 </div>
 
+<!-- 신청 정보 최종 확인 모달 -->
+<div id="confirmBookingModal" class="modal" style="z-index: 10000;">
+    <div class="modal-content" style="max-width: 460px; padding: 26px 22px; text-align: left; background: #12151e; border: 1px solid #2d3748; border-radius: 22px; box-shadow: 0 25px 60px rgba(0,0,0,0.85);">
+        <!-- 상단 타이틀 & 닫기 -->
+        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 18px;">
+            <div style="display: flex; align-items: center; gap: 12px;">
+                <div style="width: 40px; height: 40px; border-radius: 12px; background: rgba(77, 148, 255, 0.15); border: 1px solid rgba(77, 148, 255, 0.35); display: flex; align-items: center; justify-content: center; font-size: 20px;">
+                    🛡️
+                </div>
+                <div>
+                    <h3 style="margin: 0; font-size: 18px; color: #fff; font-weight: 800; letter-spacing: -0.5px;">신청 정보 최종 확인</h3>
+                    <p style="margin: 3px 0 0; font-size: 12px; color: #94a3b8;">오타나 잘못된 번호가 없는지 한 번 더 확인해 주세요</p>
+                </div>
+            </div>
+            <button type="button" onclick="closeConfirmBookingModal()" style="background: none; border: none; color: #64748b; font-size: 22px; cursor: pointer; padding: 4px; line-height: 1;">✕</button>
+        </div>
+
+        <!-- 신청 내역 요약 카드 -->
+        <div style="background: #181d2c; border: 1px solid #232b40; border-radius: 16px; padding: 16px 18px; margin-bottom: 14px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; padding-bottom: 10px; border-bottom: 1px solid #21293e;">
+                <span style="color: #94a3b8; font-size: 13px;">신청 항목</span>
+                <span id="confirmCategoryBadge" style="font-size: 12px; font-weight: 800; color: #2ecc71; background: rgba(46, 204, 113, 0.15); padding: 4px 10px; border-radius: 8px; border: 1px solid rgba(46, 204, 113, 0.3);">일반 대관 (2시간)</span>
+            </div>
+            <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid #21293e;">
+                <span style="color: #94a3b8; font-size: 13px;">예약 날짜</span>
+                <strong id="confirmDate" style="color: #fff; font-size: 14px;">2026-08-29 (토)</strong>
+            </div>
+            <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid #21293e;">
+                <span style="color: #94a3b8; font-size: 13px;">합주 시간</span>
+                <strong id="confirmTime" style="color: #fff; font-size: 14px;">09:00 ~ 11:00 (2시간)</strong>
+            </div>
+            <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid #21293e;">
+                <span style="color: #94a3b8; font-size: 13px;">예약자 / 팀명</span>
+                <strong id="confirmTeam" style="color: #fff; font-size: 15px; font-weight: 800;">민경선</strong>
+            </div>
+            <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid #21293e;">
+                <span style="color: #94a3b8; font-size: 13px;">발급 연락처</span>
+                <strong id="confirmPhone" style="color: #3b82f6; font-size: 16px; font-weight: 900; letter-spacing: 0.5px;">010-6240-6569</strong>
+            </div>
+            <div style="display: flex; justify-content: space-between; align-items: center; padding-top: 10px;">
+                <span style="color: #94a3b8; font-size: 13px;">총 대관료</span>
+                <strong id="confirmAmount" style="color: #c49aee; font-size: 18px; font-weight: 900;">50,000원</strong>
+            </div>
+        </div>
+
+        <!-- 알림 안내 배너 -->
+        <div style="background: rgba(245, 158, 11, 0.1); border: 1px solid rgba(245, 158, 11, 0.3); border-radius: 12px; padding: 11px 14px; margin-bottom: 20px; display: flex; align-items: flex-start; gap: 10px;">
+            <span style="font-size: 15px; line-height: 1.2;">⚠️</span>
+            <span style="color: #fbbf24; font-size: 12px; line-height: 1.5; font-weight: 600;">
+                위 번호로 입금 확인 및 출입 안내(도어락 비밀번호) 문자가 발송됩니다. 번호가 맞는지 꼭 확인해 주세요!
+            </span>
+        </div>
+
+        <!-- 하단 버튼 2개 -->
+        <div style="display: flex; gap: 10px;">
+            <button type="button" onclick="closeConfirmBookingModal()" style="flex: 1; padding: 14px 0; background: #1e2538; border: 1px solid #334155; color: #cbd5e1; font-size: 14px; font-weight: 700; border-radius: 12px; cursor: pointer; transition: 0.2s;">
+                다시 확인하기 (수정)
+            </button>
+            <button type="button" id="confirmFinalSubmitBtn" onclick="executeActualReservation()" style="flex: 1.3; padding: 14px 0; background: linear-gradient(135deg, #2563eb, #7c3aed); border: none; color: #fff; font-size: 15px; font-weight: 800; border-radius: 12px; cursor: pointer; box-shadow: 0 4px 16px rgba(37, 99, 235, 0.4); transition: 0.2s;">
+                예약 신청
+            </button>
+        </div>
+    </div>
+</div>
+
 <!-- 예약 완료 팝업 모달 -->
 <div id="resultModal" class="modal">
     <div class="modal-content" style="text-align:center;">
@@ -1477,8 +1542,16 @@
         document.getElementById('reservationModal').style.display = 'flex';
     }
 
-    // [예약 신청 전송]
-    document.getElementById('reservationForm').onsubmit = async (e) => {
+    // [신청 정보 최종 확인 모달 열기/닫기 및 실제 전송 파이프라인]
+    let pendingBookingData = null;
+
+    function closeConfirmBookingModal() {
+        const modal = document.getElementById('confirmBookingModal');
+        if (modal) modal.style.display = 'none';
+    }
+
+    // 1단계: 폼 제출 시 바로 저장하지 않고 최종 확인 모달을 띄움
+    document.getElementById('reservationForm').onsubmit = (e) => {
         e.preventDefault(); 
         const times = Array.from(document.querySelectorAll('input[name="timeSlot"]:checked')).map(cb => cb.value);
         if(!times.length) return alert('예약할 시간을 선택해주세요!');
@@ -1494,27 +1567,109 @@
         const phoneVal = document.getElementById('bookerPhone').value.trim();
 
         if (!teamNameVal) return alert('합주팀 이름을 입력해주세요.');
-        if (!phoneVal || phoneVal.length < 10) return alert('올바른 휴대폰 번호를 입력해주세요.');
+        if (!phoneVal || phoneVal.replace(/[^0-9]/g, '').length < 10) return alert('올바른 휴대폰 번호를 입력해주세요.');
 
+        // 요금 계산
+        let totalPrice = 0;
+        let categoryText = `일반 대관 (${times.length}시간)`;
+        let categoryBadgeStyle = 'color:#4d94ff; background:rgba(77,148,255,0.15); border-color:rgba(77,148,255,0.3);';
+
+        if (currentBookingCategory === 'pass') {
+            const passPrices = {
+                'church_a': 200000,
+                'church_b': 290000,
+                'work_a': 160000,
+                'work_b': 276000
+            };
+            const planTitles = {
+                'church_a': '교회형 정기권 A (주말 2h)',
+                'church_b': '교회형 정기권 B (주말 3h)',
+                'work_a': '직장형 정기권 A (주중 2h)',
+                'work_b': '직장형 정기권 B (주중 3h)'
+            };
+            totalPrice = passPrices[currentPassPlan] || 200000;
+            const pTitle = planTitles[currentPassPlan] || '정기권 4회';
+            categoryText = `🎁 ${pTitle}`;
+            categoryBadgeStyle = 'color:#c49aee; background:rgba(138,43,226,0.15); border-color:rgba(138,43,226,0.3);';
+        } else if (isWeeklyVal) {
+            totalPrice = calculatePrice(window.selectedDate, times) * 24;
+            categoryText = `👑 24주 고정팀 (${times.length}시간)`;
+            categoryBadgeStyle = 'color:#2ecc71; background:rgba(39,174,96,0.15); border-color:rgba(39,174,96,0.3);';
+        } else {
+            totalPrice = calculatePrice(window.selectedDate, times);
+        }
+
+        // 요일 및 날짜 포맷팅
+        const days = ['일', '월', '화', '수', '목', '금', '토'];
+        const [y, m, d] = (window.selectedDate || '').split('-').map(Number);
+        const dayIdx = new Date(y, m - 1, d).getDay();
+        const dayName = isNaN(dayIdx) ? '' : ` (${days[dayIdx]})`;
+        const formattedDate = `${window.selectedDate || '-'}${dayName}`;
+
+        // 시간 범위 문자열
+        const sortedTimes = [...times].sort();
+        const timeRangeStr = sortedTimes.length === 1 
+            ? `${sortedTimes[0]} (1시간)`
+            : `${sortedTimes[0].split('-')[0]} ~ ${sortedTimes[sortedTimes.length-1].split('-')[1]} (${sortedTimes.length}시간)`;
+
+        // 최종 확인 모달 엘리먼트 채우기
+        const badgeEl = document.getElementById('confirmCategoryBadge');
+        if (badgeEl) {
+            badgeEl.textContent = categoryText;
+            badgeEl.style.cssText = `font-size:12px; font-weight:800; padding:4px 10px; border-radius:8px; border:1px solid; ${categoryBadgeStyle}`;
+        }
+        if (document.getElementById('confirmDate')) document.getElementById('confirmDate').textContent = formattedDate;
+        if (document.getElementById('confirmTime')) document.getElementById('confirmTime').textContent = timeRangeStr;
+        if (document.getElementById('confirmTeam')) document.getElementById('confirmTeam').textContent = teamNameVal;
+        if (document.getElementById('confirmPhone')) document.getElementById('confirmPhone').textContent = phoneVal;
+        if (document.getElementById('confirmAmount')) document.getElementById('confirmAmount').textContent = `${totalPrice.toLocaleString()}원`;
+
+        // 보류 중인 신청 데이터 저장
+        pendingBookingData = {
+            date: window.selectedDate,
+            times: times,
+            teamName: teamNameVal,
+            phone: phoneVal,
+            isWeekly: isWeeklyVal,
+            category: currentBookingCategory,
+            passPlan: currentPassPlan,
+            amount: totalPrice
+        };
+
+        // 최종 확인 모달 띄우기
+        document.getElementById('confirmBookingModal').style.display = 'flex';
+    };
+
+    // 2단계: 최종 확인 모달에서 '예약 신청' 버튼 클릭 시 실제 API 호출 및 처리
+    async function executeActualReservation() {
+        if (!pendingBookingData) return;
+
+        const confirmBtn = document.getElementById('confirmFinalSubmitBtn');
         const submitBtn = document.getElementById('submitBtn');
-        submitBtn.disabled = true;
-        submitBtn.textContent = '신청 처리 중...';
+        if (confirmBtn) {
+            confirmBtn.disabled = true;
+            confirmBtn.textContent = '신청 처리 중...';
+        }
+        if (submitBtn) {
+            submitBtn.disabled = true;
+            submitBtn.textContent = '신청 처리 중...';
+        }
 
         try {
             const createHeaders = { 'Content-Type': 'application/json' };
-            if (isWeeklyVal) createHeaders['X-Admin-Token'] = getAdminToken();
+            if (pendingBookingData.isWeekly) createHeaders['X-Admin-Token'] = getAdminToken();
 
             const response = await fetch(API_CREATE, {
                 method: 'POST',
                 headers: createHeaders,
                 body: JSON.stringify({
-                    date: window.selectedDate,
-                    times: times,
-                    teamName: teamNameVal,
-                    phone: phoneVal,
-                    isWeekly: isWeeklyVal,
-                    category: currentBookingCategory,
-                    passPlan: currentPassPlan
+                    date: pendingBookingData.date,
+                    times: pendingBookingData.times,
+                    teamName: pendingBookingData.teamName,
+                    phone: pendingBookingData.phone,
+                    isWeekly: pendingBookingData.isWeekly,
+                    category: pendingBookingData.category,
+                    passPlan: pendingBookingData.passPlan
                 })
             });
 
@@ -1525,10 +1680,11 @@
                 return;
             }
 
+            closeConfirmBookingModal();
             closeModal();
             loadReservations(true);
 
-            if (isWeeklyVal) {
+            if (pendingBookingData.isWeekly) {
                 alert(`👑 [관리자] 고정팀 일정이 향후 24주간 성공적으로 일괄 등록되었습니다!`);
             } else {
                 showResultModal(resData);
@@ -1538,10 +1694,17 @@
             console.error(err);
             alert('서버와 통신할 수 없습니다. 잠시 후 다시 시도해 주세요.');
         } finally {
-            submitBtn.disabled = false;
-            submitBtn.textContent = '예약 신청';
+            if (confirmBtn) {
+                confirmBtn.disabled = false;
+                confirmBtn.textContent = '예약 신청';
+            }
+            if (submitBtn) {
+                submitBtn.disabled = false;
+                submitBtn.textContent = '예약 신청';
+            }
+            pendingBookingData = null;
         }
-    };
+    }
 
     function showResultModal(resData = {}) {
         const { amount, isPass, planName, date, timeRange, teamName, weeksRegistered } = resData;
@@ -1970,11 +2133,13 @@
     // 페이지 접속 시 0.1초 캐시 로드 시작
     loadReservations();
 
-    // 3분마다 백그라운드 자동 갱신 (사용자가 모달 열지 않은 상태에서만)
+    // 3분마다 백그라운드 자동 갱신 (사용자가 어떤 모달도 열지 않은 상태에서만)
     setInterval(() => {
-        const modalOpen = document.getElementById('reservationModal').style.display === 'flex';
-        const resultOpen = document.getElementById('resultModal').style.display === 'flex';
-        if (!modalOpen && !resultOpen) {
+        const modalOpen = document.getElementById('reservationModal')?.style.display === 'flex';
+        const resultOpen = document.getElementById('resultModal')?.style.display === 'flex';
+        const confirmOpen = document.getElementById('confirmBookingModal')?.style.display === 'flex';
+        const adminListOpen = document.getElementById('adminListModal')?.style.display === 'flex';
+        if (!modalOpen && !resultOpen && !confirmOpen && !adminListOpen) {
             loadReservations(true);
         }
     }, 3 * 60 * 1000);
