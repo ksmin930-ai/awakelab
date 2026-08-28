@@ -1410,8 +1410,21 @@
             // 과거 날짜 dim처리
             if (dStr < todayStr) cell.classList.add('past');
 
+            // 1. [상시 고정] 매주 토요일 09:00~12:00 워십웨이커스 고정 배지 표시
+            if (day === 6) {
+                const b = document.createElement('div');
+                b.className = 'res-badge badge-fixed';
+                b.innerHTML = '<span class="badge-time">09:00~12:00</span>[고정] 워십웨이커스';
+                cell.appendChild(b);
+            }
+
             reservationsList.forEach(r => {
                 if (r.date === dStr) {
+                    // 토요일 09:00~12:00 구간의 모든 DB 데이터는 상시 고정 1줄로 통합 표기
+                    if (day === 6 && r.times && r.times.length > 0 && r.times.every(t => ['09:00-10:00','10:00-11:00','11:00-12:00'].includes(t.replace(/\s/g, '')))) {
+                        return;
+                    }
+
                     const b = document.createElement('div');
                     const isFixed = r.isWeekly || (r.teamName && (r.teamName.includes('[고정]') || r.teamName.includes('[정기권]')));
                     b.className = `res-badge ${isFixed ? 'badge-fixed' : (r.status === 'pending' ? 'badge-pending' : 'badge-approved')}`;
@@ -1511,9 +1524,20 @@
 
         let listHTML = ''; 
         const cleanOccupied = []; 
+
+        // [상시 고정] 매주 토요일 09:00~12:00 워십웨이커스 고정 선점 처리 (단 1줄로 표기)
+        if (day === 6) {
+            listHTML += `<div style="margin-bottom:6px;">• 09:00~12:00 : [고정] 워십웨이커스 <span style="color:#27ae60; font-size:11px; font-weight:bold; margin-left:4px;">(매주 정기 합주)</span></div>`;
+            cleanOccupied.push('09:00-10:00', '10:00-11:00', '11:00-12:00');
+        }
         
         reservationsList.forEach(r => {
             if (r.date === d && r.times && r.times.length > 0) {
+                // 토요일 09:00~12:00 구간의 모든 DB 데이터는 중복 2줄 노출 방지
+                if (day === 6 && r.times.every(t => ['09:00-10:00','10:00-11:00','11:00-12:00'].includes(t.replace(/\s/g, '')))) {
+                    return;
+                }
+
                 const sortedTimes = [...r.times].sort(); 
                 const startTime = sortedTimes[0].split('-')[0].replace(/\s/g, ''); 
                 const endTime = sortedTimes[sortedTimes.length - 1].split('-')[1].replace(/\s/g, ''); 
