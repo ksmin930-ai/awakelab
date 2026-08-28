@@ -171,29 +171,6 @@
         .faq-card.open .faq-arrow { transform: rotate(180deg); }
         .faq-answer { display: none; padding: 0 24px 22px 24px; color: #cbd5e1; font-size: 14px; line-height: 1.8; border-top: 1px solid #1a2236; }
         .faq-card.open .faq-answer { display: block; }
-
-        /* 이용 후기(REVIEWS) 스타일 */
-        .reviews-container { max-width: 1000px; margin: 0 auto; width: 100%; display: flex; flex-direction: column; gap: 20px; }
-        .reviews-stat-banner { background: linear-gradient(135deg, #141b2d, #1f1a3a); border: 1px solid #3d4a70; border-radius: 20px; padding: 26px 30px; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
-        .review-filters { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 5px; }
-        .review-filter-btn { background: #161b2a; color: #94a3b8; border: 1px solid #2a3550; padding: 8px 16px; border-radius: 20px; font-size: 13px; font-weight: 700; cursor: pointer; transition: 0.2s; }
-        .review-filter-btn.active, .review-filter-btn:hover { background: #8a2be2; color: #fff; border-color: #8a2be2; box-shadow: 0 4px 15px rgba(138,43,226,0.3); }
-        .reviews-grid { display: grid; grid-template-columns: 1fr; gap: 16px; }
-        @media (min-width: 768px) { .reviews-grid { grid-template-columns: 1fr 1fr; } }
-        .review-card { background: #0d101a; border: 1px solid #1f273d; border-radius: 18px; padding: 22px; display: flex; flex-direction: column; justify-content: space-between; transition: 0.3s; }
-        .review-card:hover { border-color: #4d94ff; transform: translateY(-3px); box-shadow: 0 10px 25px rgba(77,148,255,0.15); }
-        .review-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px; }
-        .review-team { font-weight: 800; font-size: 15px; color: #fff; display: flex; align-items: center; gap: 6px; }
-        .review-badge { font-size: 11px; padding: 2px 7px; border-radius: 6px; font-weight: 700; }
-        .badge-church { background: rgba(46, 204, 113, 0.15); color: #2ecc71; }
-        .badge-band { background: rgba(138, 43, 226, 0.15); color: #c49aee; }
-        .badge-indie { background: rgba(77, 148, 255, 0.15); color: #64b5f6; }
-        .badge-vocal { background: rgba(243, 156, 18, 0.15); color: #f39c12; }
-        .review-rating { color: #f1c40f; font-size: 14px; letter-spacing: 1px; }
-        .review-date { color: #64748b; font-size: 11px; margin-top: 2px; }
-        .review-body { color: #cbd5e1; font-size: 13.5px; line-height: 1.7; margin-bottom: 14px; }
-        .review-tags { display: flex; gap: 6px; flex-wrap: wrap; }
-        .review-tag { font-size: 11px; color: #8899ac; background: #141a29; padding: 3px 8px; border-radius: 6px; }
     </style>
 </head>
 <body>
@@ -205,7 +182,6 @@
         <button class="nav-btn" id="priceBtn" onclick="showTab('price')">요금표 (PRICE)</button>
         <button class="nav-btn" id="guideBtn" onclick="showTab('guide')">가이드 (GUIDE)</button>
         <button class="nav-btn" id="faqBtn" onclick="showTab('faq')">Q&A (FAQ)</button>
-        <button class="nav-btn" id="reviewsBtn" onclick="showTab('reviews')">이용 후기 (REVIEWS)</button>
         <button class="nav-btn" id="lookupBtn" onclick="showTab('lookup')" style="color:#64b5f6; border-color:rgba(77,148,255,0.3);">🔍 내 예약 조회</button>
     </div>
 </header>
@@ -503,7 +479,7 @@
                     </div>
                     <div class="faq-answer" style="display: block;">
                         달력에서 원하시는 날짜와 시간을 선택 후 신청하시면 즉시 <strong>'입금 대기'</strong> 상태로 선점됩니다.<br>
-                        안내된 계좌(케이뱅크 100-111-300282 민경선)로 대관료를 입금해 주시면, 관리자가 입금 확인 즉시 <strong>건물 현관 출입문 비밀번호(1236580*) 및 합주실 원격 개방 안내 문자가 고객님의 휴대폰으로 자동 발송</strong>되며 최종 확정됩니다!
+                        안내된 계좌(케이뱅크 100-111-300282 민경선)로 대관료를 입금해 주시면, 관리자가 입금 확인 즉시 <strong>건물 현관 출입문 비밀번호 및 합주실 원격 개방 안내 문자가 고객님의 휴대폰으로 자동 발송</strong>되며 최종 확정됩니다!
                     </div>
                 </div>
 
@@ -517,7 +493,7 @@
                         <span class="faq-arrow">▼</span>
                     </div>
                     <div class="faq-answer">
-                        1. <strong>건물 1층 초입 현관문</strong>: 문자로 발송된 비밀번호 <code>1236580*</code>을 입력하여 열고 지하 1층으로 내려오시면 됩니다.<br>
+                        1. <strong>건물 1층 초입 현관문</strong>: 예약 확정 시 문자로 발송된 비밀번호를 입력하여 열고 지하 1층으로 내려오시면 됩니다.<br>
                         2. <strong>합주실 메인 방음 도어</strong>: 합주실 문 앞 도착 후 관리자 번호(<code>010-6240-6569</code>)로 '도착했습니다' 문자를 남겨주시면 관리자가 확인 즉시 <strong>원격으로 문을 열어드립니다!</strong>
                     </div>
                 </div>
@@ -559,17 +535,19 @@
                     <div class="faq-question" onclick="toggleFaq(this)">
                         <div>
                             <span class="q-tag">장비/음향</span>
-                            <span>Q5. 합주실 내 구비 장비(앰프/드럼/건반/마이크) 스펙이 어떻게 되나요?</span>
+                            <span>Q5. 합주실 내 구비 장비(콘솔/건반/앰프/드럼) 스펙이 어떻게 되나요?</span>
                         </div>
                         <span class="faq-arrow">▼</span>
                     </div>
                     <div class="faq-answer">
-                        최고의 사운드 퀄리티를 위해 전문 밴드 세팅이 완비되어 있습니다:<br>
-                        • <strong>드럼</strong>: 하이엔드 풀 쉘팩 드럼 세트 + 프리미엄 심벌 세트 완비 (스틱 지참 권장)<br>
-                        • <strong>기타 앰프</strong>: 진공관 헤드 & 캐비닛 + TR 앰프 2대 완비<br>
-                        • <strong>베이스 앰프</strong>: 탄탄한 저음의 고출력 베이스 콤보/헤드 앰프<br>
-                        • <strong>건반</strong>: 88건반 프로페셔널 스테이지 신디사이저 + 서스테인 페달<br>
-                        • <strong>보컬/음향</strong>: 슈어(Shure) 프로 마이크 다수 + 메인 PA 믹서 및 스테레오 모니터링 시스템
+                        프로 밴드 및 워십 사운드를 위해 엄선된 전문 장비가 완비되어 있습니다:<br>
+                        • <strong>콘솔</strong>: Behringer X32 Compact + Midas DL32 (스테이지 랙 완비)<br>
+                        • <strong>메인 피아노</strong>: Yamaha P-225 (88건반)<br>
+                        • <strong>신디사이저</strong>: Yamaha Motif 7<br>
+                        • <strong>기타 앰프</strong>: Fender Champion II 100<br>
+                        • <strong>베이스 앰프</strong>: Ashdown Bass Amp<br>
+                        • <strong>드럼</strong>: TAMA Drum & Zildjian A Custom Set (차음 쉴드 완비)<br>
+                        • <strong>마이크/음향</strong>: 다이나믹 마이크 다수 (슈어 SM58 / TM58 등) + 메인 PA 시스템
                     </div>
                 </div>
 
@@ -605,6 +583,21 @@
                         • <strong>퇴실 매너</strong>: 다음 팀을 위해 퇴실 5분 전 장비 전원 OFF 및 조명 소등, 악보 정리를 부탁드립니다.
                     </div>
                 </div>
+
+                <!-- Q8 -->
+                <div class="faq-card">
+                    <div class="faq-question" onclick="toggleFaq(this)">
+                        <div>
+                            <span class="q-tag">안전/보안</span>
+                            <span>Q8. 늦은 시간이나 야간 이용 시 안전/보안은 어떤가요?</span>
+                        </div>
+                        <span class="faq-arrow">▼</span>
+                    </div>
+                    <div class="faq-answer">
+                        어웨이크 랩은 <strong>ADT 캡스(SK쉴더스) 24시간 무인 출동 경비 시스템 및 실시간 CCTV 보안</strong>이 철저하게 가동 중입니다.<br>
+                        늦은 밤이나 새벽 시간대, 혹은 여성/청소년 밴드도 외부 침입이나 위험 걱정 없이 <strong>오직 음악과 합주에만 안심하고 집중</strong>하실 수 있습니다. 🛡️
+                    </div>
+                </div>
             </div>
 
             <!-- 하단 1:1 문의 배너 -->
@@ -612,386 +605,6 @@
                 <h4 style="margin: 0 0 8px 0; color: #fff; font-size: 17px;">💬 더 궁금한 점이 있으신가요?</h4>
                 <p style="margin: 0 0 16px 0; color: #94a3b8; font-size: 13px;">관리자 연락처로 문자 남겨주시면 가장 빠르고 친절하게 답변해 드립니다.</p>
                 <a href="tel:010-6240-6569" style="display: inline-block; background: linear-gradient(135deg, #8a2be2, #4a00e0); color: #fff; text-decoration: none; padding: 12px 24px; border-radius: 12px; font-weight: 800; font-size: 14px; box-shadow: 0 4px 15px rgba(138,43,226,0.4);">📞 010-6240-6569 문자/전화 문의</a>
-            </div>
-        </div>
-    </div>
-
-    <!-- 6. 이용 후기 탭 (REVIEWS) -->
-    <div id="reviewsContent" class="tab-content">
-        <div class="reviews-container">
-            <div class="guide-header-box" style="background: linear-gradient(135deg, #0b0c16, #16182a);">
-                <h2>합주실 이용 후기</h2>
-                <div class="guide-header-line" style="background: #f1c40f;"></div>
-                <p class="sub1" style="color: #fef08a;">어웨이크 랩을 경험한 밴드 & 찬양팀들의 100% 리얼 후기</p>
-                <p class="sub2">방문자 만족도 평점 4.98점! 최고의 룸 어쿠스틱과 사운드를 직접 확인해 보세요.</p>
-            </div>
-
-            <!-- 평점 통계 배너 -->
-            <div class="reviews-stat-banner">
-                <div style="display: flex; align-items: center; gap: 20px;">
-                    <div style="text-align: center; background: rgba(0,0,0,0.4); padding: 16px 24px; border-radius: 16px; border: 1px solid #334155;">
-                        <div style="font-size: 38px; font-weight: 900; color: #f1c40f; line-height: 1;">4.98</div>
-                        <div style="color: #f1c40f; font-size: 14px; margin-top: 4px;">⭐⭐⭐⭐⭐</div>
-                        <div style="color: #94a3b8; font-size: 11px; margin-top: 4px;">총 128개 리뷰 기준</div>
-                    </div>
-                    <div>
-                        <div style="color: #fff; font-size: 17px; font-weight: 800; margin-bottom: 6px;">방문자 99.8% 적극 추천! 👍</div>
-                        <div style="color: #94a3b8; font-size: 13px; line-height: 1.6;">
-                            • 룸 어쿠스틱 & 방음 만족도: <strong style="color:#2ecc71;">100%</strong><br>
-                            • 악기/앰프 퀄리티 만족도: <strong style="color:#2ecc71;">99.4%</strong><br>
-                            • 공간 청결도 & 편리한 출입: <strong style="color:#2ecc71;">100%</strong>
-                        </div>
-                    </div>
-                </div>
-                <button type="button" onclick="showTab('home')" class="btn btn-submit" style="padding: 14px 22px; font-size: 14px;">🗓️ 실시간 예약하기</button>
-            </div>
-
-            <!-- 카테고리 필터 버튼 -->
-            <div class="review-filters">
-                <button type="button" class="review-filter-btn active" onclick="filterReviewCards('all', this)">전체보기 (16)</button>
-                <button type="button" class="review-filter-btn" onclick="filterReviewCards('church', this)">⛪ 교회 찬양팀 (4)</button>
-                <button type="button" class="review-filter-btn" onclick="filterReviewCards('band', this)">🎸 직장인 밴드 (5)</button>
-                <button type="button" class="review-filter-btn" onclick="filterReviewCards('indie', this)">🥁 인디/대학 밴드 (4)</button>
-                <button type="button" class="review-filter-btn" onclick="filterReviewCards('vocal', this)">🎹 보컬/소규모 (3)</button>
-            </div>
-
-            <!-- 16개 후기 카드 그리드 -->
-            <div class="reviews-grid" id="reviewsGrid">
-                <!-- 1 -->
-                <div class="review-card" data-cat="church">
-                    <div>
-                        <div class="review-header">
-                            <div>
-                                <div class="review-team">워십웨이커스 찬양팀 <span class="review-badge badge-church">매주 토요 고정</span></div>
-                                <div class="review-date">2026.08.22 이용</div>
-                            </div>
-                            <div class="review-rating">⭐⭐⭐⭐⭐</div>
-                        </div>
-                        <div class="review-body">
-                            "매주 토요일 아침마다 정기 합주로 애용하고 있습니다. 드럼 톤이 벙벙거리지 않고 마이크 모니터링이 너무 깔끔해서 보컬들도 목이 전혀 안 아파요. 원격 문 열림도 칼답이라 멤버들 모두 감탄했습니다!"
-                        </div>
-                    </div>
-                    <div class="review-tags">
-                        <span class="review-tag">#교회찬양팀</span>
-                        <span class="review-tag">#사운드맛집</span>
-                        <span class="review-tag">#원격개방편리</span>
-                    </div>
-                </div>
-
-                <!-- 2 -->
-                <div class="review-card" data-cat="band">
-                    <div>
-                        <div class="review-header">
-                            <div>
-                                <div class="review-team">직장인 밴드 '오버드라이브' <span class="review-badge badge-band">직장형 정기권</span></div>
-                                <div class="review-date">2026.08.20 이용</div>
-                            </div>
-                            <div class="review-rating">⭐⭐⭐⭐⭐</div>
-                        </div>
-                        <div class="review-body">
-                            "죽전/용인 인근 합주실 중 단연 탑입니다. 진공관 기타 앰프 질감이 제대로 살아있고 에어컨도 빵빵해서 3시간 풀로 달려도 쾌적하네요. 정기권 할인 혜택도 쏠쏠해서 총무 입장에서 너무 든든합니다."
-                        </div>
-                    </div>
-                    <div class="review-tags">
-                        <span class="review-tag">#직장인밴드</span>
-                        <span class="review-tag">#진공관앰프</span>
-                        <span class="review-tag">#정기권할인</span>
-                    </div>
-                </div>
-
-                <!-- 3 -->
-                <div class="review-card" data-cat="indie">
-                    <div>
-                        <div class="review-header">
-                            <div>
-                                <div class="review-team">단국대 밴드동아리 '메아리' <span class="review-badge badge-indie">대학 밴드</span></div>
-                                <div class="review-date">2026.08.18 이용</div>
-                            </div>
-                            <div class="review-rating">⭐⭐⭐⭐⭐</div>
-                        </div>
-                        <div class="review-body">
-                            "정기 공연 앞두고 주말 4시간 대관했는데 모니터 스피커 분리도가 미쳤습니다. 지하인데도 퀴퀴한 냄새 1도 없고 실내화 관리까지 청결해서 동아리 부원들 모두 만족했어요."
-                        </div>
-                    </div>
-                    <div class="review-tags">
-                        <span class="review-tag">#공연준비</span>
-                        <span class="review-tag">#모니터분리도</span>
-                        <span class="review-tag">#지하청결맛집</span>
-                    </div>
-                </div>
-
-                <!-- 4 -->
-                <div class="review-card" data-cat="church">
-                    <div>
-                        <div class="review-header">
-                            <div>
-                                <div class="review-team">CCM 프로젝트팀 'Grace Note' <span class="review-badge badge-church">교회형 정기권</span></div>
-                                <div class="review-date">2026.08.15 이용</div>
-                            </div>
-                            <div class="review-rating">⭐⭐⭐⭐⭐</div>
-                        </div>
-                        <div class="review-body">
-                            "88건반 터치감이랑 사운드 모듈이 훌륭해서 피아노/패드 레이어링 합주하기 최고예요. 시간 선택할 때 드래그하듯 시작-종료만 누르면 자동 선택되는 예약 시스템도 너무 편리합니다!"
-                        </div>
-                    </div>
-                    <div class="review-tags">
-                        <span class="review-tag">#CCM합주</span>
-                        <span class="review-tag">#신디사이저최고</span>
-                        <span class="review-tag">#예약편리</span>
-                    </div>
-                </div>
-
-                <!-- 5 -->
-                <div class="review-card" data-cat="indie">
-                    <div>
-                        <div class="review-header">
-                            <div>
-                                <div class="review-team">인디 록밴드 'The Midnight' <span class="review-badge badge-indie">인디 밴드</span></div>
-                                <div class="review-date">2026.08.12 이용</div>
-                            </div>
-                            <div class="review-rating">⭐⭐⭐⭐⭐</div>
-                        </div>
-                        <div class="review-body">
-                            "드럼 튜닝이 완벽하게 잡혀 있어서 림샷 칠 때 쾌감이 장난 아닙니다. 합주 폰 녹음 따서 들어봤는데 밸런스가 거의 스튜디오 음원 급으로 묻어나옵니다. 적극 추천합니다."
-                        </div>
-                    </div>
-                    <div class="review-tags">
-                        <span class="review-tag">#드럼사운드</span>
-                        <span class="review-tag">#합주녹음추천</span>
-                        <span class="review-tag">#인디밴드</span>
-                    </div>
-                </div>
-
-                <!-- 6 -->
-                <div class="review-card" data-cat="vocal">
-                    <div>
-                        <div class="review-header">
-                            <div>
-                                <div class="review-team">재즈 콰르텟 'Blue Hour' <span class="review-badge badge-vocal">재즈 앙상블</span></div>
-                                <div class="review-date">2026.08.09 이용</div>
-                            </div>
-                            <div class="review-rating">⭐⭐⭐⭐⭐</div>
-                        </div>
-                        <div class="review-body">
-                            "어쿠스틱 베이스와 피아노 톤의 섬세한 다이내믹이 방음 공간 안에서 뭉개지지 않고 명료하게 들립니다. 조명 무드도 은은해서 합주 영상 촬영하기도 딱이에요."
-                        </div>
-                    </div>
-                    <div class="review-tags">
-                        <span class="review-tag">#재즈합주</span>
-                        <span class="review-tag">#영상촬영맛집</span>
-                        <span class="review-tag">#어쿠스틱룸</span>
-                    </div>
-                </div>
-
-                <!-- 7 -->
-                <div class="review-card" data-cat="band">
-                    <div>
-                        <div class="review-header">
-                            <div>
-                                <div class="review-team">직장인 메탈 밴드 'Iron Sound' <span class="review-badge badge-band">직장인 밴드</span></div>
-                                <div class="review-date">2026.08.05 이용</div>
-                            </div>
-                            <div class="review-rating">⭐⭐⭐⭐⭐</div>
-                        </div>
-                        <div class="review-body">
-                            "투베이스 밟고 하이게인 맘껏 걸어도 부밍 현상 없이 룸 어쿠스틱 처리가 기가 막히게 되어 있습니다. 도어락 비번 문자 안내도 초스피드로 오고 스트레스 확 풀고 갑니다."
-                        </div>
-                    </div>
-                    <div class="review-tags">
-                        <span class="review-tag">#헤비메탈</span>
-                        <span class="review-tag">#부밍제로</span>
-                        <span class="review-tag">#방음완벽</span>
-                    </div>
-                </div>
-
-                <!-- 8 -->
-                <div class="review-card" data-cat="vocal">
-                    <div>
-                        <div class="review-header">
-                            <div>
-                                <div class="review-team">보컬 & 건반 듀오 '새벽별' <span class="review-badge badge-vocal">어쿠스틱 듀오</span></div>
-                                <div class="review-date">2026.08.01 이용</div>
-                            </div>
-                            <div class="review-rating">⭐⭐⭐⭐⭐</div>
-                        </div>
-                        <div class="review-body">
-                            "마이크가 저가형이 아니라 슈어 정품이라 하울링 없이 고음까지 시원하게 뻗네요. 둘이서 연습하기에도 아늑하고 집중이 너무 잘 되는 공간입니다. 단골 예약입니다!"
-                        </div>
-                    </div>
-                    <div class="review-tags">
-                        <span class="review-tag">#보컬연습</span>
-                        <span class="review-tag">#슈어마이크</span>
-                        <span class="review-tag">#집중도최고</span>
-                    </div>
-                </div>
-
-                <!-- 9 -->
-                <div class="review-card" data-cat="church">
-                    <div>
-                        <div class="review-header">
-                            <div>
-                                <div class="review-team">주일 찬양팀 '하늘소리' <span class="review-badge badge-church">교회형 정기권</span></div>
-                                <div class="review-date">2026.07.28 이용</div>
-                            </div>
-                            <div class="review-rating">⭐⭐⭐⭐⭐</div>
-                        </div>
-                        <div class="review-body">
-                            "교회형 정기권으로 3달째 이용 중입니다. 주말 시간 선점이 늘 치열했는데 정기권으로 안정적으로 시간 확보하고 할인까지 받으니 총무 입장에서 너무 든든합니다."
-                        </div>
-                    </div>
-                    <div class="review-tags">
-                        <span class="review-tag">#교회정기권</span>
-                        <span class="review-tag">#시간선점</span>
-                        <span class="review-tag">#총무강추</span>
-                    </div>
-                </div>
-
-                <!-- 10 -->
-                <div class="review-card" data-cat="indie">
-                    <div>
-                        <div class="review-header">
-                            <div>
-                                <div class="review-team">퓨전 국악/밴드 크루 '소리결' <span class="review-badge badge-indie">퓨전 밴드</span></div>
-                                <div class="review-date">2026.07.24 이용</div>
-                            </div>
-                            <div class="review-rating">⭐⭐⭐⭐⭐</div>
-                        </div>
-                        <div class="review-body">
-                            "다양한 악기 라인 인풋이 필요했는데 믹서 채널도 넉넉하고 PA 출력이 탄탄해서 모든 파트가 묻히지 않고 골고루 모니터링되었습니다. 재방문 의사 200%!"
-                        </div>
-                    </div>
-                    <div class="review-tags">
-                        <span class="review-tag">#믹서채널</span>
-                        <span class="review-tag">#PA출력빵빵</span>
-                        <span class="review-tag">#재방문의사100%</span>
-                    </div>
-                </div>
-
-                <!-- 11 -->
-                <div class="review-card" data-cat="church">
-                    <div>
-                        <div class="review-header">
-                            <div>
-                                <div class="review-team">청소년부 밴드팀 'J-Kids' <span class="review-badge badge-church">찬양팀</span></div>
-                                <div class="review-date">2026.07.20 이용</div>
-                            </div>
-                            <div class="review-rating">⭐⭐⭐⭐⭐</div>
-                        </div>
-                        <div class="review-body">
-                            "학생들이 처음 합주실 와봤는데 도어락 출입도 쉽고 내부가 너무 깨끗해서 안심하고 보낼 수 있었습니다. 실내화 신고 쾌적하게 2시간 알차게 맞추고 갑니다."
-                        </div>
-                    </div>
-                    <div class="review-tags">
-                        <span class="review-tag">#안전출입</span>
-                        <span class="review-tag">#청결함</span>
-                        <span class="review-tag">#학생합주</span>
-                    </div>
-                </div>
-
-                <!-- 12 -->
-                <div class="review-card" data-cat="band">
-                    <div>
-                        <div class="review-header">
-                            <div>
-                                <div class="review-team">펑크 록밴드 '노이즈 캔슬' <span class="review-badge badge-band">직장인 밴드</span></div>
-                                <div class="review-date">2026.07.16 이용</div>
-                            </div>
-                            <div class="review-rating">⭐⭐⭐⭐⭐</div>
-                        </div>
-                        <div class="review-body">
-                            "베이스 앰프 로우엔드가 심장을 때립니다. 볼륨 맘껏 올려도 밖으로 소리 안 새어나가고 방음 시공 진짜 제대로 하셨네요. 앞으로 합주는 무조건 여기로 정착합니다."
-                        </div>
-                    </div>
-                    <div class="review-tags">
-                        <span class="review-tag">#베이스톤</span>
-                        <span class="review-tag">#완벽방음</span>
-                        <span class="review-tag">#아지트확정</span>
-                    </div>
-                </div>
-
-                <!-- 13 -->
-                <div class="review-card" data-cat="band">
-                    <div>
-                        <div class="review-header">
-                            <div>
-                                <div class="review-team">팝 밴드 'Lofi Sunday' <span class="review-badge badge-band">직장인 밴드</span></div>
-                                <div class="review-date">2026.07.11 이용</div>
-                            </div>
-                            <div class="review-rating">⭐⭐⭐⭐⭐</div>
-                        </div>
-                        <div class="review-body">
-                            "퇴근하고 금요일 저녁마다 합주하는데 주차도 수월하고 죽전역/단국대 근처라 접근성이 너무 좋습니다. 합주 끝나고 주변에 먹거리도 많아서 팀 회식하기도 좋아요!"
-                        </div>
-                    </div>
-                    <div class="review-tags">
-                        <span class="review-tag">#접근성우수</span>
-                        <span class="review-tag">#주차편리</span>
-                        <span class="review-tag">#금요합주</span>
-                    </div>
-                </div>
-
-                <!-- 14 -->
-                <div class="review-card" data-cat="vocal">
-                    <div>
-                        <div class="review-header">
-                            <div>
-                                <div class="review-team">어쿠스틱 기타 동호회 '통기타 울림' <span class="review-badge badge-vocal">통기타 합주</span></div>
-                                <div class="review-date">2026.07.07 이용</div>
-                            </div>
-                            <div class="review-rating">⭐⭐⭐⭐⭐</div>
-                        </div>
-                        <div class="review-body">
-                            "마이크 밸런스가 섬세해서 통기타 핑거스타일 소리 하나하나가 공간에 따뜻하게 감깁니다. 앰프 연결 안 해도 잔향이 예뻐서 소규모 앙상블 연습하기 최고였습니다."
-                        </div>
-                    </div>
-                    <div class="review-tags">
-                        <span class="review-tag">#통기타</span>
-                        <span class="review-tag">#잔향맛집</span>
-                        <span class="review-tag">#소규모합주</span>
-                    </div>
-                </div>
-
-                <!-- 15 -->
-                <div class="review-card" data-cat="band">
-                    <div>
-                        <div class="review-header">
-                            <div>
-                                <div class="review-team">직장인 밴드 '퇴근길' <span class="review-badge badge-band">직장인 밴드</span></div>
-                                <div class="review-date">2026.07.03 이용</div>
-                            </div>
-                            <div class="review-rating">⭐⭐⭐⭐⭐</div>
-                        </div>
-                        <div class="review-body">
-                            "합주실 관리가 너무 잘 되어 있어서 스위치 켜고 5분 만에 세팅 끝내고 바로 합주 들어갔습니다. 낭비되는 시간 없이 꽉 찬 2시간 보냈네요. 사장님 센스 최고!"
-                        </div>
-                    </div>
-                    <div class="review-tags">
-                        <span class="review-tag">#빠른세팅</span>
-                        <span class="review-tag">#완벽관리</span>
-                        <span class="review-tag">#스트레스해소</span>
-                    </div>
-                </div>
-
-                <!-- 16 -->
-                <div class="review-card" data-cat="indie">
-                    <div>
-                        <div class="review-header">
-                            <div>
-                                <div class="review-team">하드록 밴드 'Thunder' <span class="review-badge badge-indie">인디 밴드</span></div>
-                                <div class="review-date">2026.06.28 이용</div>
-                            </div>
-                            <div class="review-rating">⭐⭐⭐⭐⭐</div>
-                        </div>
-                        <div class="review-body">
-                            "스네어 타격감, 심벌의 선명함, 기타 하이게인의 펀치력까지 완벽합니다. 다른 곳은 귀가 먹먹해지는데 여기는 어쿠스틱 디퓨저가 잘 되어 있어서 귀가 편안합니다."
-                        </div>
-                    </div>
-                    <div class="review-tags">
-                        <span class="review-tag">#귀편안함</span>
-                        <span class="review-tag">#디퓨저시공</span>
-                        <span class="review-tag">#사운드최상</span>
-                    </div>
-                </div>
             </div>
         </div>
     </div>
@@ -1754,21 +1367,6 @@
             card.classList.add('open');
             if (answer) answer.style.display = 'block';
         }
-    }
-
-    // 후기 카테고리 필터링
-    function filterReviewCards(cat, btn) {
-        document.querySelectorAll('.review-filter-btn').forEach(b => b.classList.remove('active'));
-        if (btn) btn.classList.add('active');
-
-        const cards = document.querySelectorAll('.review-card');
-        cards.forEach(c => {
-            if (cat === 'all' || c.dataset.cat === cat) {
-                c.style.display = 'flex';
-            } else {
-                c.style.display = 'none';
-            }
-        });
     }
 
     function showTab(t) {
