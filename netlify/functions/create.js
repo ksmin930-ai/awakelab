@@ -183,12 +183,12 @@ exports.handler = async (event) => {
     // 3. 정기권 (월 4회 정기 우대) 신청인 경우 -> 4주간 동일 요일/시간 일괄 선점 등록
     if (category === 'pass') {
       const passPriceMap = {
-        'church_a': { name: '교회형 정기권 A (주말 2h)', amount: 200000 },
-        'church_b': { name: '교회형 정기권 B (주말 3h)', amount: 290000 },
-        'work_a': { name: '직장형 정기권 A (주중 2h)', amount: 160000 },
-        'work_b': { name: '직장형 정기권 B (주중 3h)', amount: 240000 },
-        'work_weekend_a': { name: '직장형 정기권 A (주말 2h)', amount: 200000 },
-        'work_weekend_b': { name: '직장형 정기권 B (주말 3h)', amount: 290000 }
+        'church_a': { name: '교회 찬양팀 A (주말 2h)', amount: 200000 },
+        'church_b': { name: '교회 찬양팀 B (주말 3h)', amount: 290000 },
+        'work_a': { name: '인근 직장인 밴드 A (주중 2h)', amount: 160000 },
+        'work_b': { name: '인근 직장인 밴드 B (주중 3h)', amount: 240000 },
+        'work_weekend_a': { name: '인근 직장인 밴드 A (일요일 2h)', amount: 200000 },
+        'work_weekend_b': { name: '인근 직장인 밴드 B (일요일 3h)', amount: 290000 }
       };
 
       const selectedPlan = passPriceMap[passPlan] || passPriceMap['work_a'];
