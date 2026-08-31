@@ -268,32 +268,67 @@
     <div id="homeContent" class="tab-content active">
         <div class="info-panel">
             <div class="info-card">
-                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
-                    <h3 style="margin:0; border:none; padding:0;">⏰ 대관 요금 안내</h3>
-                    <button type="button" onclick="showTab('price')" style="background:none; border:none; color:#8a2be2; font-size:12px; font-weight:bold; cursor:pointer; text-decoration:underline;">상세 요금표 ❯</button>
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
+                    <h3 style="margin:0; border:none; padding:0; font-size:17px; font-weight:800;">⏰ 대관 요금 안내</h3>
+                    <button type="button" onclick="showTab('price')" style="background:none; border:none; color:#a855f7; font-size:12px; font-weight:bold; cursor:pointer; text-decoration:underline;">상세 요금표 ❯</button>
                 </div>
-                <div style="font-size:13px; color:#aaa; margin-bottom:15px;">
-                    <div style="display:flex; justify-content:space-between; margin-bottom:8px;">
-                        <span>• <strong>주중 일반</strong> (기본 2시간~)</span>
-                        <span style="color:#fff; font-weight:bold;">25,000원 / 시간</span>
+
+                <!-- 1. 일반 대관 묶음 -->
+                <div style="background:#111520; border:1px solid #232b40; border-radius:14px; padding:13px 15px; margin-bottom:12px;">
+                    <div style="color:#fff; font-weight:800; font-size:13px; margin-bottom:8px; display:flex; align-items:center; justify-content:space-between;">
+                        <span>🎵 일반 대관</span>
+                        <span style="font-size:11px; color:#94a3b8; font-weight:normal;">(기본 2시간~)</span>
                     </div>
-                    <div style="display:flex; justify-content:space-between; margin-bottom:8px;">
-                        <span>• <strong>주말·공휴일·금18시~</strong></span>
-                        <span style="color:#4d94ff; font-weight:bold;">30,000원 / 시간</span>
+                    <div style="font-size:12.5px; color:#cbd5e1; display:flex; flex-direction:column; gap:6px;">
+                        <div style="display:flex; justify-content:space-between; align-items:center;">
+                            <span>• 주중 (월~금 18시 전)</span>
+                            <strong style="color:#fff; font-size:13px;">25,000원 <span style="font-size:11px; color:#888; font-weight:normal;">/h</span></strong>
+                        </div>
+                        <div style="display:flex; justify-content:space-between; align-items:center;">
+                            <span>• 주말·공휴일·금18시~</span>
+                            <strong style="color:#60a5fa; font-size:13px;">30,000원 <span style="font-size:11px; color:#888; font-weight:normal;">/h</span></strong>
+                        </div>
                     </div>
                 </div>
 
-                <div style="background:rgba(255,255,255,0.03); border:1px solid #222; border-radius:14px; padding:14px; margin-bottom:15px; font-size:12px;">
-                    <div style="color:#8a2be2; font-weight:bold; margin-bottom:8px;">🎁 정기권 우대 할인 (교회/직장인)</div>
-                    <div style="margin-bottom:6px; line-height:1.5;">
-                        <span style="color:#2ecc71; font-weight:bold;">⛪ 교회형 (주말)</span><br>
-                        • A형(월 4회/회당 2h): <strong>200,000원</strong> (4만 할인)<br>
-                        • B형(월 4회/회당 3h): <strong>290,000원</strong> (7만 할인)
+                <!-- 2. 할인 결제! 묶음 -->
+                <div style="background:linear-gradient(145deg, rgba(138, 43, 226, 0.08), rgba(59, 130, 246, 0.08)); border:1px solid rgba(138, 43, 226, 0.35); border-radius:14px; padding:14px; margin-bottom:14px;">
+                    <div style="color:#c084fc; font-weight:900; font-size:13.5px; margin-bottom:10px; display:flex; align-items:center; justify-content:space-between;">
+                        <span>🔥 할인 결제! (우대 혜택)</span>
+                        <span style="font-size:10.5px; color:#e9d5ff; background:rgba(168, 85, 247, 0.25); padding:2px 8px; border-radius:6px; font-weight:800;">최대 20%↓</span>
                     </div>
-                    <div style="line-height:1.5;">
-                        <span style="color:#e67e22; font-weight:bold;">🏢 직장형 (주중)</span><br>
-                        • A형(월 4회/회당 2h): <strong>160,000원</strong> (4만 할인)<br>
-                        • B형(월 4회/회당 3h): <strong>276,000원</strong> (7만 할인)
+
+                    <!-- 단국대 학생 할인 (단품) -->
+                    <div style="background:rgba(0,0,0,0.35); border:1px solid rgba(96, 165, 250, 0.25); border-radius:10px; padding:9px 12px; margin-bottom:9px; font-size:12px;">
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:3px;">
+                            <strong style="color:#93c5fd;">🎓 단국대 학생 10% (단품)</strong>
+                            <span style="color:#60a5fa; font-weight:800; font-size:11px;">10% 즉시 할인</span>
+                        </div>
+                        <div style="color:#94a3b8; font-size:11.5px; line-height:1.4;">
+                            주중 <strong>22,500원</strong> / 주말 <strong>27,000원</strong> (학생증 확인)
+                        </div>
+                    </div>
+
+                    <!-- 정기권 우대 할인 (월 4회) -->
+                    <div style="background:rgba(0,0,0,0.35); border:1px solid rgba(255,255,255,0.08); border-radius:10px; padding:10px 12px; font-size:12px;">
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+                            <strong style="color:#34d399;">🎁 월 4회 정기권 (시간 선점)</strong>
+                            <span style="color:#34d399; font-weight:800; font-size:11px;">17%~20% 할인</span>
+                        </div>
+                        <div style="display:flex; flex-direction:column; gap:5px; color:#cbd5e1; font-size:11.5px; line-height:1.4;">
+                            <div>
+                                <span style="color:#4ade80; font-weight:700;">• 교회 찬양팀 (주말)</span><br>
+                                A형(2h) <strong>20만</strong> <span style="color:#4ade80; font-weight:bold;">(17%↓)</span> · B형(3h) <strong>29만</strong> <span style="color:#4ade80; font-weight:bold;">(20%↓)</span>
+                            </div>
+                            <div style="border-top:1px dashed rgba(255,255,255,0.1); padding-top:4px;">
+                                <span style="color:#fb923c; font-weight:700;">• 직장인 밴드 (주중)</span><br>
+                                A형(2h) <strong>16만</strong> <span style="color:#fb923c; font-weight:bold;">(20%↓)</span> · B형(3h) <strong>24만</strong> <span style="color:#fb923c; font-weight:bold;">(20%↓)</span>
+                            </div>
+                            <div style="border-top:1px dashed rgba(255,255,255,0.1); padding-top:4px;">
+                                <span style="color:#facc15; font-weight:700;">• 직장인 밴드 (일요일)</span><br>
+                                A형(2h) <strong>20만</strong> <span style="color:#facc15; font-weight:bold;">(17%↓)</span> · B형(3h) <strong>29만</strong> <span style="color:#facc15; font-weight:bold;">(20%↓)</span>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -356,64 +391,115 @@
             <div class="guide-header-box" style="background: linear-gradient(135deg, #0b112c, #071739);">
                 <h2>요금 상세표</h2>
                 <div class="guide-header-line" style="background: #4d94ff;"></div>
-                <p class="sub1" style="color: #64b5f6; font-weight: 700;">교회 찬양팀 / 인근 직장인 동아리 정기권 우대</p>
+                <p class="sub1" style="color: #64b5f6; font-weight: 700;">일반 대관 & 할인 결제 (단국대 10% · 정기권 20%) 요금표</p>
                 <p class="sub2">창작자를 위한 최적의 공간, 깨어있는 연구소 (Awake Lab)</p>
             </div>
 
-            <div class="price-table-card">
-                <table class="price-table">
-                    <thead>
-                        <tr>
-                            <th>구분</th>
-                            <th>이용 기준</th>
-                            <th>이용 요금</th>
-                            <th>혜택 및 비고</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td><strong style="color:#fff;">일반 대관 (주중)</strong></td>
-                            <td>시간당 (기본 2시간~)</td>
-                            <td><span class="badge-cost" style="color:#fff;">25,000원</span></td>
-                            <td>개인 및 일반 밴드 (월~금 18시 이전)</td>
-                        </tr>
-                        <tr>
-                            <td><strong style="color:#4d94ff;">일반 대관 (주말)</strong></td>
-                            <td>시간당 (기본 2시간~)</td>
-                            <td><span class="badge-cost" style="color:#4d94ff;">30,000원</span></td>
-                            <td>금요일 18시 이후 ~ 주말 / 공휴일</td>
-                        </tr>
-                        <tr>
-                            <td><strong style="color:#2ecc71;">교회형 정기권 A (주말)*</strong></td>
-                            <td>월 4회 (회당 2시간 / 총 8시간)</td>
-                            <td><span class="badge-cost">200,000원</span></td>
-                            <td><span class="badge-save">4만원 할인</span> (주말을 주중 요금으로!)</td>
-                        </tr>
-                        <tr>
-                            <td><strong style="color:#2ecc71;">교회형 정기권 B (주말)</strong></td>
-                            <td>월 4회 (회당 3시간 / 총 12시간)</td>
-                            <td><span class="badge-cost">290,000원</span></td>
-                            <td><span class="badge-save">7만원 할인</span> (시간당 약 2.4만 원꼴)</td>
-                        </tr>
-                        <tr>
-                            <td><strong style="color:#e67e22;">직장형 정기권 A (주중)*</strong></td>
-                            <td>월 4회 (회당 2시간 / 총 8시간)</td>
-                            <td><span class="badge-cost">160,000원</span></td>
-                            <td><span class="badge-save">4만원 할인</span> (시간당 2만 원꼴)</td>
-                        </tr>
-                        <tr>
-                            <td><strong style="color:#e67e22;">직장형 정기권 B (주중)</strong></td>
-                            <td>월 4회 (회당 3시간 / 총 12시간)</td>
-                            <td><span class="badge-cost">276,000원</span></td>
-                            <td><span class="badge-save">7만원 할인</span> (시간당 약 2.3만 원꼴)</td>
-                        </tr>
-                    </tbody>
-                </table>
+            <!-- 묶음 1: 일반 대관 요금표 -->
+            <div style="margin-bottom: 24px;">
+                <div style="display:flex; align-items:center; gap:8px; margin-bottom:10px;">
+                    <span style="font-size:16px;">🎵</span>
+                    <h3 style="margin:0; font-size:16px; color:#fff; font-weight:800;">1. 일반 대관 (단품 1회)</h3>
+                    <span style="font-size:12px; color:#94a3b8;">- 기본 2시간부터 이용 가능</span>
+                </div>
+                <div class="price-table-card">
+                    <table class="price-table">
+                        <thead>
+                            <tr>
+                                <th>구분</th>
+                                <th>이용 기준</th>
+                                <th>이용 요금</th>
+                                <th>비고</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong style="color:#fff;">주중 일반</strong></td>
+                                <td>시간당 (기본 2시간~)</td>
+                                <td><span class="badge-cost" style="color:#fff;">25,000원</span></td>
+                                <td>월~금 18시 이전 대관</td>
+                            </tr>
+                            <tr>
+                                <td><strong style="color:#60a5fa;">주말 / 공휴일 / 금18시~</strong></td>
+                                <td>시간당 (기본 2시간~)</td>
+                                <td><span class="badge-cost" style="color:#60a5fa;">30,000원</span></td>
+                                <td>금요일 저녁 및 주말/공휴일 대관</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
 
-            <div style="font-size:13px; color:#888; margin-top:8px; line-height:1.6;">
-                • <strong>* 교회형과 직장형은 주말 / 주중으로 다릅니다.</strong><br>
-                • 정기권 등록 및 고정 시간 선점은 관리자에게 문의해 주시면 신속하게 배정해 드립니다.
+            <!-- 묶음 2: 할인 결제! 요금표 -->
+            <div>
+                <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:10px;">
+                    <div style="display:flex; align-items:center; gap:8px;">
+                        <span style="font-size:16px;">🔥</span>
+                        <h3 style="margin:0; font-size:16px; color:#c084fc; font-weight:800;">2. 할인 결제! (특별 우대 혜택)</h3>
+                    </div>
+                    <span style="font-size:11.5px; color:#e9d5ff; background:rgba(168, 85, 247, 0.2); padding:3px 10px; border-radius:8px; font-weight:800;">최대 20% 파격 할인</span>
+                </div>
+                <div class="price-table-card">
+                    <table class="price-table">
+                        <thead>
+                            <tr>
+                                <th>할인 플랜</th>
+                                <th>이용 기준</th>
+                                <th>이용 요금</th>
+                                <th>할인율 및 혜택</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr style="background: rgba(59, 130, 246, 0.06);">
+                                <td><strong style="color:#93c5fd;">🎓 단국대 학생 할인 (단품)</strong></td>
+                                <td>시간당 (기본 2시간~)</td>
+                                <td><span class="badge-cost" style="color:#93c5fd;">주중 22,500원 / 주말 27,000원</span></td>
+                                <td><span class="badge-save" style="background:rgba(59,130,246,0.25); color:#93c5fd;">10% 할인</span> (학생증 지참 & 문자 인증)</td>
+                            </tr>
+                            <tr>
+                                <td><strong style="color:#4ade80;">⛪ 교회 찬양팀 A (주말)*</strong></td>
+                                <td>월 4회 (회당 2시간 / 총 8시간)</td>
+                                <td><span class="badge-cost">200,000원</span></td>
+                                <td><span class="badge-save">17% 할인</span> (주말을 주중 요금으로!)</td>
+                            </tr>
+                            <tr>
+                                <td><strong style="color:#4ade80;">⛪ 교회 찬양팀 B (주말)</strong></td>
+                                <td>월 4회 (회당 3시간 / 총 12시간)</td>
+                                <td><span class="badge-cost">290,000원</span></td>
+                                <td><span class="badge-save">20% 할인</span> (시간당 약 2.4만 원꼴)</td>
+                            </tr>
+                            <tr>
+                                <td><strong style="color:#fb923c;">🏢 직장인 밴드 A (주중)*</strong></td>
+                                <td>월 4회 (회당 2시간 / 총 8시간)</td>
+                                <td><span class="badge-cost">160,000원</span></td>
+                                <td><span class="badge-save">20% 할인</span> (시간당 2만 원 균일)</td>
+                            </tr>
+                            <tr>
+                                <td><strong style="color:#fb923c;">🏢 직장인 밴드 B (주중)</strong></td>
+                                <td>월 4회 (회당 3시간 / 총 12시간)</td>
+                                <td><span class="badge-cost">240,000원</span></td>
+                                <td><span class="badge-save">20% 할인</span> (시간당 2만 원 균일)</td>
+                            </tr>
+                            <tr>
+                                <td><strong style="color:#facc15;">🏢 직장인 밴드 A (일요일)*</strong></td>
+                                <td>월 4회 (회당 2시간 / 총 8시간)</td>
+                                <td><span class="badge-cost">200,000원</span></td>
+                                <td><span class="badge-save">17% 할인</span> (주말을 주중 요금으로!)</td>
+                            </tr>
+                            <tr>
+                                <td><strong style="color:#facc15;">🏢 직장인 밴드 B (일요일)</strong></td>
+                                <td>월 4회 (회당 3시간 / 총 12시간)</td>
+                                <td><span class="badge-cost">290,000원</span></td>
+                                <td><span class="badge-save">20% 할인</span> (시간당 약 2.4만 원꼴)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div style="font-size:13px; color:#888; margin-top:14px; line-height:1.6;">
+                • <strong>* 정기권(월 4회)</strong>은 매주 동일 요일/시간을 우선 고정 선점하는 우대 상품입니다.<br>
+                • <strong>🎓 단국대 학생 할인</strong>은 단품 대관 시 적용되며, 예약 신청 후 관리자에게 학생증 사진 문자가 필요합니다.
             </div>
 
             <div style="margin-top:20px; display:flex; gap:12px;">
@@ -590,9 +676,10 @@
                         <span class="faq-arrow">▼</span>
                     </div>
                     <div class="faq-answer">
-                        정기권은 <strong>월 4회 고정 시간 선점 + 최대 7만 원 파격 할인</strong> 혜택이 적용되는 특별 우대 상품입니다.<br>
-                        • <strong>⛪ 교회형 정기권 (주말)</strong>: A형(회당 2h) 20만 원(4만 할인) / B형(회당 3h) 29만 원(7만 할인)<br>
-                        • <strong>🏢 직장형 정기권 (주중)</strong>: A형(회당 2h) 16만 원(4만 할인) / B형(회당 3h) 27.6만 원(7만 할인)<br>
+                        정기권은 <strong>월 4회 고정 시간 선점 + 최대 20% 파격 할인</strong> 혜택이 적용되는 특별 우대 상품입니다.<br>
+                        • <strong>⛪ 교회 찬양팀 (주말)</strong>: A형(회당 2h) 20만 원(17% 할인) / B형(회당 3h) 29만 원(20% 할인)<br>
+                        • <strong>🏢 인근 직장인 밴드 (주중)</strong>: A형(회당 2h) 16만 원(20% 할인) / B형(회당 3h) 24만 원(20% 할인)<br>
+                        • <strong>🏢 인근 직장인 밴드 (일요일)</strong>: A형(회당 2h) 20만 원(17% 할인) / B형(회당 3h) 29만 원(20% 할인)<br>
                         👉 예약 신청 창에서 <strong>[🎁 정기권 (월 4회 할인)]</strong> 탭을 누르고 신청하시면 향후 4주간 동일 요일/시간이 자동으로 일괄 선점됩니다!
                     </div>
                 </div>
@@ -769,6 +856,20 @@
             <div id="rangeGuideBanner" class="range-guide-banner"></div>
             <div class="checkbox-grid" id="timeGrid"></div>
             
+            <!-- 단국대 학생 10% 특별 할인 체크박스 (일반 대관 시) -->
+            <div id="dkuDiscountBox" style="background:#0d1424; border:1px solid #1e293b; border-radius:14px; padding:12px 16px; margin-bottom:14px;">
+                <label style="display:flex; align-items:flex-start; gap:10px; cursor:pointer; font-size:13.5px; font-weight:700; color:#fff;">
+                    <input type="checkbox" id="dkuDiscountCheck" onchange="updateLivePrice()" style="margin-top:3px; width:18px; height:18px; accent-color:#3b82f6;">
+                    <div>
+                        <span style="color:#64b5f6;">🎓 단국대학교 학생 10% 특별 할인 적용</span>
+                        <p style="margin:4px 0 0 0; font-size:11.5px; color:#94a3b8; font-weight:normal; line-height:1.4;">
+                            • 단품 대관 10% 즉시 할인 (주중 22,500원 / 주말 27,000원)<br>
+                            • <strong style="color:#fbbf24;">※ 단국대 모바일/실물 학생증 지참 + 예약 신청 후 관리자 문자 확인(학생증 사진 전송) 필수</strong>
+                        </p>
+                    </div>
+                </label>
+            </div>
+
             <!-- 실시간 요금 계산 바 -->
             <div id="livePriceBox" style="background:#0a0a0a; border:1px solid #222; border-radius:14px; padding:14px 18px; margin-bottom:18px; display:flex; justify-content:space-between; align-items:center; font-size:14px;">
                 <span>선택 시간: <strong id="selectedHoursCount" style="color:#8a2be2;">0시간</strong> <span id="hoursNotice" style="font-size:12px; color:#888;">(기본 2시간~)</span></span>
@@ -846,6 +947,14 @@
                 <span style="color: #94a3b8; font-size: 13px;">총 대관료</span>
                 <strong id="confirmAmount" style="color: #c49aee; font-size: 18px; font-weight: 900;">50,000원</strong>
             </div>
+        </div>
+
+        <!-- 단국대 학생증 확인 알림 배너 (단국대 할인 선택 시 노출) -->
+        <div id="confirmDkuWarning" style="display: none; background: rgba(59, 130, 246, 0.12); border: 1px solid rgba(59, 130, 246, 0.35); border-radius: 12px; padding: 11px 14px; margin-bottom: 12px; align-items: flex-start; gap: 10px;">
+            <span style="font-size: 15px; line-height: 1.2;">🎓</span>
+            <span style="color: #93c5fd; font-size: 12px; line-height: 1.5; font-weight: 600;">
+                [단국대 학생 확인 필수] 예약 신청 완료 후 관리자 연락처(010-6240-6569)로 <strong>단국대 모바일/실물 학생증 사진</strong>을 문자로 보내주셔야 최종 확정됩니다. (이용 당일 학생증 지참 필수)
+            </span>
         </div>
 
         <!-- 알림 안내 배너 -->
@@ -1130,14 +1239,17 @@
 
         const passBox = document.getElementById('passPlanContainer');
         const durBox = document.getElementById('durationPresetBox');
+        const dkuBox = document.getElementById('dkuDiscountBox');
 
         if (cat === 'pass') {
             passBox.style.display = 'block';
             durBox.style.display = 'none';
+            if (dkuBox) dkuBox.style.display = 'none';
             renderPassPlans();
         } else {
             passBox.style.display = 'none';
             durBox.style.display = 'block';
+            if (dkuBox) dkuBox.style.display = 'block';
             setDurationMode(2);
         }
         updateLivePrice();
@@ -1170,15 +1282,19 @@
         let plans = [];
         if (isWeekendRate) {
             plans = [
-                { id: 'church_a', name: '⛪ 교회형 정기권 A (주말)', desc: '월 4회 (회당 2시간 / 총 8시간)', price: 200000, duration: 2, save: '4만원 할인' },
-                { id: 'church_b', name: '⛪ 교회형 정기권 B (주말)', desc: '월 4회 (회당 3시간 / 총 12시간)', price: 290000, duration: 3, save: '7만원 할인' }
+                { id: 'church_a', name: '⛪ 교회 찬양팀 A (주말)', desc: '월 4회 (회당 2시간 / 총 8시간)', price: 200000, duration: 2, save: '17% 할인' },
+                { id: 'church_b', name: '⛪ 교회 찬양팀 B (주말)', desc: '월 4회 (회당 3시간 / 총 12시간)', price: 290000, duration: 3, save: '20% 할인' },
+                { id: 'work_weekend_a', name: '🏢 인근 직장인 밴드 A (일요일)', desc: '월 4회 (회당 2시간 / 총 8시간)', price: 200000, duration: 2, save: '17% 할인' },
+                { id: 'work_weekend_b', name: '🏢 인근 직장인 밴드 B (일요일)', desc: '월 4회 (회당 3시간 / 총 12시간)', price: 290000, duration: 3, save: '20% 할인' }
             ];
         } else {
             plans = [
-                { id: 'work_a', name: '🏢 직장형 정기권 A (주중)', desc: '월 4회 (회당 2시간 / 총 8시간)', price: 160000, duration: 2, save: '4만원 할인' },
-                { id: 'work_b', name: '🏢 직장형 정기권 B (주중)', desc: '월 4회 (회당 3시간 / 총 12시간)', price: 276000, duration: 3, save: '7만원 할인' },
-                { id: 'church_a', name: '⛪ 교회형 정기권 A (주말)', desc: '월 4회 (회당 2시간 / 총 8시간)', price: 200000, duration: 2, save: '4만원 할인' },
-                { id: 'church_b', name: '⛪ 교회형 정기권 B (주말)', desc: '월 4회 (회당 3시간 / 총 12시간)', price: 290000, duration: 3, save: '7만원 할인' }
+                { id: 'work_a', name: '🏢 인근 직장인 밴드 A (주중)', desc: '월 4회 (회당 2시간 / 총 8시간)', price: 160000, duration: 2, save: '20% 할인' },
+                { id: 'work_b', name: '🏢 인근 직장인 밴드 B (주중)', desc: '월 4회 (회당 3시간 / 총 12시간)', price: 240000, duration: 3, save: '20% 할인' },
+                { id: 'work_weekend_a', name: '🏢 인근 직장인 밴드 A (일요일)', desc: '월 4회 (회당 2시간 / 총 8시간)', price: 200000, duration: 2, save: '17% 할인' },
+                { id: 'work_weekend_b', name: '🏢 인근 직장인 밴드 B (일요일)', desc: '월 4회 (회당 3시간 / 총 12시간)', price: 290000, duration: 3, save: '20% 할인' },
+                { id: 'church_a', name: '⛪ 교회 찬양팀 A (주말)', desc: '월 4회 (회당 2시간 / 총 8시간)', price: 200000, duration: 2, save: '17% 할인' },
+                { id: 'church_b', name: '⛪ 교회 찬양팀 B (주말)', desc: '월 4회 (회당 3시간 / 총 12시간)', price: 290000, duration: 3, save: '20% 할인' }
             ];
         }
 
@@ -1245,17 +1361,29 @@
                 'church_a': 200000,
                 'church_b': 290000,
                 'work_a': 160000,
-                'work_b': 276000
+                'work_b': 240000,
+                'work_weekend_a': 200000,
+                'work_weekend_b': 290000
             };
             const price = passPrices[currentPassPlan] || 200000;
             document.getElementById('selectedHoursCount').textContent = `회당 ${count}시간`;
             document.getElementById('hoursNotice').textContent = `(월 4회 정기 우대)`;
             document.getElementById('livePriceAmount').textContent = `${price.toLocaleString()}원`;
         } else {
-            const price = calculatePrice(window.selectedDate, times);
-            document.getElementById('selectedHoursCount').textContent = `${count}시간`;
-            document.getElementById('hoursNotice').textContent = `(기본 2시간~)`;
-            document.getElementById('livePriceAmount').textContent = `${price.toLocaleString()}원`;
+            const basePrice = calculatePrice(window.selectedDate, times);
+            const isDku = document.getElementById('dkuDiscountCheck')?.checked;
+            let finalPrice = basePrice;
+            if (isDku && basePrice > 0) {
+                finalPrice = Math.round(basePrice * 0.9);
+                const saveAmount = basePrice - finalPrice;
+                document.getElementById('selectedHoursCount').textContent = `${count}시간`;
+                document.getElementById('hoursNotice').textContent = `(🎓 단국대 10% -${saveAmount.toLocaleString()}원)`;
+                document.getElementById('livePriceAmount').textContent = `${finalPrice.toLocaleString()}원`;
+            } else {
+                document.getElementById('selectedHoursCount').textContent = `${count}시간`;
+                document.getElementById('hoursNotice').textContent = `(기본 2시간~)`;
+                document.getElementById('livePriceAmount').textContent = `${finalPrice.toLocaleString()}원`;
+            }
         }
 
         // 금액 변경 시 플래시 애니메이션
@@ -1870,19 +1998,24 @@
         let totalPrice = 0;
         let categoryText = `일반 대관 (${times.length}시간)`;
         let categoryBadgeStyle = 'color:#4d94ff; background:rgba(77,148,255,0.15); border-color:rgba(77,148,255,0.3);';
+        const isDkuVal = currentBookingCategory === 'general' && !isWeeklyVal && (document.getElementById('dkuDiscountCheck')?.checked || false);
 
         if (currentBookingCategory === 'pass') {
             const passPrices = {
                 'church_a': 200000,
                 'church_b': 290000,
                 'work_a': 160000,
-                'work_b': 276000
+                'work_b': 240000,
+                'work_weekend_a': 200000,
+                'work_weekend_b': 290000
             };
             const planTitles = {
-                'church_a': '교회형 정기권 A (주말 2h)',
-                'church_b': '교회형 정기권 B (주말 3h)',
-                'work_a': '직장형 정기권 A (주중 2h)',
-                'work_b': '직장형 정기권 B (주중 3h)'
+                'church_a': '교회 찬양팀 A (주말 2h)',
+                'church_b': '교회 찬양팀 B (주말 3h)',
+                'work_a': '인근 직장인 밴드 A (주중 2h)',
+                'work_b': '인근 직장인 밴드 B (주중 3h)',
+                'work_weekend_a': '인근 직장인 밴드 A (일요일 2h)',
+                'work_weekend_b': '인근 직장인 밴드 B (일요일 3h)'
             };
             totalPrice = passPrices[currentPassPlan] || 200000;
             const pTitle = planTitles[currentPassPlan] || '정기권 4회';
@@ -1892,6 +2025,10 @@
             totalPrice = calculatePrice(window.selectedDate, times) * 24;
             categoryText = `👑 24주 고정팀 (${times.length}시간)`;
             categoryBadgeStyle = 'color:#2ecc71; background:rgba(39,174,96,0.15); border-color:rgba(39,174,96,0.3);';
+        } else if (isDkuVal) {
+            totalPrice = Math.round(calculatePrice(window.selectedDate, times) * 0.9);
+            categoryText = `🎓 [단국대 10%] 일반 대관 (${times.length}시간)`;
+            categoryBadgeStyle = 'color:#64b5f6; background:rgba(77,148,255,0.2); border-color:rgba(77,148,255,0.4);';
         } else {
             totalPrice = calculatePrice(window.selectedDate, times);
         }
@@ -1921,6 +2058,12 @@
         if (document.getElementById('confirmPhone')) document.getElementById('confirmPhone').textContent = phoneVal;
         if (document.getElementById('confirmAmount')) document.getElementById('confirmAmount').textContent = `${totalPrice.toLocaleString()}원`;
 
+        // 단국대 학생증 경고 배너 토글
+        const dkuWarnEl = document.getElementById('confirmDkuWarning');
+        if (dkuWarnEl) {
+            dkuWarnEl.style.display = isDkuVal ? 'flex' : 'none';
+        }
+
         // 보류 중인 신청 데이터 저장
         pendingBookingData = {
             date: window.selectedDate,
@@ -1930,6 +2073,7 @@
             isWeekly: isWeeklyVal,
             category: currentBookingCategory,
             passPlan: currentPassPlan,
+            isDkuStudent: isDkuVal,
             amount: totalPrice
         };
 
@@ -1966,7 +2110,8 @@
                     phone: pendingBookingData.phone,
                     isWeekly: pendingBookingData.isWeekly,
                     category: pendingBookingData.category,
-                    passPlan: pendingBookingData.passPlan
+                    passPlan: pendingBookingData.passPlan,
+                    isDkuStudent: pendingBookingData.isDkuStudent
                 })
             });
 
