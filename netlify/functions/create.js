@@ -65,6 +65,22 @@ exports.handler = async (event) => {
       return { statusCode: 400, headers, body: JSON.stringify({ error: '합주실 대관은 기본 2시간 이상부터 가능합니다.' }) };
     }
 
+    // 20:00 이후 합주 불가 서버 검증 (운영시간 09:00 ~ 20:00)
+    for (const slot of times) {
+      const parts = slot.split('-');
+      if (parts.length === 2) {
+        const startH = parseInt(parts[0].split(':')[0], 10);
+        const endH = parseInt(parts[1].split(':')[0], 10);
+        if (startH < 9 || endH > 20 || startH >= 20) {
+          return { 
+            statusCode: 400, 
+            headers, 
+            body: JSON.stringify({ error: '합주실 운영 시간은 09:00~20:00입니다. 저녁 20시(8시) 이후에는 합주실 이용 및 예약이 불가합니다.' }) 
+          };
+        }
+      }
+    }
+
     // 1. 예약 시간 범위 계산 (KST 기준)
     const sortedTimes = [...times].sort();
     const startTime = sortedTimes[0].split('-')[0].trim();
