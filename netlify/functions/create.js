@@ -186,7 +186,9 @@ exports.handler = async (event) => {
         'church_a': { name: '교회형 정기권 A (주말 2h)', amount: 200000 },
         'church_b': { name: '교회형 정기권 B (주말 3h)', amount: 290000 },
         'work_a': { name: '직장형 정기권 A (주중 2h)', amount: 160000 },
-        'work_b': { name: '직장형 정기권 B (주중 3h)', amount: 240000 }
+        'work_b': { name: '직장형 정기권 B (주중 3h)', amount: 240000 },
+        'work_weekend_a': { name: '직장형 정기권 A (주말 2h)', amount: 200000 },
+        'work_weekend_b': { name: '직장형 정기권 B (주말 3h)', amount: 290000 }
       };
 
       const selectedPlan = passPriceMap[passPlan] || passPriceMap['work_a'];

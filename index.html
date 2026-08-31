@@ -300,10 +300,15 @@
                         • A형(월 4회/회당 2h): <strong>200,000원</strong> (4만 할인)<br>
                         • B형(월 4회/회당 3h): <strong>290,000원</strong> (7만 할인)
                     </div>
-                    <div style="line-height:1.5;">
+                    <div style="margin-bottom:6px; line-height:1.5;">
                         <span style="color:#e67e22; font-weight:bold;">🏢 직장형 (주중)</span><br>
                         • A형(월 4회/회당 2h): <strong>160,000원</strong> (4만 할인)<br>
                         • B형(월 4회/회당 3h): <strong>240,000원</strong> (6만 할인)
+                    </div>
+                    <div style="line-height:1.5;">
+                        <span style="color:#f39c12; font-weight:bold;">🏢 직장형 (주말)</span><br>
+                        • A형(월 4회/회당 2h): <strong>200,000원</strong> (4만 할인)<br>
+                        • B형(월 4회/회당 3h): <strong>290,000원</strong> (7만 할인)
                     </div>
                 </div>
 
@@ -422,6 +427,18 @@
                             <td>월 4회 (회당 3시간 / 총 12시간)</td>
                             <td><span class="badge-cost">240,000원</span></td>
                             <td><span class="badge-save">6만원 할인</span> (시간당 2만 원꼴)</td>
+                        </tr>
+                        <tr>
+                            <td><strong style="color:#f39c12;">직장형 정기권 A (주말)*</strong></td>
+                            <td>월 4회 (회당 2시간 / 총 8시간)</td>
+                            <td><span class="badge-cost">200,000원</span></td>
+                            <td><span class="badge-save">4만원 할인</span> (주말을 주중 요금으로!)</td>
+                        </tr>
+                        <tr>
+                            <td><strong style="color:#f39c12;">직장형 정기권 B (주말)</strong></td>
+                            <td>월 4회 (회당 3시간 / 총 12시간)</td>
+                            <td><span class="badge-cost">290,000원</span></td>
+                            <td><span class="badge-save">7만원 할인</span> (시간당 약 2.4만 원꼴)</td>
                         </tr>
                     </tbody>
                 </table>
@@ -610,6 +627,7 @@
                         정기권은 <strong>월 4회 고정 시간 선점 + 최대 7만 원 파격 할인</strong> 혜택이 적용되는 특별 우대 상품입니다.<br>
                         • <strong>⛪ 교회형 정기권 (주말)</strong>: A형(회당 2h) 20만 원(4만 할인) / B형(회당 3h) 29만 원(7만 할인)<br>
                         • <strong>🏢 직장형 정기권 (주중)</strong>: A형(회당 2h) 16만 원(4만 할인) / B형(회당 3h) 24만 원(6만 할인)<br>
+                        • <strong>🏢 직장형 정기권 (주말)</strong>: A형(회당 2h) 20만 원(4만 할인) / B형(회당 3h) 29만 원(7만 할인)<br>
                         👉 예약 신청 창에서 <strong>[🎁 정기권 (월 4회 할인)]</strong> 탭을 누르고 신청하시면 향후 4주간 동일 요일/시간이 자동으로 일괄 선점됩니다!
                     </div>
                 </div>
@@ -1213,12 +1231,16 @@
         if (isWeekendRate) {
             plans = [
                 { id: 'church_a', name: '⛪ 교회형 정기권 A (주말)', desc: '월 4회 (회당 2시간 / 총 8시간)', price: 200000, duration: 2, save: '4만원 할인' },
-                { id: 'church_b', name: '⛪ 교회형 정기권 B (주말)', desc: '월 4회 (회당 3시간 / 총 12시간)', price: 290000, duration: 3, save: '7만원 할인' }
+                { id: 'church_b', name: '⛪ 교회형 정기권 B (주말)', desc: '월 4회 (회당 3시간 / 총 12시간)', price: 290000, duration: 3, save: '7만원 할인' },
+                { id: 'work_weekend_a', name: '🏢 직장형 정기권 A (주말)', desc: '월 4회 (회당 2시간 / 총 8시간)', price: 200000, duration: 2, save: '4만원 할인' },
+                { id: 'work_weekend_b', name: '🏢 직장형 정기권 B (주말)', desc: '월 4회 (회당 3시간 / 총 12시간)', price: 290000, duration: 3, save: '7만원 할인' }
             ];
         } else {
             plans = [
                 { id: 'work_a', name: '🏢 직장형 정기권 A (주중)', desc: '월 4회 (회당 2시간 / 총 8시간)', price: 160000, duration: 2, save: '4만원 할인' },
                 { id: 'work_b', name: '🏢 직장형 정기권 B (주중)', desc: '월 4회 (회당 3시간 / 총 12시간)', price: 240000, duration: 3, save: '6만원 할인' },
+                { id: 'work_weekend_a', name: '🏢 직장형 정기권 A (주말)', desc: '월 4회 (회당 2시간 / 총 8시간)', price: 200000, duration: 2, save: '4만원 할인' },
+                { id: 'work_weekend_b', name: '🏢 직장형 정기권 B (주말)', desc: '월 4회 (회당 3시간 / 총 12시간)', price: 290000, duration: 3, save: '7만원 할인' },
                 { id: 'church_a', name: '⛪ 교회형 정기권 A (주말)', desc: '월 4회 (회당 2시간 / 총 8시간)', price: 200000, duration: 2, save: '4만원 할인' },
                 { id: 'church_b', name: '⛪ 교회형 정기권 B (주말)', desc: '월 4회 (회당 3시간 / 총 12시간)', price: 290000, duration: 3, save: '7만원 할인' }
             ];
@@ -1287,7 +1309,9 @@
                 'church_a': 200000,
                 'church_b': 290000,
                 'work_a': 160000,
-                'work_b': 240000
+                'work_b': 240000,
+                'work_weekend_a': 200000,
+                'work_weekend_b': 290000
             };
             const price = passPrices[currentPassPlan] || 200000;
             document.getElementById('selectedHoursCount').textContent = `회당 ${count}시간`;
@@ -1929,13 +1953,17 @@
                 'church_a': 200000,
                 'church_b': 290000,
                 'work_a': 160000,
-                'work_b': 240000
+                'work_b': 240000,
+                'work_weekend_a': 200000,
+                'work_weekend_b': 290000
             };
             const planTitles = {
                 'church_a': '교회형 정기권 A (주말 2h)',
                 'church_b': '교회형 정기권 B (주말 3h)',
                 'work_a': '직장형 정기권 A (주중 2h)',
-                'work_b': '직장형 정기권 B (주중 3h)'
+                'work_b': '직장형 정기권 B (주중 3h)',
+                'work_weekend_a': '직장형 정기권 A (주말 2h)',
+                'work_weekend_b': '직장형 정기권 B (주말 3h)'
             };
             totalPrice = passPrices[currentPassPlan] || 200000;
             const pTitle = planTitles[currentPassPlan] || '정기권 4회';
