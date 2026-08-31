@@ -49,7 +49,7 @@ exports.handler = async (event) => {
   if (event.httpMethod === 'OPTIONS') return { statusCode: 200, headers, body: '' };
 
   try {
-    const { date, times, teamName, phone, isWeekly, category, passPlan } = JSON.parse(event.body);
+    const { date, times, teamName, phone, isWeekly, category, passPlan, isDkuStudent } = JSON.parse(event.body);
     
     if (!date || !times || !times.length || !teamName) {
       return { statusCode: 400, headers, body: JSON.stringify({ error: '필수 예약 정보가 누락되었습니다.' }) };
@@ -186,7 +186,7 @@ exports.handler = async (event) => {
         'church_a': { name: '교회형 정기권 A (주말 2h)', amount: 200000 },
         'church_b': { name: '교회형 정기권 B (주말 3h)', amount: 290000 },
         'work_a': { name: '직장형 정기권 A (주중 2h)', amount: 160000 },
-        'work_b': { name: '직장형 정기권 B (주중 3h)', amount: 276000 }
+        'work_b': { name: '직장형 정기권 B (주중 3h)', amount: 240000 }
       };
 
       const selectedPlan = passPriceMap[passPlan] || passPriceMap['work_a'];
@@ -211,21 +211,22 @@ exports.handler = async (event) => {
         if (dateStr < todayKST) continue;
 
         const periodStr = `[${dateStr} ${startTime}:00+09, ${dateStr} ${endTime}:00+09)`;
+        const reservationNo = `PASS-${batchCode}-${w + 1}`;
 
         rows.push({
-          reservation_no: `PASS-${batchCode}-W${String(w+1).padStart(2, '0')}`,
+          reservation_no: reservationNo,
           room_id: 1,
           period: periodStr,
           status: 'pending',
-          booker_name: teamName.includes('[정기권]') ? teamName : `[정기권] ${teamName}`,
+          booker_name: `[정기권] ${teamName}`,
           booker_phone: cleanPhone,
           base_amount: singleWeekAmount,
-          amount: w === 0 ? passAmount : 0 // 첫 주에 총 입금액 기록
+          amount: singleWeekAmount
         });
       }
 
       if (rows.length === 0) {
-        return { statusCode: 400, headers, body: JSON.stringify({ error: '선택하신 날짜를 포함한 4주 일정이 모두 과거입니다. 다시 날짜를 선택해주세요.' }) };
+        return { statusCode: 400, headers, body: JSON.stringify({ error: '선택하신 시작일 이후로 등록 가능한 4주 정기권 일정이 없습니다.' }) };
       }
 
       const response = await fetch(`${supabaseUrl}/rest/v1/reservations`, {
@@ -290,7 +291,15 @@ exports.handler = async (event) => {
     }
 
     // 4. 일반 사용자 단건 예약 신청
-    const exactAmount = calculateBookingPrice(date, times);
+    let exactAmount = calculateBookingPrice(date, times);
+    let finalTeamName = teamName;
+    const isDku = (isDkuStudent === true);
+    if (isDku) {
+      exactAmount = Math.round(exactAmount * 0.9);
+      if (!finalTeamName.includes('[단국대]')) {
+        finalTeamName = `[단국대 10%] ${finalTeamName}`;
+      }
+    }
     const periodStr = `[${date} ${startTime}:00+09, ${date} ${endTime}:00+09)`;
     const reservationNo = Math.random().toString(36).substring(2, 12).toUpperCase();
 
@@ -307,7 +316,7 @@ exports.handler = async (event) => {
         room_id: 1,
         period: periodStr,
         status: 'pending',
-        booker_name: teamName,
+        booker_name: finalTeamName,
         booker_phone: cleanPhone,
         base_amount: exactAmount,
         amount: exactAmount
