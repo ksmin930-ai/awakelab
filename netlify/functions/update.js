@@ -116,6 +116,9 @@ exports.handler = async (event) => {
         apiUrl = isAuthorizedAdmin 
           ? `${supabaseUrl}/rest/v1/reservations?id=eq.${id}`
           : `${supabaseUrl}/rest/v1/reservations?id=eq.${id}&status=eq.pending`;
+      } else {
+        return { statusCode: 400, headers, body: JSON.stringify({ error: '삭제할 대상 정보가 누락되었습니다.' }) };
+      }
     } else if (action === 'reschedule') {
       // 관리자 전용 예약 일정 및 시간 변동 처리
       if (!isAuthorizedAdmin) {
@@ -176,8 +179,11 @@ exports.handler = async (event) => {
         body: JSON.stringify({ period: newPeriodStr })
       });
 
+      let updatedData = null;
       if (!patchRes.ok) {
-        const errJson = await patchRes.json().catch(() => ({}));
+        const errorText = await patchRes.text().catch(() => '');
+        let errJson = {};
+        try { errJson = JSON.parse(errorText); } catch(e) {}
         if (errJson.code === '23P01') {
           return {
             statusCode: 409,
@@ -185,11 +191,11 @@ exports.handler = async (event) => {
             body: JSON.stringify({ error: '선택하신 변경 일시에는 이미 다른 확정/대기 예약이 존재합니다. 다른 시간을 선택해 주세요.' })
           };
         }
-        console.error('Reschedule DB Error:', errJson);
-        throw new Error(errJson.message || '일정 변경 DB 저장 실패');
+        console.error('Reschedule DB Error:', errorText);
+        throw new Error(errJson.message || errorText || '일정 변경 DB 저장 실패');
+      } else {
+        updatedData = await patchRes.json().catch(() => null);
       }
-
-      const updatedData = await patchRes.json().catch(() => null);
 
       // 4. 안내 문자 자동 발송 (sendSms === true 이고 연락처가 있는 경우)
       if (sendSms && targetRes.booker_phone) {
