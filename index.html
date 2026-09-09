@@ -225,6 +225,81 @@
             transform: translateY(-4px) scale(1.05);
             box-shadow: 0 12px 30px rgba(254, 229, 0, 0.7), 0 6px 15px rgba(0,0,0,0.4);
         }
+
+        /* 갤러리 탭 & 카드 스타일 */
+        .gallery-container { width: 100%; max-width: 1200px; margin: 0 auto; display: flex; flex-direction: column; gap: 20px; }
+
+        .gallery-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 22px; }
+        .gallery-card { background: #0d111c; border: 1px solid #232b40; border-radius: 18px; overflow: hidden; transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.3s ease, border-color 0.3s ease; cursor: pointer; display: flex; flex-direction: column; }
+        .gallery-card:hover { transform: translateY(-6px); border-color: #8a2be2; box-shadow: 0 14px 30px rgba(0,0,0,0.6), 0 0 20px rgba(138, 43, 226, 0.25); }
+        .gallery-thumb-wrap { position: relative; width: 100%; height: 210px; overflow: hidden; background: #07090e; }
+        .gallery-thumb { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s ease; }
+        .gallery-card:hover .gallery-thumb { transform: scale(1.08); }
+        .gallery-badge { position: absolute; top: 12px; left: 12px; background: rgba(10, 14, 24, 0.85); backdrop-filter: blur(8px); border: 1px solid rgba(255, 255, 255, 0.15); color: #c49aee; font-size: 11px; font-weight: 800; padding: 4px 10px; border-radius: 20px; text-transform: uppercase; letter-spacing: 0.5px; }
+        .gallery-zoom-icon { position: absolute; top: 12px; right: 12px; width: 32px; height: 32px; border-radius: 50%; background: rgba(0,0,0,0.65); backdrop-filter: blur(6px); display: flex; align-items: center; justify-content: center; color: #fff; font-size: 14px; opacity: 0; transform: scale(0.8); transition: all 0.25s ease; border: 1px solid rgba(255,255,255,0.2); }
+        .gallery-card:hover .gallery-zoom-icon { opacity: 1; transform: scale(1); }
+
+        .gallery-info { padding: 18px 20px; display: flex; flex-direction: column; gap: 8px; flex: 1; }
+        .gallery-title { font-size: 16px; font-weight: 800; color: #fff; margin: 0; }
+        .gallery-desc { font-size: 13px; color: #94a3b8; line-height: 1.5; margin: 0; }
+        .gallery-spec-pill { margin-top: auto; padding-top: 10px; border-top: 1px solid #1a2236; font-size: 11.5px; color: #4d94ff; font-weight: 600; display: flex; align-items: center; gap: 6px; }
+
+        /* 홈 화면 갤러리 프리뷰 카드 */
+        .home-gallery-banner { background: linear-gradient(135deg, #101426, #161a30); border: 1px solid #283352; border-radius: 16px; padding: 16px; margin-bottom: 14px; cursor: pointer; transition: all 0.25s ease; }
+        .home-gallery-banner:hover { border-color: #8a2be2; transform: translateY(-2px); box-shadow: 0 8px 25px rgba(138,43,226,0.25); }
+        .home-gallery-preview-grid { display: grid; grid-template-columns: 2fr 1fr 1fr; grid-template-rows: 60px 60px; gap: 6px; border-radius: 12px; overflow: hidden; margin: 10px 0 12px 0; border: 1px solid rgba(255,255,255,0.08); }
+        .home-gallery-thumb { width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s ease; }
+        .home-gallery-thumb:hover { transform: scale(1.05); }
+
+        /* 라이트박스 모달 */
+        .lightbox-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(5, 7, 12, 0.92); backdrop-filter: blur(12px); z-index: 9999; justify-content: center; align-items: center; padding: 20px; box-sizing: border-box; }
+        .lightbox-modal.active { display: flex; animation: fadeIn 0.25s ease; }
+        .lightbox-box { position: relative; max-width: 960px; width: 100%; background: #0d111c; border: 1px solid #2d3858; border-radius: 20px; overflow: hidden; box-shadow: 0 25px 60px rgba(0,0,0,0.85); display: flex; flex-direction: column; max-height: 90vh; }
+        .lightbox-img-wrap { position: relative; width: 100%; max-height: 60vh; background: #05070c; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+        .lightbox-img { width: 100%; height: auto; max-height: 60vh; object-fit: contain; }
+        .lightbox-caption-box { padding: 18px 24px; background: #0d111c; display: flex; justify-content: space-between; align-items: center; border-top: 1px solid #1a2236; }
+        .lightbox-close-btn { position: absolute; top: 16px; right: 16px; background: rgba(0,0,0,0.65); border: 1px solid rgba(255,255,255,0.2); color: #fff; width: 38px; height: 38px; border-radius: 50%; font-size: 18px; cursor: pointer; display: flex; align-items: center; justify-content: center; z-index: 10; transition: all 0.2s; }
+        .lightbox-close-btn:hover { background: #e74c3c; border-color: #e74c3c; transform: scale(1.1); }
+        .lightbox-nav-btn { position: absolute; top: 50%; transform: translateY(-50%); background: rgba(13, 17, 28, 0.75); border: 1px solid rgba(255,255,255,0.2); color: #fff; width: 44px; height: 44px; border-radius: 50%; font-size: 20px; cursor: pointer; display: flex; align-items: center; justify-content: center; z-index: 10; transition: all 0.2s; }
+        .lightbox-nav-btn:hover { background: #8a2be2; border-color: #8a2be2; transform: translateY(-50%) scale(1.1); }
+        .lightbox-prev { left: 16px; }
+        .lightbox-next { right: 16px; }
+
+        /* 🥁 1:1 드럼 레슨 전용 스타일 */
+        .lesson-container { width: 100%; max-width: 1100px; margin: 0 auto; display: flex; flex-direction: column; gap: 24px; }
+        .lesson-limit-banner { background: linear-gradient(135deg, rgba(231, 76, 60, 0.18), rgba(138, 43, 226, 0.22)); border: 1.5px solid #e74c3c; border-radius: 18px; padding: 18px 24px; display: flex; align-items: center; justify-content: space-between; gap: 16px; box-shadow: 0 8px 30px rgba(231, 76, 60, 0.25); flex-wrap: wrap; }
+        .lesson-limit-tag { background: #e74c3c; color: #fff; font-size: 12px; font-weight: 900; padding: 5px 12px; border-radius: 20px; letter-spacing: 0.5px; animation: pulse 2s infinite; display: inline-flex; align-items: center; gap: 6px; }
+        
+        .lesson-profile-card { background: #0c101c; border: 1px solid #232b40; border-radius: 24px; padding: 32px; display: grid; grid-template-columns: 320px 1fr; gap: 32px; box-shadow: 0 20px 50px rgba(0,0,0,0.6); align-items: start; }
+        @media (max-width: 820px) {
+            .lesson-profile-card { grid-template-columns: 1fr; padding: 22px; gap: 22px; }
+        }
+        .lesson-photo-wrap { position: relative; border-radius: 18px; overflow: hidden; border: 1.5px solid rgba(138, 43, 226, 0.4); box-shadow: 0 10px 30px rgba(0,0,0,0.5); margin-bottom: 12px; }
+        .lesson-photo { width: 100%; height: 215px; object-fit: cover; object-position: center; display: block; transition: transform 0.3s ease; }
+        .lesson-photo:hover { transform: scale(1.03); }
+        .lesson-photo-sub-wrap { position: relative; border-radius: 18px; overflow: hidden; border: 1.5px solid rgba(77, 148, 255, 0.35); box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        .lesson-photo-sub { width: 100%; height: 215px; object-fit: cover; object-position: center 10%; display: block; transition: transform 0.3s ease; }
+        .lesson-photo-sub:hover { transform: scale(1.03); }
+        
+        .lesson-plan-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; align-items: stretch; }
+        @media (max-width: 820px) {
+            .lesson-plan-grid { grid-template-columns: 1fr; }
+        }
+        .lesson-plan-card { background: #0c101c; border: 1.5px solid #232b40; border-radius: 22px; padding: 28px; display: flex; flex-direction: column; justify-content: space-between; transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); position: relative; overflow: hidden; }
+        .lesson-plan-card:hover { transform: translateY(-5px); border-color: #8a2be2; box-shadow: 0 16px 40px rgba(138, 43, 226, 0.25); }
+        .lesson-plan-badge { display: inline-block; padding: 5px 12px; border-radius: 20px; font-size: 12px; font-weight: 800; margin-bottom: 12px; }
+        .lesson-price-large { font-size: 32px; font-weight: 900; color: #fff; margin: 12px 0 6px 0; }
+        .lesson-price-large span { font-size: 14px; color: #94a3b8; font-weight: 500; }
+        
+        .lesson-feature-list { list-style: none; padding: 0; margin: 16px 0 24px 0; display: flex; flex-direction: column; gap: 10px; font-size: 13.5px; color: #cbd5e1; }
+        .lesson-feature-list li { display: flex; align-items: flex-start; gap: 8px; line-height: 1.5; }
+        .lesson-feature-list li span { color: #2ecc71; font-weight: bold; }
+
+        .career-accordion { background: #0a0d16; border: 1px solid #1c2335; border-radius: 18px; padding: 24px; }
+        .career-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; font-size: 13px; color: #94a3b8; line-height: 1.7; }
+        @media (max-width: 680px) {
+            .career-grid { grid-template-columns: 1fr; }
+        }
     </style>
 </head>
 <body>
@@ -235,6 +310,8 @@
     </div>
     <div class="nav-links">
         <button class="nav-btn active" id="homeBtn" onclick="showTab('home')">예약 (HOME)</button>
+        <button class="nav-btn" id="galleryBtn" onclick="showTab('gallery')">📷 갤러리 (SPACE)</button>
+        <button class="nav-btn" id="lessonBtn" onclick="showTab('lesson')">🎵 개인레슨 문의 (LESSON)</button>
         <button class="nav-btn" id="priceBtn" onclick="showTab('price')">요금표 (PRICE)</button>
         <button class="nav-btn" id="guideBtn" onclick="showTab('guide')">가이드 (GUIDE)</button>
         <button class="nav-btn" id="faqBtn" onclick="showTab('faq')">Q&A (FAQ)</button>
@@ -267,6 +344,50 @@
     <!-- 1. 예약 홈 탭 -->
     <div id="homeContent" class="tab-content active">
         <div class="info-panel">
+            <!-- 갤러리 둘러보기 미니 프리뷰 카드 -->
+            <div class="home-gallery-banner" onclick="showTab('gallery')">
+                <div style="display:flex; justify-content:space-between; align-items:center;">
+                    <div style="font-weight:800; font-size:14.5px; color:#fff; display:flex; align-items:center; gap:7px;">
+                        <span>📷 어웨이크랩 공간 & 실사용 둘러보기</span>
+                        <span style="font-size:10.5px; background:rgba(138,43,226,0.25); color:#c49aee; padding:2px 7px; border-radius:6px; font-weight:800;">실사 12장</span>
+                    </div>
+                    <span style="font-size:12px; color:#c49aee; font-weight:bold;">갤러리 보기 ❯</span>
+                </div>
+                <div class="home-gallery-preview-grid">
+                    <img src="images/space/photo_10.png" alt="라이브 클립 & 영상 콘텐츠 촬영" class="home-gallery-thumb" style="grid-row: span 2;">
+                    <img src="images/space/photo_04.jpeg" alt="세미나 & 마스터클래스 전경" class="home-gallery-thumb">
+                    <img src="images/space/photo_17.jpg" alt="야마하 88건반 & MOTIF 7 신디사이저" class="home-gallery-thumb">
+                    <img src="images/space/photo_11.png" alt="10인 대규모 워십 밴드 합주" class="home-gallery-thumb">
+                    <img src="images/space/photo_14.jpg" alt="풀 어쿠스틱 드럼 세트" class="home-gallery-thumb">
+                </div>
+                <div style="font-size:12px; color:#94a3b8; display:flex; justify-content:space-between; align-items:center;">
+                    <span>영상 촬영 · 세미나 전경 · 88건반/신디 · 10인 밴드 · 드럼</span>
+                    <span style="color:#60a5fa; font-weight:700; font-size:11.5px;">자세히 보기 ❯</span>
+                </div>
+            </div>
+
+            <!-- 개인레슨 오픈 홍보 미니 배너 -->
+            <div class="home-gallery-banner" onclick="showTab('lesson')" style="background: linear-gradient(135deg, #1b122e, #22143b); border: 1.5px solid rgba(168, 85, 247, 0.45); box-shadow: 0 8px 25px rgba(138,43,226,0.22);">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+                    <div style="font-weight:900; font-size:14px; color:#fff; display:flex; align-items:center; gap:6px;">
+                        <span>🎵 AWAKE LAB 개인레슨 오픈</span>
+                        <span style="font-size:10px; background:#e74c3c; color:#fff; padding:2px 8px; border-radius:12px; font-weight:900; animation:pulse 2s infinite;">⚡ 도합 5명 한정 모집</span>
+                    </div>
+                    <span style="font-size:12px; color:#c084fc; font-weight:bold;">레슨 문의 ❯</span>
+                </div>
+                <div style="display:flex; gap:12px; align-items:center; margin:8px 0;">
+                    <img src="images/profile-drum-1.jpg" alt="민경선 드럼 강사" style="width:50px; height:50px; border-radius:50%; object-fit:cover; border:2px solid #a855f7; flex-shrink:0;">
+                    <div style="font-size:12px; color:#cbd5e1; line-height:1.45;">
+                        <strong style="color:#fff;">드럼 1:1 직강 OPEN · 베이스 & 건반 클래스 준비 중</strong><br>
+                        <span style="color:#c49aee; font-weight:700;">취미 4회 18만 · 입시/전공 4회 30만 (회당 60분)</span>
+                    </div>
+                </div>
+                <div style="font-size:11.5px; color:#94a3b8; display:flex; justify-content:space-between; align-items:center; border-top:1px dashed rgba(255,255,255,0.1); padding-top:6px;">
+                    <span>더 나은 레슨의 질을 위한 소수 정예 집중 지도</span>
+                    <span style="color:#60a5fa; font-weight:700;">상세 안내 ❯</span>
+                </div>
+            </div>
+
             <div class="info-card">
                 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
                     <h3 style="margin:0; border:none; padding:0; font-size:17px; font-weight:800;">⏰ 대관 요금 안내</h3>
@@ -385,7 +506,247 @@
         </div>
     </div>
 
-    <!-- 2. 요금 상세표 탭 (PRICE) -->
+    <!-- 2. 공간 갤러리 탭 (SPACE / GALLERY) -->
+    <div id="galleryContent" class="tab-content">
+        <div class="gallery-container">
+            <div class="guide-header-box" style="background: linear-gradient(135deg, #181028, #0e1a38);">
+                <h2>어웨이크랩 공간 갤러리</h2>
+                <div class="guide-header-line" style="background: linear-gradient(90deg, #8a2be2, #4d94ff);"></div>
+                <p class="sub1" style="color: #c49aee; font-weight: 700;">최적의 룸 어쿠스틱 방음과 프로 사양 악기 라인업</p>
+                <p class="sub2">창작자와 밴드를 위한 몰입형 합주 공간, 깨어있는 연구소 (AWAKE LAB)</p>
+            </div>
+
+            <!-- 갤러리 그리드 컨테이너 (전체보기 단일 노출) -->
+
+            <!-- 갤러리 그리드 컨테이너 (JS 렌더링) -->
+            <div class="gallery-grid" id="galleryGrid">
+                <!-- 자바스크립트로 동적 렌더링 -->
+            </div>
+
+            <!-- 하단 안내 및 예약 바로가기 배너 -->
+            <div style="background: linear-gradient(135deg, #0c101d, #141a2e); border: 1px solid #232c44; border-radius: 18px; padding: 24px; margin-top: 20px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.4);">
+                <h3 style="margin: 0 0 8px 0; font-size: 18px; color: #fff; font-weight: 800;">마음에 드는 시간을 지금 바로 예약하세요!</h3>
+                <p style="margin: 0 0 18px 0; font-size: 13.5px; color: #94a3b8;">주중 25,000원 / 주말 30,000원 · 단국대 학생 10% 즉시 우대 · 4주 정기권 최대 20% 할인</p>
+                <div style="display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;">
+                    <button type="button" class="btn btn-submit" style="padding: 14px 28px; width: auto; font-size: 14.5px;" onclick="showTab('home')">🗓️ 실시간 예약 현황 보러가기</button>
+                    <button type="button" class="btn" style="padding: 14px 24px; width: auto; font-size: 14.5px; background: #181f33; border: 1px solid #334266; color: #cbd5e1;" onclick="showTab('price')">💰 요금 상세표 보기</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 3. 개인레슨 문의 탭 (LESSON) -->
+    <div id="lessonContent" class="tab-content">
+        <div class="lesson-container">
+            <!-- 헤더 박스 -->
+            <div class="guide-header-box" style="background: linear-gradient(135deg, #1b1130, #131733);">
+                <div style="display:inline-block; font-size:11px; font-weight:800; color:#c084fc; background:rgba(168,85,247,0.18); border:1px solid rgba(168,85,247,0.35); padding:3px 10px; border-radius:12px; margin-bottom:8px;">AWAKE LAB 1:1 LESSON</div>
+                <h2>AWAKE LAB 개인레슨 오픈</h2>
+                <div class="guide-header-line" style="background: linear-gradient(90deg, #e74c3c, #a855f7);"></div>
+                <p class="sub1" style="color: #c084fc; font-weight: 800;">⚡ 더 나은 레슨의 질을 위한 [취미·전공 도합 총 5명] 소수 정예 집중 코칭</p>
+                <p class="sub2">호원대학교 실용음악과 드럼전공 학사 · 10년+ 풍부한 티칭 노하우의 어웨이크랩 운영자 드러머 민경선 1:1 직강</p>
+                <div style="display:flex; justify-content:center; gap:8px; margin-top:14px; flex-wrap:wrap;">
+                    <span style="background:rgba(46,204,113,0.18); border:1px solid rgba(46,204,113,0.4); color:#4ade80; font-size:12px; font-weight:800; padding:4px 12px; border-radius:14px;">🥁 드럼 클래스 수강생 모집 중</span>
+                    <span style="background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.12); color:#94a3b8; font-size:12px; font-weight:700; padding:4px 12px; border-radius:14px;">🎸 베이스 · 🎹 건반 클래스 오픈 준비 중</span>
+                </div>
+            </div>
+
+            <!-- 5명 한정 모집 강조 배너 -->
+            <div class="lesson-limit-banner">
+                <div style="display: flex; align-items: center; gap: 14px; flex-wrap: wrap;">
+                    <span class="lesson-limit-tag">🔥 정원 마감 임박</span>
+                    <div style="color: #fff; font-size: 14px; line-height: 1.5;">
+                        <strong style="color: #ff7675; font-size: 15px;">소수정예 모집 (취미 · 전공 구분 없이 도합 총 5명 한정)</strong><br>
+                        <span style="color: #cbd5e1; font-size: 13px;">한 분 한 분에게 100% 온전히 집중하여 가장 확실한 실력 향상을 이끌어내기 위해, 과정 구분 없이 전체 도합 5명만 정원으로 제한합니다.</span>
+                    </div>
+                </div>
+                <a href="http://pf.kakao.com/_xminSX/chat" target="_blank" rel="noopener noreferrer" style="background: #e74c3c; color: #fff; text-decoration: none; padding: 10px 18px; border-radius: 12px; font-weight: 800; font-size: 13px; display: inline-flex; align-items: center; gap: 6px; box-shadow: 0 4px 15px rgba(231,76,60,0.4); white-space: nowrap;">
+                    레슨 신청 및 상담 ❯
+                </a>
+            </div>
+
+            <!-- 강사 프로필 카드 -->
+            <div class="lesson-profile-card">
+                <div>
+                    <div class="lesson-photo-wrap">
+                        <img src="images/profile-drum-1.jpg" alt="민경선 드러머 프로필" class="lesson-photo">
+                        <span style="position:absolute; top:10px; left:10px; background:rgba(10,14,24,0.85); backdrop-filter:blur(6px); color:#c49aee; font-size:11px; font-weight:800; padding:3px 9px; border-radius:12px; border:1px solid rgba(255,255,255,0.15);">🎤 라이브 세션</span>
+                    </div>
+                    <div class="lesson-photo-sub-wrap">
+                        <img src="images/space/photo_12.jpg" alt="어웨이크랩 1:1 드럼 레슨 현장" class="lesson-photo-sub">
+                        <span style="position:absolute; top:10px; left:10px; background:rgba(10,14,24,0.85); backdrop-filter:blur(6px); color:#93c5fd; font-size:11px; font-weight:800; padding:3px 9px; border-radius:12px; border:1px solid rgba(255,255,255,0.15);">🥁 합주실 1:1 드럼 레슨</span>
+                    </div>
+                    <div style="margin-top: 16px; text-align: center;">
+                        <h3 style="margin: 0 0 4px 0; font-size: 20px; color: #fff; font-weight: 900;">어웨이크랩 운영자 드러머 민경선</h3>
+                        <p style="margin: 0; font-size: 13px; color: #a855f7; font-weight: 700;">호원대학교 실용음악과 드럼전공 학사</p>
+                    </div>
+                </div>
+                <div style="display: flex; flex-direction: column; gap: 16px;">
+                    <div>
+                        <div style="display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 12px;">
+                            <span style="background: rgba(138,43,226,0.25); color: #c49aee; padding: 4px 10px; border-radius: 8px; font-size: 11.5px; font-weight: 800;">호원대 드럼전공 학사</span>
+                            <span style="background: rgba(59,130,246,0.25); color: #93c5fd; padding: 4px 10px; border-radius: 8px; font-size: 11.5px; font-weight: 800;">10년+ 레슨 지도 경력</span>
+                            <span style="background: rgba(46,204,113,0.25); color: #86efac; padding: 4px 10px; border-radius: 8px; font-size: 11.5px; font-weight: 800;">입시 합격 다수 배출</span>
+                        </div>
+                        <h3 style="margin: 0 0 10px 0; font-size: 20px; color: #fff; font-weight: 800; line-height: 1.45;">
+                            "대학 밴드 동아리부터 퇴근 후 힐링 취미, 교회 찬양팀 반주까지 —<br><span style="color: #c084fc;">실전 합주와 무대에서 진짜 빛나는 드럼</span>을 알려드립니다."
+                        </h3>
+                        <p style="margin: 0; font-size: 13.8px; color: #94a3b8; line-height: 1.75;">
+                            악보만 기계적으로 외우는 딱딱한 레슨이 아닙니다.<br>
+                            🎸 <strong>대학생</strong>: 동아리 합주 및 캠퍼스 축제 무대 실전 테크닉 & 앙상블 호흡<br>
+                            💼 <strong>직장인</strong>: 하루 스트레스 해소와 최신 가요·팝·록 1곡 완벽 마스터<br>
+                            ⛪ <strong>교회 찬양팀</strong>: 은혜로운 예배 흐름 빌드업과 센스 넘치는 CCM 필인 노하우<br>
+                            기초 스틱 그립부터 실전 앙상블 팁까지 10년+ 풍부한 티칭 노하우로 가장 쉽고 직관적으로 1:1 밀착 지도해 드립니다.
+                        </p>
+                    </div>
+
+                    <div style="background: #111626; border: 1px solid #232c44; border-radius: 16px; padding: 18px; display: flex; flex-direction: column; gap: 10px;">
+                        <div style="font-weight: 800; font-size: 14px; color: #fff; display: flex; align-items: center; gap: 6px;">
+                            <span>✨ AWAKE LAB 드럼 레슨만의 독보적인 장점</span>
+                        </div>
+                        <div style="font-size: 13px; color: #cbd5e1; display: flex; flex-direction: column; gap: 8px; line-height: 1.5;">
+                            <div>🎧 <strong>합주실 어쿠스틱 드럼 환경 직강</strong>: 전자드럼이 아닌 TAMA & Pearl 실제 풀 어쿠스틱 드럼 셋과 차음 쉴드 환경에서 실전 터치감 습득</div>
+                            <div>🎯 <strong>100% 개인 맞춤형 커리큘럼</strong>: 완전 기초 왕초보, 퇴근 후 직장인 밴드, 교회 찬양팀 실전 반주, 예고·음대 실용음악과 입시까지 맞춤 진행</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 레슨 플랜 카드 2종 (취미/전공 동일 균형 배치 & 전체 5명 소수정예 강조) -->
+            <div style="margin-top: 10px;">
+                <div style="text-align: center; margin-bottom: 22px;">
+                    <span style="font-size: 12px; color: #e74c3c; font-weight: 900; background: rgba(231,76,60,0.15); padding: 5px 14px; border-radius: 20px; border: 1px solid rgba(231,76,60,0.35); animation: pulse 2s infinite; display: inline-flex; align-items: center; gap: 6px;">
+                        🔥 전체 5명 소수정예 집중 지도 (취미 · 전공 도합)
+                    </span>
+                    <h3 style="margin: 10px 0 6px 0; font-size: 22px; color: #fff; font-weight: 900;">1:1 개인 레슨 프로그램 안내</h3>
+                    <p style="margin: 0; font-size: 13.5px; color: #cbd5e1;">레슨 퀄리티 유지를 위해 취미와 전공 구분 없이 <strong style="color: #ff7675;">도합 총 5명 정원제</strong>로 운영됩니다.</p>
+                </div>
+
+                <div class="lesson-plan-grid">
+                    <!-- 1. 취미 / 직장인 / 찬양팀 -->
+                    <div class="lesson-plan-card">
+                        <div style="position: absolute; top: 16px; right: 16px; background: rgba(231,76,60,0.15); border: 1.5px solid rgba(231,76,60,0.45); color: #ff7675; font-size: 11px; font-weight: 800; padding: 4px 10px; border-radius: 12px;">
+                            ⚡ 전체 5명 정원 포함
+                        </div>
+                        <div>
+                            <span class="lesson-plan-badge" style="background: rgba(46,204,113,0.18); color: #4ade80; border: 1px solid rgba(46,204,113,0.35);">초보 · 직장인 · 찬양팀</span>
+                            <h4 style="margin: 0; font-size: 21px; color: #fff; font-weight: 900;">취미 1:1 개인레슨</h4>
+                            <p style="margin: 6px 0 0 0; font-size: 13px; color: #94a3b8;">기초부터 탄탄하게! 좋아하는 곡을 내 손으로 직접 연주하는 기쁨</p>
+                            
+                            <div class="lesson-price-large">
+                                180,000원 <span>/ 월 4회 (회당 60분)</span>
+                            </div>
+
+                            <ul class="lesson-feature-list">
+                                <li><span>✓</span> <strong>1:1 맞춤형 60분 밀착 지도</strong> (주 1회, 총 4회)</li>
+                                <li><span>✓</span> 스틱 그립, 페달링 기본자세 및 스트로크 완벽 교정</li>
+                                <li><span>✓</span> 기본 8비트, 16비트 리듬 패턴과 필수 필인(Fill-in) 마스터</li>
+                                <li><span>✓</span> 최신 가요 / 팝 / 록 / CCM 등 <strong>희망 애창곡 1곡 완벽 마스터</strong></li>
+                                <li><span>✓</span> 밴드 합주 및 교회 찬양팀 실전 반주 노하우 전수</li>
+                                <li><span>✓</span> 악보를 전혀 볼 줄 몰라도 첫날부터 드럼 연주 가능</li>
+                            </ul>
+                        </div>
+
+                        <a href="http://pf.kakao.com/_xminSX/chat" target="_blank" rel="noopener noreferrer" class="btn btn-submit" style="padding: 14px; text-decoration: none; text-align: center; font-size: 14px; font-weight: 800;">
+                            💬 취미 레슨 상담 신청 ❯
+                        </a>
+                    </div>
+
+                    <!-- 2. 입시 / 전공 / 프로 -->
+                    <div class="lesson-plan-card">
+                        <div style="position: absolute; top: 16px; right: 16px; background: rgba(231,76,60,0.15); border: 1.5px solid rgba(231,76,60,0.45); color: #ff7675; font-size: 11px; font-weight: 800; padding: 4px 10px; border-radius: 12px;">
+                            ⚡ 전체 5명 정원 포함
+                        </div>
+                        <div>
+                            <span class="lesson-plan-badge" style="background: rgba(168,85,247,0.18); color: #c084fc; border: 1px solid rgba(168,85,247,0.35);">예고 · 음대 입시 / 전공자</span>
+                            <h4 style="margin: 0; font-size: 21px; color: #fff; font-weight: 900;">입시 · 전공 1:1 심화레슨</h4>
+                            <p style="margin: 6px 0 0 0; font-size: 13px; color: #94a3b8;">실용음악과 대학 입시, 전문 세션 드러머를 위한 나노 단위 테크닉 교정</p>
+                            
+                            <div class="lesson-price-large" style="color: #c084fc;">
+                                300,000원 <span>/ 월 4회 (회당 60분)</span>
+                            </div>
+
+                            <ul class="lesson-feature-list">
+                                <li><span>✓</span> <strong>1:1 고강도 정밀 심화 지도</strong> (주 1회, 총 4회)</li>
+                                <li><span>✓</span> 루디먼트(Rudiments) 정밀 테크닉 (파라디들, 플램, 롤 응용)</li>
+                                <li><span>✓</span> Funk, Latin, Jazz, Odd-meter 등 <strong>장르별 심화 그루브 마스터</strong></li>
+                                <li><span>✓</span> <strong>실전 연주 모니터링</strong> & 터치·타이밍 정밀 피드백</li>
+                                <li><span>✓</span> 수험생 개성에 맞춘 입시곡 선곡, 솔로잉 편곡 & 모의 실기 평가</li>
+                                <li><span>✓</span> 호원대, 국제예대, 백석문화대 등 <strong>다수 합격생 배출 노하우 전수</strong></li>
+                            </ul>
+                        </div>
+
+                        <a href="http://pf.kakao.com/_xminSX/chat" target="_blank" rel="noopener noreferrer" class="btn" style="padding: 14px; text-decoration: none; text-align: center; font-size: 14px; font-weight: 800; background: linear-gradient(135deg, #8a2be2, #4d94ff); color: #fff; border: none; box-shadow: 0 6px 20px rgba(138,43,226,0.35);">
+                            🔥 입시·전공 레슨 심층 상담 ❯
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 강사 주요 약력 및 활동 이력 -->
+            <div class="career-accordion" style="margin-top: 10px;">
+                <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; border-bottom: 1px solid #1c2335; padding-bottom: 12px;">
+                    <h4 style="margin: 0; font-size: 16px; color: #fff; font-weight: 800; display: flex; align-items: center; gap: 8px;">
+                        <span>📋 드러머 민경선 주요 약력 및 필드 이력</span>
+                    </h4>
+                    <span style="font-size: 12px; color: #64b5f6; font-weight: 700;">프로필</span>
+                </div>
+
+                <div class="career-grid">
+                    <div>
+                        <strong style="color: #fff; font-size: 13.5px; display: block; margin-bottom: 8px;">🎓 학력 및 교육 사사</strong>
+                        • 호원대학교 실용음악과 드럼전공 학사<br>
+                        • 차준호, 정원영, 송홍섭, 전성식, 한상원 교수님 사사<br>
+                        • 제3야전군사령부 군악대 병장 만기전역<br>
+                        • 호원대, 국제예대, 백석문화대, 계원예중 등 다수 입시 합격생 지도
+                        <div style="margin-top: 14px;">
+                            <strong style="color: #fff; font-size: 13.5px; display: block; margin-bottom: 8px;">🏫 주요 출강 경력</strong>
+                            • 현 I Am 실용음악학원 드럼 강사 (10년 근속 출강)<br>
+                            • 현 뮤지끄 실용음악학원 드럼 강사 (5년 근속 출강)<br>
+                            • 현 107실용음악학원 드럼 강사<br>
+                            • 전 비뉴베 실용음악학원(3년), YL, CM, 라다실용음악학원 출강
+                        </div>
+                    </div>
+                    <div>
+                        <strong style="color: #fff; font-size: 13.5px; display: block; margin-bottom: 8px;">🎸 아티스트 라이브 & 방송 세션</strong>
+                        • 김재중, 이진성(먼데이키즈), 슈퍼주니어 신동, 스윙스, 보이비 라이브 무대 드럼 세션<br>
+                        • 베이시스트 전성식 교수 밴드 라이브 다수 세션<br>
+                        • 워십웨이커스 메인 드러머, 새에덴교회 드러머 사역<br>
+                        • 청와대 2020년 국가조찬기도회 집회 드럼 세션 (CBS 방송)<br>
+                        • CTS Live 집회 방송 세션, 뮤지컬배우 리사, 강균성 찬양집회 세션<br>
+                        • 용인 포은아트홀 대공연장 정기 기획연주회, 주한 미8군 초청 야외 콘서트, 에버랜드 페스티벌 라이브 세션 연주
+                        <div style="margin-top: 14px;">
+                            <strong style="color: #fff; font-size: 13.5px; display: block; margin-bottom: 8px;">💿 주요 음반 레코딩 세션</strong>
+                            • 워십웨이커스 1집/2집 전 앨범 작사·작곡 및 드럼 연주<br>
+                            • 새에덴국악찬양단 '혈루병 여인의 고백' 녹음 세션<br>
+                            • 밴드 'Navy clover', 뉴에덴워십 앨범 등 다수 녹음 세션
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 하단 1:1 문의 박스 -->
+            <div style="background: linear-gradient(135deg, #101526, #161835); border: 1.5px solid rgba(168,85,247,0.3); border-radius: 20px; padding: 26px; text-align: center; box-shadow: 0 10px 35px rgba(0,0,0,0.5);">
+                <span style="background: #e74c3c; color: #fff; font-size: 11.5px; font-weight: 900; padding: 4px 12px; border-radius: 16px; display: inline-block; margin-bottom: 10px;">⚡ 취미 · 전공 도합 총 5명 정원제</span>
+                <h3 style="margin: 0 0 8px 0; font-size: 20px; color: #fff; font-weight: 900;">1:1 개인레슨 상담 & 무료 사전 방문 신청</h3>
+                <p style="margin: 0 0 20px 0; font-size: 13.5px; color: #94a3b8; line-height: 1.6;">
+                    어웨이크랩에 직접 오셔서 드럼 룸을 둘러보시고 강사님과 1:1 실력 진단 및 레슨 방향을 먼저 편하게 상담받으실 수 있습니다.<br>
+                    <span style="color: #fca5a5; font-weight: 700;">※ 최고 수준의 레슨 퀄리티 유지를 위해 취미·전공 구분 없이 도합 5명 마감 시 대기 등록으로 안내됩니다.</span>
+                </p>
+                <div style="display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;">
+                    <a href="http://pf.kakao.com/_xminSX/chat" target="_blank" rel="noopener noreferrer" style="background: #FEE500; color: #000; text-decoration: none; padding: 14px 28px; border-radius: 14px; font-weight: 900; font-size: 14px; display: inline-flex; align-items: center; gap: 8px; box-shadow: 0 4px 15px rgba(254,229,0,0.3);">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="#000"><path d="M12 3C6.48 3 2 6.48 2 10.8c0 2.76 1.84 5.18 4.62 6.54-.2.74-.74 2.68-.85 3.09-.14.52.19.51.4.37.16-.11 2.54-1.73 3.56-2.43.74.1 1.5.16 2.27.16 5.52 0 10-3.48 10-7.8S17.52 3 12 3z"/></svg>
+                        💬 카카오톡으로 1:1 레슨 문의하기
+                    </a>
+                    <a href="tel:01062406569" style="background: #1c2338; color: #fff; border: 1px solid #3d4f7c; text-decoration: none; padding: 14px 24px; border-radius: 14px; font-weight: 800; font-size: 14px; display: inline-flex; align-items: center; gap: 8px;">
+                        📞 010-6240-6569 전화 상담
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 4. 요금 상세표 탭 (PRICE) -->
     <div id="priceContent" class="tab-content">
         <div class="price-container">
             <div class="guide-header-box" style="background: linear-gradient(135deg, #0b112c, #071739);">
@@ -899,6 +1260,7 @@
             <div style="display:flex; flex-direction:column; gap:10px;">
                 <button class="btn" style="background:#27ae60; color:#fff" onclick="updateStatus('confirmed')" id="approveBtn">✅ 이 날짜 예약 승인 (확정 문자 발송)</button>
                 <button class="btn" style="background:#1a7a4a; color:#fff; font-size:13px;" onclick="approveBatchRes()" id="approveBatchBtn" style="display:none;">🔁 이 팀 전체 일정 일괄 승인 (정기권/고정팀)</button>
+                <button type="button" class="btn" style="background:#2563eb; color:#fff; font-size:13.5px; font-weight:bold; box-shadow:0 4px 15px rgba(37,99,235,0.35);" onclick="openRescheduleModal(currentAdminRes)" id="rescheduleBtn">📅 예약 날짜/시간 변경 (스케줄 변동)</button>
                 <div class="btn-group">
                     <button class="btn" style="background:#c0392b; color:#fff; font-size:13px;" onclick="deleteRes('single')" id="deleteBtn">🗑️ 이 날짜만 삭제</button>
                     <button class="btn" style="background:#8e44ad; color:#fff; font-size:13px;" onclick="deleteRes('team')" id="deleteTeamBtn">💥 이 팀 전체 일정 삭제</button>
@@ -1046,6 +1408,78 @@
     </div>
 </div>
 
+<!-- 4-1. 관리자 전용 예약 일정 및 시간(스케줄) 변경 모달 -->
+<div id="rescheduleModal" class="modal" style="z-index: 10002;">
+    <div class="modal-content" style="max-width: 500px; text-align: left; background: #0e121d; border: 1.5px solid #3b82f6; border-radius: 22px; box-shadow: 0 25px 65px rgba(0,0,0,0.85); padding: 24px; box-sizing: border-box;">
+        <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:16px; border-bottom:1px solid #1f283d; padding-bottom:12px;">
+            <div style="display:flex; align-items:center; gap:10px;">
+                <div style="width:38px; height:38px; border-radius:10px; background:rgba(59,130,246,0.18); border:1px solid rgba(59,130,246,0.4); display:flex; align-items:center; justify-content:center; font-size:18px;">
+                    📅
+                </div>
+                <div>
+                    <h3 style="margin:0; font-size:18px; color:#fff; font-weight:800;">예약 일정 & 시간 변경</h3>
+                    <p style="margin:2px 0 0; font-size:12px; color:#94a3b8;">고객 요청 스케줄 변동 처리 (관리자 권한)</p>
+                </div>
+            </div>
+            <button type="button" onclick="closeRescheduleModal()" style="background:none; border:none; color:#64748b; font-size:22px; cursor:pointer;">✕</button>
+        </div>
+
+        <!-- 현재 예약 정보 요약 카드 -->
+        <div style="background:#131826; border:1px solid #24304c; border-radius:14px; padding:14px 16px; margin-bottom:18px; font-size:13px; line-height:1.7;">
+            <div style="display:flex; justify-content:space-between; margin-bottom:4px;">
+                <span style="color:#94a3b8;">예약자 / 팀명:</span>
+                <strong id="reschedTeam" style="color:#fff;">-</strong>
+            </div>
+            <div style="display:flex; justify-content:space-between; margin-bottom:4px;">
+                <span style="color:#94a3b8;">현재 등록 일정:</span>
+                <span id="reschedCurrentPeriod" style="color:#f59e0b; font-weight:bold;">-</span>
+            </div>
+            <div style="display:flex; justify-content:space-between;">
+                <span style="color:#94a3b8;">연락처:</span>
+                <span id="reschedPhone" style="color:#cbd5e1;">-</span>
+            </div>
+        </div>
+
+        <!-- 1. 변경할 날짜 선택 -->
+        <div style="margin-bottom:16px;">
+            <label style="display:block; font-size:12.5px; font-weight:bold; color:#cbd5e1; margin-bottom:6px;">
+                1. 변경할 날짜 선택
+            </label>
+            <input type="date" id="reschedNewDate" onchange="onReschedDateChange()" style="width:100%; box-sizing:border-box; background:#080b14; border:1px solid #2c3856; color:#fff; padding:12px 14px; border-radius:10px; font-size:14px; font-weight:bold; outline:none;">
+            <div id="reschedDateNotice" style="font-size:11.5px; color:#60a5fa; margin-top:5px;"></div>
+        </div>
+
+        <!-- 2. 변경할 시간 슬롯 선택 -->
+        <div style="margin-bottom:18px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+                <label style="font-size:12.5px; font-weight:bold; color:#cbd5e1;">
+                    2. 변경할 시간 선택 (운영 09:00~20:00)
+                </label>
+                <span id="reschedDurationText" style="font-size:12px; color:#38bdf8; font-weight:bold;"></span>
+            </div>
+            <div id="reschedTimeGrid" style="display:grid; grid-template-columns:repeat(auto-fill, minmax(105px, 1fr)); gap:7px; max-height:180px; overflow-y:auto; background:#080b14; padding:10px; border-radius:12px; border:1px solid #24304c;">
+                <!-- 슬롯 버튼들이 동적으로 렌더링 됨 -->
+            </div>
+            <p style="margin:6px 0 0; font-size:11.5px; color:#94a3b8;">* 합주실 운영 규칙에 따라 연속된 시간으로만 선택 가능합니다.</p>
+        </div>
+
+        <!-- 안내 문자 발송 여부 토글 -->
+        <div style="background:rgba(59,130,246,0.08); border:1px solid rgba(59,130,246,0.25); border-radius:12px; padding:12px 14px; margin-bottom:20px; display:flex; align-items:center; justify-content:space-between;">
+            <div>
+                <div style="font-size:13px; font-weight:bold; color:#fff;">📱 변경 안내 문자 자동 발송</div>
+                <div style="font-size:11.5px; color:#94a3b8;">고객에게 변경된 일시와 도어락 비밀번호를 자동 재발송합니다.</div>
+            </div>
+            <input type="checkbox" id="reschedSendSms" checked style="width:18px; height:18px; accent-color:#2563eb; cursor:pointer;">
+        </div>
+
+        <!-- 하단 버튼 그룹 -->
+        <div style="display:flex; gap:10px;">
+            <button type="button" class="btn" onclick="closeRescheduleModal()" style="flex:1; background:#1e2640; color:#cbd5e1; border:1px solid #2e3a5a; border-radius:10px; padding:12px; font-weight:bold; cursor:pointer;">취소</button>
+            <button type="button" id="reschedSaveBtn" onclick="submitReschedule()" class="btn" style="flex:2; background:#2563eb; color:#fff; border:none; border-radius:10px; padding:12px; font-weight:bold; cursor:pointer; box-shadow:0 4px 15px rgba(37,99,235,0.4);">💾 변경 사항 저장 및 적용</button>
+        </div>
+    </div>
+</div>
+
 <!-- 5. 뱅크다 가상 입금 시뮬레이션 모달 -->
 <div id="bankdaTestModal" class="modal">
     <div class="modal-content" style="max-width: 480px; text-align: left;">
@@ -1074,7 +1508,223 @@
     </div>
 </div>
 
+<!-- 갤러리 사진 라이트박스 확대 모달 -->
+<div id="galleryLightboxModal" class="lightbox-modal" onclick="onLightboxBgClick(event)">
+    <div class="lightbox-box" onclick="event.stopPropagation()">
+        <button type="button" class="lightbox-close-btn" onclick="closeLightbox()" title="닫기 (ESC)">✕</button>
+        <button type="button" class="lightbox-nav-btn lightbox-prev" onclick="navigateLightbox(-1)" title="이전 사진">❮</button>
+        <button type="button" class="lightbox-nav-btn lightbox-next" onclick="navigateLightbox(1)" title="다음 사진">❯</button>
+        <div class="lightbox-img-wrap">
+            <img id="lightboxImg" src="" alt="확대 사진" class="lightbox-img">
+        </div>
+        <div class="lightbox-caption-box">
+            <div>
+                <div style="display:flex; align-items:center; gap:8px; margin-bottom:4px;">
+                    <span id="lightboxBadge" class="gallery-badge" style="position:static;">ROOM</span>
+                    <h3 id="lightboxTitle" style="margin:0; font-size:17px; color:#fff; font-weight:800;">제목</h3>
+                </div>
+                <p id="lightboxDesc" style="margin:0; font-size:13px; color:#94a3b8; line-height:1.4;">설명</p>
+                <div id="lightboxSpec" style="margin-top:6px; font-size:12px; color:#4d94ff; font-weight:600;">스펙</div>
+            </div>
+            <div style="text-align:right; font-size:13px; color:#64b5f6; font-weight:800; white-space:nowrap; padding-left:15px;">
+                <span id="lightboxIndex">1</span> / <span id="lightboxTotal">12</span>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script>
+    // ==========================================
+    // 📷 어웨이크랩 공간 갤러리 데이터 및 로직 (실사 12장)
+    // ==========================================
+    const GALLERY_ITEMS = [
+        {
+            id: 1,
+            category: 'LIVE',
+            categoryName: '영상 촬영 & 콘텐츠',
+            title: '7인 풀 밴드 라이브 클립 & 영상 콘텐츠 촬영',
+            desc: '단순 합주실을 넘어 전문 영상 촬영 장소로도 최적화된 공간입니다. 감성적인 무드 조명과 세련된 스튜디오 연출 속에서 보컬 3인과 풀 밴드가 함께 고화질 라이브 클립 및 음악 콘텐츠를 전문적으로 촬영하는 실제 현장입니다.',
+            spec: '영상 콘텐츠 촬영 최적화 · 감성 조명 & 인테리어 연출 · 7인 이상 풀밴드 촬영 동선 완비',
+            img: 'images/space/photo_10.png'
+        },
+        {
+            id: 2,
+            category: 'ROOM',
+            categoryName: '공간 전경 & 세미나',
+            title: '세미나 & 마스터클래스 워크숍 전경',
+            desc: '15~20인 이상의 단체 음악 세미나, 보컬/드럼 마스터클래스, 워십 워크숍 및 팀 빌딩 미팅까지 거뜬히 소화하는 넉넉한 공간감과 좌석 배치입니다.',
+            spec: '15~20인 좌석 세팅 지원 · 메인 PA 스피커 & 무선 마이크 · 드럼 쉴드 부스 구비',
+            img: 'images/space/photo_04.jpeg'
+        },
+        {
+            id: 3,
+            category: 'KEYS',
+            categoryName: '건반 & 신디사이저',
+            title: '야마하 88건반 디지털 피아노 & MOTIF 7 신디사이저',
+            desc: '메인 피아노를 위한 야마하 88 해머액션 디지털 피아노와 다채로운 신스·패드 음색의 야마하 MOTIF 7이 완비되어 있어, 어쿠스틱 피아노부터 세컨 신디사이저까지 2단 건반 세션을 완벽하게 지원합니다.',
+            spec: 'Yamaha 88 해머액션 디지털 피아노 · Yamaha MOTIF 7 신디사이저 · 서스테인 페달 & 보면대 완비',
+            img: 'images/space/photo_17.jpg'
+        },
+        {
+            id: 4,
+            category: 'ENSEMBLE',
+            categoryName: '합주 · 실사용',
+            title: '10인 대규모 워십 밴드 & 보컬 앙상블 합주',
+            desc: '6명의 보컬팀과 풀 밴드 세션 4인이 함께 서서 웅장하고 풍성한 사운드를 만들어내는 대규모 앙상블의 실제 합주 모습입니다.',
+            spec: '10인 이상 대형 앙상블 쾌적한 수용 · 멀티채널 마이크 시스템 · 정교한 룸 어쿠스틱 방음',
+            img: 'images/space/photo_11.png'
+        },
+        {
+            id: 5,
+            category: 'DRUM',
+            categoryName: '드럼 & 사운드 시스템',
+            title: '풀 어쿠스틱 드럼 세트 & 멀티 마이킹·모니터링',
+            desc: '질지언(Zildjian) A 커스텀 심벌 풀세트와 소너(Sonor) 탐탐으로 세팅된 풀 어쿠스틱 드럼입니다. 파트별 전용 독립 마이킹과 전용 플로어 모니터 스피커가 완비되어 있어 합주와 레코딩 시 선명한 사운드와 안정적인 모니터링을 제공합니다.',
+            spec: 'Zildjian A 커스텀 심벌 풀세트 · 전 파트 멀티채널 마이킹 · 독립 플로어 모니터 완비',
+            img: 'images/space/photo_14.jpg'
+        },
+        {
+            id: 6,
+            category: 'CONSOLE',
+            categoryName: 'X32 디지털 콘솔',
+            title: 'Behringer X32 Compact 디지털 믹싱 콘솔',
+            desc: '전용 독립 Wi-Fi 공유기가 상시 구축되어 있어 스마트폰/태블릿 앱(M32-Q / X32-Q)으로 연주자 각자 실시간 모니터 믹스를 즉각 조절합니다.',
+            spec: 'Behringer X32 Compact · Wi-Fi 무선 원격 제어 · Drum/Key/Guitar/Vox 1~12 채널 믹싱',
+            img: 'images/space/photo_05.jpeg'
+        },
+        {
+            id: 7,
+            category: 'LIVE',
+            categoryName: '영상 촬영 & 레코딩',
+            title: '라이브 영상 촬영 & 유튜브 콘텐츠 제작 현장',
+            desc: '전문 카메라 리그와 스튜디오 소프트박스 조명 아래 풀 밴드 및 보컬의 고화질 라이브 영상과 유튜브 콘텐츠를 원스톱으로 촬영·제작하는 현장입니다.',
+            spec: '스튜디오 소프트박스 조명 · 전문 카메라 동선 확보 · 고음질 멀티트랙 동시 수음 환경',
+            img: 'images/space/photo_09.jpeg'
+        },
+        {
+            id: 8,
+            category: 'DRUM',
+            categoryName: '드럼 부스 & 쉴드',
+            title: '투명 아크릴 드럼 쉴드 & 어쿠스틱 흡음 부스',
+            desc: '보컬 마이크나 어쿠스틱 악기로 유입되는 드럼 심벌/스네어 사운드 간섭(블리딩)을 원천 차단하는 대형 투명 아크릴 쉴드와 후면 고밀도 흡음 배플 세팅입니다.',
+            spec: '투명 아크릴 드럼 쉴드 완비 · 후면 패브릭 흡음 배플 · 보컬/밴드 모니터링 밸런스 극대화',
+            img: 'images/space/photo_13.jpg'
+        },
+        {
+            id: 9,
+            category: 'ENSEMBLE',
+            categoryName: '합주 · 실사용',
+            title: '보컬 & 코러스 앙상블 서클 파트 연습',
+            desc: '넓고 쾌적한 룸에서 개별 마이크를 들고 원형으로 둘러앉아 화음과 파트를 정밀하게 점검하는 보컬팀 앙상블 연습 모습입니다.',
+            spec: '개별 보컬 다이나믹 마이크 구비 · 24시간 항온항습/인버터 냉난방 · 감성 페르시안 러그',
+            img: 'images/space/photo_01.jpeg'
+        },
+        {
+            id: 10,
+            category: 'LESSON',
+            categoryName: '1:1 드럼 레슨',
+            title: '1:1 드럼 개인 레슨 현장',
+            desc: '합주실 실제 풀 어쿠스틱 드럼 셋에서 1:1 드럼 레슨을 진행하는 모습입니다.',
+            spec: '1:1 개인 레슨 · 풀 어쿠스틱 드럼 세팅 · 맞춤 지도',
+            img: 'images/space/photo_12.jpg'
+        },
+        {
+            id: 11,
+            category: 'AMPS',
+            categoryName: '앰프 시스템',
+            title: 'Fender Champion 100 기타 앰프 & SM57 마이킹',
+            desc: '맑고 찰랑이는 펜더 고유의 클린 톤부터 다채로운 드라이브/모듈레이션 이펙트를 지원하며, Shure SM57 마이킹으로 콘솔과 PA 시스템에 직결됩니다.',
+            spec: 'Fender Champion 100 콤보 앰프 · Shure SM57 전용 악기 마이킹 · 이동식 앰프 스탠드',
+            img: 'images/space/photo_06.jpeg'
+        },
+        {
+            id: 12,
+            category: 'LIVE',
+            categoryName: '영상 촬영 & 레코딩',
+            title: '영상 콘텐츠 촬영 준비 & 세션 세팅',
+            desc: '유튜브 영상 촬영 및 라이브 클립 제작을 위해 스튜디오 소프트박스 조명과 롤랜드 샘플링 패드, 건반 사운드를 정밀하게 조율하는 콘텐츠 촬영 준비 현장입니다.',
+            spec: '스튜디오 소프트박스 조명 세팅 · Roland SPD-SX 샘플링 패드 · 신디사이저 & 건반 세션 세팅',
+            img: 'images/space/photo_03.jpeg'
+        }
+    ];
+
+    let currentLightboxList = [...GALLERY_ITEMS];
+    let currentLightboxIndex = 0;
+
+    function renderGallery() {
+        const grid = document.getElementById('galleryGrid');
+        if (!grid) return;
+
+        currentLightboxList = GALLERY_ITEMS;
+
+        grid.innerHTML = GALLERY_ITEMS.map((item, idx) => `
+            <div class="gallery-card" onclick="openLightbox(${idx})">
+                <div class="gallery-thumb-wrap">
+                    <img src="${item.img}" alt="${item.title}" class="gallery-thumb" loading="lazy">
+                    <span class="gallery-badge">${item.categoryName}</span>
+                    <div class="gallery-zoom-icon">🔍</div>
+                </div>
+                <div class="gallery-info">
+                    <h4 class="gallery-title">${item.title}</h4>
+                    <p class="gallery-desc">${item.desc}</p>
+                    <div class="gallery-spec-pill">⚙️ ${item.spec}</div>
+                </div>
+            </div>
+        `).join('');
+    }
+
+    function filterGallery() {
+        renderGallery();
+    }
+
+    function openLightbox(index) {
+        if (!currentLightboxList || currentLightboxList.length === 0) return;
+        currentLightboxIndex = (index + currentLightboxList.length) % currentLightboxList.length;
+        const item = currentLightboxList[currentLightboxIndex];
+
+        document.getElementById('lightboxImg').src = item.img;
+        document.getElementById('lightboxBadge').textContent = item.categoryName;
+        document.getElementById('lightboxTitle').textContent = item.title;
+        document.getElementById('lightboxDesc').textContent = item.desc;
+        document.getElementById('lightboxSpec').textContent = '⚙️ ' + item.spec;
+        document.getElementById('lightboxIndex').textContent = currentLightboxIndex + 1;
+        document.getElementById('lightboxTotal').textContent = currentLightboxList.length;
+
+        const modal = document.getElementById('galleryLightboxModal');
+        modal.classList.add('active');
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeLightbox() {
+        const modal = document.getElementById('galleryLightboxModal');
+        if (modal) modal.classList.remove('active');
+        document.body.style.overflow = '';
+    }
+
+    function navigateLightbox(direction) {
+        openLightbox(currentLightboxIndex + direction);
+    }
+
+    function onLightboxBgClick(e) {
+        if (e.target.id === 'galleryLightboxModal') {
+            closeLightbox();
+        }
+    }
+
+    window.addEventListener('keydown', (e) => {
+        const modal = document.getElementById('galleryLightboxModal');
+        if (modal && modal.classList.contains('active')) {
+            if (e.key === 'Escape') closeLightbox();
+            else if (e.key === 'ArrowLeft') navigateLightbox(-1);
+            else if (e.key === 'ArrowRight') navigateLightbox(1);
+        }
+        if (e.key === 'Escape') {
+            const reschedModal = document.getElementById('rescheduleModal');
+            if (reschedModal && reschedModal.style.display === 'flex') {
+                closeRescheduleModal();
+            }
+        }
+    });
     const API_READ = "/.netlify/functions/read";
     const API_CREATE = "/.netlify/functions/create";
     const API_UPDATE = "/.netlify/functions/update";
@@ -1599,6 +2249,14 @@
         const targetBtn = document.getElementById(t + 'Btn');
         if (targetContent) targetContent.classList.add('active');
         if (targetBtn) targetBtn.classList.add('active');
+
+        // 갤러리 탭 진입 시 렌더링 & 상단 스크롤
+        if (t === 'gallery') {
+            renderGallery(currentGalleryFilter);
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        } else if (t === 'lesson') {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
 
         // 조회 탭으로 진입 시 결과창 초기화
         if (t === 'lookup') {
@@ -2426,10 +3084,17 @@
             let actionBtns = '';
             if (!g.allConfirmed) {
                 if (g.isBatch) {
-                    actionBtns += `<button type="button" onclick="approveBatchDirect('${g.batchKey}', '${encodeURIComponent(g.teamName)}')" style="background:#27ae60; color:#fff; border:none; padding:6px 12px; border-radius:8px; font-size:12px; font-weight:bold; cursor:pointer; margin-right:6px; box-shadow:0 0 10px rgba(39,174,96,0.4);">✅ 정기권 ${count}회 일괄 승인</button>`;
+                    actionBtns += `<button type="button" onclick="approveBatchDirect('${g.batchKey}', '${encodeURIComponent(g.teamName)}')" style="background:#27ae60; color:#fff; border:none; padding:6px 10px; border-radius:8px; font-size:12px; font-weight:bold; cursor:pointer; margin-right:6px; box-shadow:0 0 10px rgba(39,174,96,0.4);">✅ 일괄 승인</button>`;
                 } else {
-                    actionBtns += `<button type="button" onclick="approveResDirect('${g.id}', '${encodeURIComponent(g.teamName)}')" style="background:#27ae60; color:#fff; border:none; padding:6px 12px; border-radius:8px; font-size:12px; font-weight:bold; cursor:pointer; margin-right:6px;">✅ 승인 (문자발송)</button>`;
+                    actionBtns += `<button type="button" onclick="approveResDirect('${g.id}', '${encodeURIComponent(g.teamName)}')" style="background:#27ae60; color:#fff; border:none; padding:6px 10px; border-radius:8px; font-size:12px; font-weight:bold; cursor:pointer; margin-right:6px;">✅ 승인</button>`;
                 }
+            }
+
+            // 일정 변경 버튼 (단건 vs 정기권/고정팀 회차별 펼치기)
+            if (g.isBatch) {
+                actionBtns += `<button type="button" onclick="toggleBatchRow('${g.batchKey}')" style="background:#2563eb; color:#fff; border:none; padding:6px 10px; border-radius:8px; font-size:12px; font-weight:bold; cursor:pointer; margin-right:6px; box-shadow:0 0 10px rgba(37,99,235,0.3);">📅 회차별 변경 (${count}회)</button>`;
+            } else {
+                actionBtns += `<button type="button" onclick="openRescheduleModalById('${g.id}')" style="background:#2563eb; color:#fff; border:none; padding:6px 10px; border-radius:8px; font-size:12px; font-weight:bold; cursor:pointer; margin-right:6px; box-shadow:0 0 10px rgba(37,99,235,0.3);">📅 일정 변경</button>`;
             }
 
             if (g.isBatch) {
@@ -2449,6 +3114,31 @@
                     </td>
                 </tr>
             `;
+
+            if (g.isBatch) {
+                let subItemsHtml = g.items.map((it, i) => {
+                    const itTimeStr = it.times && it.times.length ? `${it.times[0].split('-')[0]}~${it.times[it.times.length-1].split('-')[1]}` : '-';
+                    const itStatus = it.status === 'confirmed' ? '<span style="color:#2ecc71; font-weight:bold;">✅ 확정</span>' : '<span style="color:#f39c12; font-weight:bold;">⏳ 대기</span>';
+                    return `
+                        <div style="display:flex; justify-content:space-between; align-items:center; padding:8px 12px; background:rgba(255,255,255,0.03); border-radius:8px; margin-bottom:5px; border:1px solid rgba(255,255,255,0.06);">
+                            <div>
+                                <strong style="color:#fff; font-size:12.5px;">${i+1}회차: ${it.date} (${itTimeStr})</strong>
+                                <span style="font-size:11px; margin-left:8px;">${itStatus}</span>
+                            </div>
+                            <button type="button" onclick="openRescheduleModalById('${it.id}')" style="background:#2563eb; color:#fff; border:none; padding:5px 11px; border-radius:6px; font-size:11.5px; font-weight:bold; cursor:pointer; box-shadow:0 0 8px rgba(37,99,235,0.3);">📅 이 회차 일정 변경</button>
+                        </div>
+                    `;
+                }).join('');
+
+                html += `
+                    <tr id="sub-${g.batchKey}" style="display:none; background:#0a0e1a;">
+                        <td colspan="5" style="padding:12px 16px; border-bottom:1px solid #1f283d;">
+                            <div style="font-size:12px; color:#60a5fa; font-weight:bold; margin-bottom:8px;">📌 [${g.teamName}] 회차별 스케줄 현황 및 개별 변경:</div>
+                            ${subItemsHtml}
+                        </td>
+                    </tr>
+                `;
+            }
         });
 
         html += `</tbody></table>`;
@@ -2576,8 +3266,216 @@
         }
     }
 
+    // ============================================================
+    // 📅 [관리자 전용] 예약 일정 및 시간 변동(스케줄 변경) 로직
+    // ============================================================
+    let currentRescheduleRes = null;
+    let selectedRescheduleTimes = [];
+
+    function openRescheduleModal(res) {
+        if (!res || !isAdmin) return;
+        currentRescheduleRes = res;
+
+        document.getElementById('reschedTeam').textContent = res.teamName || '고객님';
+        const timeStr = res.times && res.times.length 
+            ? `${res.times[0].split('-')[0]}~${res.times[res.times.length - 1].split('-')[1]} (${res.times.length}시간)`
+            : '-';
+        document.getElementById('reschedCurrentPeriod').textContent = `${res.date} ${timeStr}`;
+        document.getElementById('reschedPhone').textContent = res.phone || '연락처 없음';
+
+        const dateInput = document.getElementById('reschedNewDate');
+        dateInput.value = res.date || '';
+        dateInput.min = '2026-01-01';
+
+        selectedRescheduleTimes = [...(res.times || [])];
+        renderReschedTimeGrid();
+
+        document.getElementById('rescheduleModal').style.display = 'flex';
+    }
+
+    function openRescheduleModalById(id) {
+        if (!reservationsList || !reservationsList.length) return;
+        const res = reservationsList.find(r => String(r.id) === String(id));
+        if (!res) {
+            return alert('해당 예약 정보를 찾을 수 없습니다.');
+        }
+        openRescheduleModal(res);
+    }
+
+    function closeRescheduleModal() {
+        const modal = document.getElementById('rescheduleModal');
+        if (modal) modal.style.display = 'none';
+        currentRescheduleRes = null;
+        selectedRescheduleTimes = [];
+    }
+
+    function onReschedDateChange() {
+        selectedRescheduleTimes = [];
+        renderReschedTimeGrid();
+    }
+
+    function renderReschedTimeGrid() {
+        const grid = document.getElementById('reschedTimeGrid');
+        if (!grid || !currentRescheduleRes) return;
+
+        const targetDate = document.getElementById('reschedNewDate').value;
+        const noticeEl = document.getElementById('reschedDateNotice');
+
+        if (!targetDate) {
+            grid.innerHTML = '<div style="grid-column:1/-1; text-align:center; color:#888; padding:20px;">먼저 변경할 날짜를 선택해주세요.</div>';
+            document.getElementById('reschedDurationText').textContent = '';
+            if (noticeEl) noticeEl.textContent = '';
+            return;
+        }
+
+        const [y, m, d] = targetDate.split('-').map(Number);
+        const day = new Date(y, m - 1, d).getDay();
+        const dayNames = ['일', '월', '화', '수', '목', '금', '토'];
+        if (noticeEl) {
+            noticeEl.textContent = `선택된 요일: ${targetDate} (${dayNames[day]}요일)`;
+        }
+
+        const cleanOccupied = [];
+
+        // 토요일 09:00~12:00 고정팀
+        if (day === 6) {
+            cleanOccupied.push('09:00-10:00', '10:00-11:00', '11:00-12:00');
+        }
+
+        // 다른 예약들의 시간 점유 (단, 현재 수정 중인 자기 자신의 예약 ID는 제외하여 기존 시간 유지/수정 가능)
+        reservationsList.forEach(r => {
+            if (String(r.id) === String(currentRescheduleRes.id)) return;
+            if (r.date === targetDate && r.times && r.times.length > 0) {
+                r.times.forEach(s => cleanOccupied.push(s.replace(/\s/g, '')));
+            }
+        });
+
+        let html = '';
+        timeSlots.forEach(slot => {
+            const cleanS = slot.replace(/\s/g, '');
+            const isBlocked = cleanOccupied.includes(cleanS);
+            const isSelected = selectedRescheduleTimes.includes(slot);
+
+            let style = 'padding:10px 6px; border-radius:10px; font-size:12px; font-weight:bold; cursor:pointer; text-align:center; transition:all 0.2s; border:1px solid ';
+            if (isBlocked) {
+                style += '#3b1c20; background:#1c0d10; color:#78353f; cursor:not-allowed; opacity:0.6;';
+            } else if (isSelected) {
+                style += '#3b82f6; background:#2563eb; color:#fff; box-shadow:0 0 14px rgba(37,99,235,0.5); font-weight:800;';
+            } else {
+                style += '#27324c; background:#101524; color:#94a3b8;';
+            }
+
+            const clickAttr = isBlocked ? '' : `onclick="toggleReschedSlot('${slot}')"`;
+            const labelText = isBlocked ? `${slot}<br><span style="font-size:10px; color:#ef4444;">[예약불가]</span>` : slot;
+
+            html += `<div style="${style}" ${clickAttr}>${labelText}</div>`;
+        });
+
+        grid.innerHTML = html;
+
+        if (selectedRescheduleTimes.length > 0) {
+            const sorted = [...selectedRescheduleTimes].sort();
+            const st = sorted[0].split('-')[0].trim();
+            const et = sorted[sorted.length - 1].split('-')[1].trim();
+            document.getElementById('reschedDurationText').textContent = `선택됨: ${st}~${et} (${sorted.length}시간)`;
+        } else {
+            document.getElementById('reschedDurationText').textContent = '원하는 시간대를 클릭하여 선택';
+        }
+    }
+
+    function toggleReschedSlot(slot) {
+        const idx = selectedRescheduleTimes.indexOf(slot);
+        if (idx > -1) {
+            selectedRescheduleTimes.splice(idx, 1);
+        } else {
+            selectedRescheduleTimes.push(slot);
+        }
+        renderReschedTimeGrid();
+    }
+
+    function toggleBatchRow(key) {
+        const row = document.getElementById(`sub-${key}`);
+        if (!row) return;
+        row.style.display = row.style.display === 'table-row' ? 'none' : 'table-row';
+    }
+
+    async function submitReschedule() {
+        if (!currentRescheduleRes || !isAdmin) return;
+
+        const newDate = document.getElementById('reschedNewDate').value;
+        if (!newDate) return alert('변경할 날짜를 선택해주세요.');
+
+        if (!selectedRescheduleTimes.length) return alert('변경할 시간을 최소 1개 이상 선택해주세요.');
+
+        // 연속성 검증
+        const sortedTimes = [...selectedRescheduleTimes].sort();
+        for (let i = 0; i < sortedTimes.length - 1; i++) {
+            const endH = parseInt(sortedTimes[i].split('-')[1].split(':')[0], 10);
+            const nextStartH = parseInt(sortedTimes[i + 1].split('-')[0].split(':')[0], 10);
+            if (endH !== nextStartH) {
+                return alert('예약 시간은 연속된 시간이어야 합니다. 중간에 빈 시간이 없도록 선택해주세요.');
+            }
+        }
+
+        const st = sortedTimes[0].split('-')[0].trim();
+        const et = sortedTimes[sortedTimes.length - 1].split('-')[1].trim();
+        const newPeriodStr = `${newDate} ${st}~${et} (${sortedTimes.length}시간)`;
+        const sendSms = document.getElementById('reschedSendSms').checked;
+
+        const oldPeriodStr = `${currentRescheduleRes.date} ${currentRescheduleRes.times.join(', ')}`;
+        const confirmMsg = `[${currentRescheduleRes.teamName}] 예약 일정을 다음과 같이 변경하시겠습니까?\n\n` +
+            `• 기존: ${oldPeriodStr}\n` +
+            `• 변경: ${newPeriodStr}\n` +
+            (sendSms ? `• 안내 문자: 손님에게 변경 안내 문자 자동 발송` : `• 안내 문자: 미발송`);
+
+        if (!confirm(confirmMsg)) return;
+
+        const saveBtn = document.getElementById('reschedSaveBtn');
+        saveBtn.disabled = true;
+        saveBtn.textContent = '저장 및 변경 처리 중...';
+
+        try {
+            const response = await fetch(API_UPDATE, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-Admin-Token': getAdminToken()
+                },
+                body: JSON.stringify({
+                    action: 'reschedule',
+                    id: currentRescheduleRes.id,
+                    newDate: newDate,
+                    newTimes: sortedTimes,
+                    sendSms: sendSms
+                })
+            });
+
+            const resData = await response.json().catch(() => ({}));
+            if (!response.ok) {
+                throw new Error(resData.error || resData.message || '일정 변경 처리 실패');
+            }
+
+            alert(`✅ 예약 일정이 성공적으로 변경되었습니다!\n\n변경된 일정: ${newPeriodStr}` + 
+                  (sendSms ? '\n고객에게 변경 안내 문자가 발송되었습니다.' : ''));
+
+            closeRescheduleModal();
+            closeModal();
+            await loadReservations(true);
+            if (document.getElementById('adminListModal').style.display === 'flex') {
+                openAdminListModal();
+            }
+        } catch (err) {
+            console.error(err);
+            alert(`일정 변경 실패: ${err.message}`);
+        } finally {
+            saveBtn.disabled = false;
+            saveBtn.textContent = '💾 변경 사항 저장 및 적용';
+        }
+    }
+
     // 페이지 접속 시 0.1초 캐시 로드 시작
     loadReservations();
+    renderGallery();
 
     // 3분마다 백그라운드 자동 갱신 (사용자가 어떤 모달도 열지 않은 상태에서만)
     setInterval(() => {

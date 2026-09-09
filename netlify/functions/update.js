@@ -116,9 +116,136 @@ exports.handler = async (event) => {
         apiUrl = isAuthorizedAdmin 
           ? `${supabaseUrl}/rest/v1/reservations?id=eq.${id}`
           : `${supabaseUrl}/rest/v1/reservations?id=eq.${id}&status=eq.pending`;
-      } else {
-        return { statusCode: 400, headers, body: JSON.stringify({ error: '삭제할 대상 정보가 누락되었습니다.' }) };
+    } else if (action === 'reschedule') {
+      // 관리자 전용 예약 일정 및 시간 변동 처리
+      if (!isAuthorizedAdmin) {
+        return { statusCode: 401, headers, body: JSON.stringify({ error: '일정 변경은 관리자 권한이 필요합니다.' }) };
       }
+      const { newDate, newTimes, sendSms } = JSON.parse(event.body);
+      if (!id || !newDate || !newTimes || !newTimes.length) {
+        return { statusCode: 400, headers, body: JSON.stringify({ error: '변경할 예약 ID, 날짜, 시간이 모두 필요합니다.' }) };
+      }
+
+      // 운영시간 검증 (09:00 ~ 20:00)
+      for (const slot of newTimes) {
+        const parts = slot.split('-');
+        if (parts.length === 2) {
+          const startH = parseInt(parts[0].split(':')[0], 10);
+          const endH = parseInt(parts[1].split(':')[0], 10);
+          if (startH < 9 || endH > 20 || startH >= 20) {
+            return { 
+              statusCode: 400, 
+              headers, 
+              body: JSON.stringify({ error: '합주실 운영 시간은 09:00~20:00입니다. 저녁 20시(8시) 이후에는 합주실 이용 및 예약이 불가합니다.' }) 
+            };
+          }
+        }
+      }
+
+      // 1. 기존 예약 정보 조회
+      const getRes = await fetch(`${supabaseUrl}/rest/v1/reservations?id=eq.${id}&select=*`, {
+        headers: {
+          'apikey': supabaseKey,
+          'Authorization': `Bearer ${supabaseKey}`
+        }
+      });
+      if (!getRes.ok) throw new Error('기존 예약 정보 조회 실패');
+      const oldRows = await getRes.json();
+      if (!oldRows || oldRows.length === 0) {
+        return { statusCode: 404, headers, body: JSON.stringify({ error: '해당 예약을 찾을 수 없습니다.' }) };
+      }
+      const targetRes = oldRows[0];
+      const { dateStr: oldDateStr, timeStr: oldTimeStr } = parsePeriodToKST(targetRes.period);
+
+      // 2. KST 기준 새 period 구성
+      const sortedTimes = [...newTimes].sort();
+      const startTime = sortedTimes[0].split('-')[0].trim();
+      const endTime = sortedTimes[sortedTimes.length - 1].split('-')[1].trim();
+      const newPeriodStr = `[${newDate} ${startTime}:00+09, ${newDate} ${endTime}:00+09)`;
+      const newTimeStr = `${startTime}~${endTime}`;
+
+      // 3. Supabase DB PATCH 업데이트 (Postgres GiST exclusion 제약 자동 적용)
+      const patchRes = await fetch(`${supabaseUrl}/rest/v1/reservations?id=eq.${id}`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+          'apikey': supabaseKey,
+          'Authorization': `Bearer ${supabaseKey}`,
+          'Prefer': 'return=representation'
+        },
+        body: JSON.stringify({ period: newPeriodStr })
+      });
+
+      if (!patchRes.ok) {
+        const errJson = await patchRes.json().catch(() => ({}));
+        if (errJson.code === '23P01') {
+          return {
+            statusCode: 409,
+            headers,
+            body: JSON.stringify({ error: '선택하신 변경 일시에는 이미 다른 확정/대기 예약이 존재합니다. 다른 시간을 선택해 주세요.' })
+          };
+        }
+        console.error('Reschedule DB Error:', errJson);
+        throw new Error(errJson.message || '일정 변경 DB 저장 실패');
+      }
+
+      const updatedData = await patchRes.json().catch(() => null);
+
+      // 4. 안내 문자 자동 발송 (sendSms === true 이고 연락처가 있는 경우)
+      if (sendSms && targetRes.booker_phone) {
+        const team = targetRes.booker_name || '고객님';
+        const changeMsg = `안녕하세요! 당신의 사운드가 완성되는 특별한 공간, 어웨이크 랩(AWAKE LAB)입니다. 🎸
+
+요청하신 예약 일정이 성공적으로 변경되었습니다. 변경된 상세 일정을 확인해 주세요!
+
+■ 변경된 예약 정보
+• 기존 일시: ${oldDateStr} (${oldTimeStr})
+• 변경 일시: ${newDate} (${newTimeStr})
+• 예약자명: ${team} 님
+
+■ 📍 오시는 길
+경기 용인시 수지구 죽전로168번길 19 지하 1층 (고수찜닭 건물 B1)
+
+■ 🔑 출입 안내 (★필독)
+1. 건물 현관 출입구 비밀번호
+👉 1236580*
+(초입 현관문을 여실 때 사용해 주세요.)
+
+2. 합주실 메인 도어 개방 (원격)
+👉 010-6240-6569
+합주실 문 앞 도착 후 위 번호로 '문자'를 남겨주시면 관리자가 확인 즉시 원격으로 문을 열어드립니다!
+
+■ 💡 이용 시 주의사항
+• 쾌적한 환경을 위해 비치된 실내화 착용을 부탁드립니다. (외부 신발 불가)
+• 기기 보호를 위해 음식물 반입은 불가하며, 뚜껑 있는 음료만 반입 가능합니다.
+• 다음 예약 팀을 위해 퇴실 5분 전 장비 전원 OFF 및 정리 정돈을 부탁드립니다.
+
+이용 중 문의사항이 있으시면 언제든 편하게 연락 주세요. 감사합니다! 🎶`;
+
+        try {
+          await sendNotification({
+            to: targetRes.booker_phone,
+            text: changeMsg,
+            title: '[AWAKE LAB] 예약 일정 변경 안내'
+          });
+        } catch (smsErr) {
+          console.error('일정 변경 알림 발송 에러:', smsErr);
+        }
+      }
+
+      return {
+        statusCode: 200,
+        headers,
+        body: JSON.stringify({
+          success: true,
+          action: 'reschedule',
+          oldDate: oldDateStr,
+          oldTime: oldTimeStr,
+          newDate: newDate,
+          newTime: newTimeStr,
+          data: updatedData
+        })
+      };
     } else {
       return { statusCode: 400, headers, body: JSON.stringify({ error: '유효하지 않은 요청(action)입니다.' }) };
     }
