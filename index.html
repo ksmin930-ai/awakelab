@@ -282,7 +282,7 @@
 
         /* ===== 2. 메인 컨테이너 ===== */
         .main-container {
-            max-width: 1200px;
+            max-width: 1280px;
             margin: 0 auto;
             padding: 20px 20px 80px;
             width: 100%;
@@ -300,115 +300,136 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* 에디토리얼 히어로 섹션 */
+        /* 에디토리얼 히어로 섹션 (대관요금 박스 위 독립된 웜 어쿠스틱 박스) */
         .studio-hero {
             text-align: center;
-            padding: 40px 16px 32px;
-            margin-bottom: 20px;
+            padding: 38px 28px 30px;
+            margin-bottom: 24px;
+            background: #faf7f2;
+            border: 1.5px solid #ece4d8;
+            border-radius: 24px;
+            box-shadow: var(--shadow-sm);
+            position: relative;
+            overflow: hidden;
+            transition: box-shadow 0.25s ease;
+        }
+        .studio-hero:hover {
+            box-shadow: var(--shadow-md);
         }
         .studio-badge {
             display: inline-block;
-            font-size: 11px;
-            font-weight: 700;
-            letter-spacing: 0.15em;
-            color: var(--accent-amber);
-            background: var(--bg-sub);
-            padding: 5px 14px;
+            font-size: 11.5px;
+            font-weight: 800;
+            letter-spacing: 0.14em;
+            color: #b45309;
+            background: #ffffff;
+            padding: 5px 16px;
             border-radius: 20px;
             text-transform: uppercase;
-            margin-bottom: 12px;
-            border: 1px solid var(--border-sub);
+            margin-bottom: 14px;
+            border: 1.5px solid #fde68a;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.04);
         }
         .studio-title {
-            font-size: 36px;
+            font-size: 38px;
             font-weight: 300;
-            letter-spacing: 0.14em;
-            color: var(--text-title);
+            letter-spacing: 0.16em;
+            color: #0f172a;
             margin-bottom: 12px;
         }
         .studio-divider {
-            width: 38px;
-            height: 2px;
-            background: var(--accent-amber);
+            width: 44px;
+            height: 3px;
+            background: #d97706;
             margin: 0 auto 16px;
             border-radius: 2px;
         }
         .studio-quote {
-            font-size: 13.5px;
-            font-style: italic;
-            color: var(--text-muted);
+            font-size: 15px;
+            font-weight: 700;
+            font-style: normal;
+            color: #78350f;
             margin-bottom: 10px;
         }
         .studio-desc {
             font-size: 14px;
-            line-height: 1.8;
-            color: var(--text-body);
-            max-width: 640px;
-            margin: 0 auto 22px;
+            line-height: 1.75;
+            color: #334155;
+            max-width: 680px;
+            margin: 0 auto 24px;
+            font-weight: 500;
         }
         .studio-quick-links {
             display: flex;
             justify-content: center;
-            gap: 8px;
+            gap: 10px;
             flex-wrap: wrap;
         }
         .hero-quick-btn {
-            background: var(--bg-page);
-            color: var(--text-body);
-            border: 1px solid var(--border-sub);
-            border-radius: 20px;
-            padding: 7px 18px;
-            font-size: 12px;
-            font-weight: 500;
-            letter-spacing: 0.04em;
+            background: #ffffff;
+            color: #334155;
+            border: 1.5px solid #e2e8f0;
+            border-radius: 24px;
+            padding: 9px 20px;
+            font-size: 13px;
+            font-weight: 700;
+            letter-spacing: 0.02em;
             cursor: pointer;
-            transition: all 0.2s;
+            transition: all 0.2s ease;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.04);
         }
         .hero-quick-btn:hover {
-            color: var(--text-title);
-            border-color: var(--text-title);
+            color: #0f172a;
+            border-color: #0f172a;
+            background: #f8fafc;
+            transform: translateY(-1px);
         }
         .hero-quick-btn.active {
-            background: var(--accent-amber);
+            background: #0f172a;
             color: #ffffff;
-            border-color: var(--accent-amber);
-            font-weight: 600;
+            border-color: #0f172a;
+            font-weight: 800;
+            box-shadow: 0 4px 14px rgba(15,23,42,0.2);
         }
 
-        /* 섹션 공통 헤더 */
+        /* 섹션 공통 헤더 (독립된 웜 린넨 박스 스타일) */
         .guide-header-box {
             text-align: center;
-            padding: 36px 20px 20px;
+            padding: 32px 24px 26px;
             margin-bottom: 24px;
-            background: transparent !important;
+            background: #faf7f2 !important;
+            border: 1.5px solid #ece4d8;
+            border-radius: 22px;
+            box-shadow: var(--shadow-sm);
         }
         .guide-header-box h2 {
             font-size: 24px;
-            font-weight: 300;
+            font-weight: 400;
             letter-spacing: 0.16em;
-            color: var(--text-title);
+            color: #0f172a;
             text-transform: uppercase;
             margin-bottom: 8px;
         }
         .guide-header-line {
-            width: 32px;
-            height: 1px;
-            background: var(--border-dark) !important;
-            margin: 12px auto 16px !important;
+            width: 36px;
+            height: 2.5px;
+            background: #d97706 !important;
+            margin: 10px auto 14px !important;
+            border-radius: 2px;
         }
         .guide-header-box p {
             font-size: 14px;
-            color: var(--text-body);
+            color: #475569;
             line-height: 1.7;
-            max-width: 620px;
+            max-width: 640px;
             margin: 0 auto;
         }
 
         /* ===== 3. 홈 그리드 (예약 & 정보) ===== */
         .home-grid {
             display: grid;
-            grid-template-columns: 380px 1fr;
-            gap: 28px;
+            grid-template-columns: 345px 1fr;
+            gap: 26px;
             align-items: start;
         }
 
@@ -444,16 +465,22 @@
 
         .home-gallery-preview-grid {
             display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 8px;
-            margin-top: 14px;
+            grid-template-columns: 2fr 1fr 1fr;
+            grid-template-rows: 66px 66px;
+            gap: 6px;
+            margin: 10px 0 12px 0;
+            border-radius: 12px;
+            overflow: hidden;
         }
         .home-gallery-preview-grid img {
             width: 100%;
-            aspect-ratio: 1;
+            height: 100%;
             object-fit: cover;
-            border-radius: var(--radius-sm);
-            border: 1px solid var(--border-light);
+            border-radius: 6px;
+            transition: transform 0.25s ease;
+        }
+        .home-gallery-preview-grid img:hover {
+            transform: scale(1.05);
         }
 
         .bank-info {
@@ -473,73 +500,75 @@
 
         .calendar-container {
             background: var(--bg-card);
-            border: 1px solid var(--border-sub);
-            border-radius: var(--radius-lg);
-            padding: 26px;
-            box-shadow: var(--shadow-sm);
+            border: 1.5px solid var(--border-sub);
+            border-radius: 20px;
+            padding: 28px 24px;
+            box-shadow: var(--shadow-md);
             position: relative;
         }
-
         
         .calendar-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 20px;
-            padding-bottom: 14px;
-            border-bottom: 1px solid var(--border-sub);
+            margin-bottom: 22px;
+            padding-bottom: 16px;
+            border-bottom: 1.5px solid #f1f5f9;
             width: 100%;
         }
         .calendar-header h2 {
-            font-size: 19px;
-            font-weight: 600;
+            font-size: 22px;
+            font-weight: 900;
             letter-spacing: 0.05em;
-            color: var(--text-title);
+            color: #0f172a;
             margin: 0;
         }
         .calendar-header button {
-            width: 36px;
-            height: 36px;
-            min-width: 36px;
+            width: 38px;
+            height: 38px;
+            min-width: 38px;
             border-radius: 50%;
-            border: 1px solid var(--border-sub);
-            background: var(--bg-card);
-            color: var(--text-title);
+            border: 1.5px solid var(--border-sub);
+            background: #ffffff;
+            color: #0f172a;
             display: flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
-            font-size: 13px;
+            font-size: 14px;
+            font-weight: 800;
             transition: all 0.2s ease;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
             padding: 0;
             line-height: 1;
         }
         .calendar-header button:hover {
-            background: var(--text-title);
-            color: #FFFDF9;
-            border-color: var(--text-title);
+            background: #0f172a;
+            color: #ffffff;
+            border-color: #0f172a;
+            transform: scale(1.05);
         }
-    
 
-        
         .calendar-days,
         .calendar-dates {
             display: grid !important;
             grid-template-columns: repeat(7, minmax(0, 1fr)) !important;
             width: 100% !important;
             box-sizing: border-box !important;
-            gap: 4px;
+            gap: 6px;
         }
         .calendar-days {
             text-align: center;
-            font-size: 11px;
-            font-weight: 700;
+            font-size: 12px;
+            font-weight: 800;
             letter-spacing: 0.08em;
-            color: var(--text-muted);
+            color: #64748b;
             text-transform: uppercase;
-            margin-bottom: 10px;
+            margin-bottom: 12px;
+            padding-bottom: 10px;
+            border-bottom: 1.5px solid #f1f5f9;
         }
-        .calendar-days .sun { color: var(--accent-red); }
+        .calendar-days .sun { color: #dc2626; }
         .calendar-days .sat { color: #2563eb; }
 
         .date-cell {
@@ -547,58 +576,78 @@
             width: 100% !important;
             box-sizing: border-box !important;
             overflow: hidden !important;
-            padding: 5px 2px;
-            min-height: 56px;
+            padding: 8px 4px;
+            min-height: 96px; /* 시원하고 여유로운 달력 높이 확장 (기존 56px -> 96px) */
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: flex-start;
-            border-radius: var(--radius-sm);
+            border-radius: 12px;
             cursor: pointer;
-            font-size: 13.5px;
-            color: var(--text-title);
+            font-size: 14px;
+            color: #0f172a;
             position: relative;
-            transition: all 0.15s ease;
-            border: 1px solid transparent;
-            background: var(--bg-card);
+            transition: all 0.18s ease;
+            border: 1px solid #f1f5f9;
+            background: #ffffff;
         }
         .date-cell:hover:not(.disabled) {
-            background: var(--bg-sub);
-            border-color: var(--border-sub);
+            background: #faf7f2;
+            border-color: #cbd5e1;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.06);
+        }
+        .date-cell.today {
+            border: 1.5px solid #f59e0b;
+            background: #fffdf5;
         }
         .date-cell.today .date-num {
-            background: var(--accent-amber);
+            background: #f59e0b;
             color: #ffffff !important;
             border-radius: 50%;
-            width: 22px;
-            height: 22px;
+            width: 26px;
+            height: 26px;
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            font-weight: 700;
+            font-weight: 800;
         }
         .date-cell.selected {
-            background: var(--text-title) !important;
-            color: #FFFDF9 !important;
-            border-radius: var(--radius-sm);
+            background: #0f172a !important;
+            color: #ffffff !important;
+            border-color: #0f172a !important;
+            border-radius: 12px;
+            box-shadow: 0 4px 14px rgba(15,23,42,0.25);
         }
         .date-cell.selected .date-num {
-            color: #FFFDF9 !important;
+            color: #ffffff !important;
         }
         .date-cell.disabled {
-            color: var(--border-dark);
+            color: #cbd5e1;
             cursor: not-allowed;
             opacity: 0.4;
+            background: #fafafa;
+        }
+        .date-cell.past {
+            opacity: 0.55;
+            background: #fafafa;
         }
         .date-num {
-            font-size: 13px;
-            font-weight: 600;
+            font-size: 14.5px;
+            font-weight: 700;
             line-height: 1.3;
-            margin-bottom: 2px;
+            margin-bottom: 4px;
             display: block;
         }
-        .date-num.sun-text { color: var(--accent-red); }
+        .date-num.sun-text { color: #dc2626; }
         .date-num.sat-text { color: #2563eb; }
+        .holiday-name {
+            display: block;
+            font-size: 10px;
+            font-weight: 800;
+            color: #dc2626;
+            margin-bottom: 2px;
+        }
 
         .res-badge {
             display: block;
@@ -608,20 +657,20 @@
             overflow: hidden !important;
             text-overflow: ellipsis !important;
             white-space: nowrap !important;
-            font-size: 9px;
-            line-height: 1.25;
-            padding: 2px 2px;
-            border-radius: 4px;
-            margin-top: 2px;
+            font-size: 10px;
+            line-height: 1.35;
+            padding: 3px 5px;
+            border-radius: 6px;
+            margin-top: 3px;
             text-align: center;
-            letter-spacing: -0.5px;
-            font-weight: 600;
+            letter-spacing: -0.3px;
+            font-weight: 700;
         }
         .res-badge .badge-time {
             display: block;
-            font-weight: 700;
-            font-size: 8px;
-            line-height: 1.1;
+            font-weight: 800;
+            font-size: 9.5px;
+            line-height: 1.2;
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;
@@ -631,11 +680,10 @@
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;
-            font-size: 8px;
+            font-size: 9.5px;
         }
-    
 
-        .calendar-legend {
+        .calendar-legend {.calendar-legend {
             display: flex;
             align-items: center;
             justify-content: center;
@@ -847,8 +895,8 @@
         textarea {
             width: 100%;
             padding: 12px 14px;
-            background: var(--bg-page) !important;
-            border: 1px solid var(--border-dark) !important;
+            background: #ffffff !important;
+            border: 1.5px solid var(--border-sub) !important;
             border-radius: var(--radius-sm) !important;
             color: var(--text-title) !important;
             font-size: 14px;
@@ -908,24 +956,33 @@
             border-radius: 4px;
         }
         .badge-approved {
-            background: #dcfce7;
-            color: #166534;
-            border: 1px solid #bbf7d0;
-            font-size: 11px;
-            font-weight: 600;
-            padding: 3px 8px;
-            border-radius: 4px;
+            background: #ecfdf5;
+            color: #047857;
+            border: 1px solid #a7f3d0;
+            font-size: 10.5px;
+            font-weight: 700;
+            padding: 3px 6px;
+            border-radius: 6px;
         }
         .badge-fixed {
-            background: #e0e7ff;
-            color: #3730a3;
-            border: 1px solid #c7d2fe;
-            font-size: 11px;
-            font-weight: 600;
-            padding: 3px 8px;
-            border-radius: 4px;
+            background: #eff6ff;
+            color: #1d4ed8;
+            border: 1px solid #bfdbfe;
+            font-size: 10.5px;
+            font-weight: 700;
+            padding: 3px 6px;
+            border-radius: 6px;
         }
-        .badge-save {
+        .badge-pending {
+            background: #fffbeb;
+            color: #b45309;
+            border: 1px solid #fde68a;
+            font-size: 10.5px;
+            font-weight: 700;
+            padding: 3px 6px;
+            border-radius: 6px;
+        }
+        .badge-save {.badge-save {
             background: var(--bg-sub);
             color: var(--text-body);
             border: 1px solid var(--border-sub);
@@ -935,8 +992,9 @@
             border-radius: 4px;
         }
         .badge-cost {
-            font-weight: 700;
-            color: var(--text-title);
+            font-weight: 800;
+            color: #0f172a;
+            font-size: 14.5px;
         }
         .pw-box {
             font-size: 13px;
@@ -1247,10 +1305,10 @@
             pointer-events: none;
             white-space: nowrap;
         }
-        .lesson-plan-grid {
+                .lesson-plan-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 22px;
+            gap: 24px;
             margin-top: 24px;
             align-items: stretch;
         }
@@ -1258,10 +1316,12 @@
             background: #ffffff;
             border: 1.5px solid var(--border-sub);
             border-radius: 22px;
-            padding: 32px 26px 26px 26px;
+            padding: 32px 28px 28px 28px;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
+            height: 100%;
+            box-sizing: border-box;
             box-shadow: var(--shadow-md);
             position: relative;
             transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
@@ -1286,39 +1346,57 @@
         }
         .lesson-price-large span {
             font-size: 13.5px;
-            color: #64748b;
-            font-weight: 600;
+            color: #334155;
+            font-weight: 700;
         }
         .lesson-feature-list {
             list-style: none !important;
+            list-style-type: none !important;
             padding: 0 !important;
-            margin: 20px 0 24px 0 !important;
+            margin: 20px 0 0 0 !important;
             display: flex;
             flex-direction: column;
             gap: 12px;
             text-align: left;
         }
         .lesson-feature-list li {
+            list-style: none !important;
+            list-style-type: none !important;
             display: flex;
             align-items: flex-start;
             gap: 10px;
             font-size: 13.5px;
-            color: #334155;
+            color: #0f172a;
+            font-weight: 600;
             line-height: 1.5;
+            text-align: left !important;
+        }
+        .lesson-feature-list li::before,
+        .lesson-feature-list li::marker {
+            display: none !important;
+            content: "" !important;
         }
         .lesson-feature-list li .chk-badge {
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            width: 18px;
-            height: 18px;
+            width: 20px;
+            height: 20px;
+            min-width: 20px;
+            min-height: 20px;
             border-radius: 50%;
-            background: #eff6ff;
-            color: #2563eb;
-            font-size: 11px;
+            background: #ecfdf5;
+            color: #047857;
+            border: 1.5px solid #a7f3d0;
+            font-size: 11.5px;
             font-weight: 900;
             flex-shrink: 0;
-            margin-top: 2px;
+            margin-top: 1px;
+        }
+        .lesson-feature-list li .chk-badge-blue {
+            background: #eff6ff;
+            color: #1d4ed8;
+            border: 1.5px solid #bfdbfe;
         }
 
         /* ===== 7. 요금표 섹션 ===== */
@@ -1357,78 +1435,255 @@
         }
         tr:last-child td { border-bottom: none; }
 
-        /* ===== 8. 가이드 & FAQ & 조회 섹션 ===== */
+                /* ===== 8. 가이드 & FAQ & 조회 섹션 (칸별 박스 분리 디자인) ===== */
         .guide-container {
-            max-width: 860px;
+            max-width: 920px;
             margin: 0 auto;
         }
         .guide-card {
             background: var(--bg-card);
-            border: 1px solid var(--border-sub);
-            border-radius: var(--radius-md);
-            padding: 24px;
-            box-shadow: var(--shadow-sm);
-            margin-bottom: 16px;
+            border: 1.5px solid var(--border-sub);
+            border-radius: 20px;
+            padding: 26px 28px;
+            box-shadow: var(--shadow-md);
+            margin-bottom: 22px;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
         }
-        .guide-item {
-            margin-bottom: 14px;
+        .guide-card:hover {
+            box-shadow: var(--shadow-lg);
         }
-        .guide-title {
-            font-size: 14.5px;
-            font-weight: 600;
-            color: var(--text-title);
+        .guide-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1.5px solid #f1f5f9;
+            padding-bottom: 14px;
+            margin-bottom: 18px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .guide-card-header-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .guide-num-badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            font-size: 15px;
+            font-weight: 900;
+            flex-shrink: 0;
+        }
+        .guide-card-title {
+            font-size: 17.5px;
+            font-weight: 900;
+            color: #0f172a;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .guide-cat-pill {
+            font-size: 11.5px;
+            font-weight: 800;
+            padding: 4px 10px;
+            border-radius: 12px;
+            letter-spacing: 0.03em;
+        }
+        .guide-sub-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+        }
+        .guide-sub-box {
+            background: #faf7f2;
+            border: 1.5px solid #ece4d8;
+            border-radius: 14px;
+            padding: 16px 18px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            transition: all 0.2s ease;
+        }
+        .guide-sub-box:hover {
+            border-color: #cbd5e1;
+            background: #f8fafc;
+        }
+        .guide-sub-box-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 8px;
             margin-bottom: 4px;
         }
-        .guide-desc {
-            font-size: 13.5px;
-            color: var(--text-body);
+        .guide-sub-box-title {
+            font-size: 14px;
+            font-weight: 800;
+            color: #0f172a;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .guide-sub-box-desc {
+            font-size: 13.2px;
+            color: #334155;
             line-height: 1.6;
         }
+        .guide-badge-tag {
+            font-size: 11px;
+            font-weight: 800;
+            padding: 2.5px 8px;
+            border-radius: 6px;
+            white-space: nowrap;
+        }
+        @media (max-width: 768px) {
+            .guide-sub-grid {
+                grid-template-columns: 1fr !important;
+                gap: 12px !important;
+            }
+            .guide-card {
+                padding: 20px 16px !important;
+                border-radius: 16px !important;
+            }
+            .guide-card-title {
+                font-size: 15.5px !important;
+            }
+        }
 
+                /* ===== FAQ 섹션 (카테고리별 색상 구분 & 카드 디자인) ===== */
         .faq-list {
             display: flex;
             flex-direction: column;
-            gap: 10px;
+            gap: 14px;
         }
         .faq-card {
-            background: var(--bg-card);
-            border: 1px solid var(--border-sub);
-            border-radius: var(--radius-md);
+            background: #ffffff;
+            border: 1.5px solid var(--border-sub);
+            border-radius: 16px;
             overflow: hidden;
             box-shadow: var(--shadow-sm);
+            transition: all 0.25s ease;
+            position: relative;
         }
+        .faq-card:hover {
+            box-shadow: var(--shadow-md);
+            transform: translateY(-2px);
+        }
+        .faq-card.open {
+            box-shadow: var(--shadow-md);
+            border-color: #cbd5e1;
+        }
+        
+        /* 카테고리별 좌측 악센트 바 */
+        .faq-card.cat-blue { border-left: 5px solid #2563eb; }
+        .faq-card.cat-green { border-left: 5px solid #16a34a; }
+        .faq-card.cat-purple { border-left: 5px solid #8b5cf6; }
+        .faq-card.cat-amber { border-left: 5px solid #f59e0b; }
+        .faq-card.cat-indigo { border-left: 5px solid #6366f1; }
+        .faq-card.cat-teal { border-left: 5px solid #0d9488; }
+        .faq-card.cat-red { border-left: 5px solid #ef4444; }
+        .faq-card.cat-sky { border-left: 5px solid #0284c7; }
+
         .faq-question {
             padding: 18px 22px;
             font-size: 15px;
-            font-weight: 500;
-            color: var(--text-title);
+            font-weight: 700;
+            color: #0f172a;
             cursor: pointer;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            gap: 12px;
             transition: background 0.15s;
+            user-select: none;
         }
         .faq-question:hover {
-            background: var(--bg-sub);
+            background: #faf7f2;
         }
+        .faq-question-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+            flex: 1;
+        }
+        .faq-question-text {
+            font-size: 15px;
+            font-weight: 800;
+            color: #0f172a;
+            line-height: 1.45;
+        }
+
+        /* 카테고리별 뱃지 스타일 */
         .q-tag {
-            color: var(--text-muted);
-            font-weight: 600;
-            margin-right: 8px;
+            font-size: 11.5px;
+            font-weight: 800;
+            padding: 3.5px 10px;
+            border-radius: 8px;
+            display: inline-flex;
+            align-items: center;
+            white-space: nowrap;
+            letter-spacing: -0.2px;
         }
+        .q-tag-blue { background: #eff6ff; color: #1d4ed8; border: 1.5px solid #bfdbfe; }
+        .q-tag-green { background: #ecfdf5; color: #047857; border: 1.5px solid #a7f3d0; }
+        .q-tag-purple { background: #f5f3ff; color: #6d28d9; border: 1.5px solid #ddd6fe; }
+        .q-tag-amber { background: #fffbeb; color: #b45309; border: 1.5px solid #fde68a; }
+        .q-tag-indigo { background: #eef2ff; color: #4338ca; border: 1.5px solid #c7d2fe; }
+        .q-tag-teal { background: #f0fdfa; color: #0f766e; border: 1.5px solid #99f6e4; }
+        .q-tag-red { background: #fef2f2; color: #b91c1c; border: 1.5px solid #fecaca; }
+        .q-tag-sky { background: #f0f9ff; color: #0369a1; border: 1.5px solid #bae6fd; }
+
         .faq-arrow {
-            color: var(--text-muted);
-            transition: transform 0.2s;
-            font-size: 12px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: #f1f5f9;
+            color: #64748b;
+            font-size: 11px;
+            transition: transform 0.25s ease, background 0.25s ease, color 0.25s ease;
+            flex-shrink: 0;
         }
         .faq-card.open .faq-arrow {
             transform: rotate(180deg);
+            background: #0f172a;
+            color: #ffffff;
         }
         .faq-answer {
-            padding: 0 22px 20px;
-            font-size: 14px;
-            color: var(--text-body);
+            padding: 0 20px 20px 20px;
+        }
+        .faq-answer-inner {
+            border-radius: 12px;
+            padding: 16px 18px;
+            font-size: 13.8px;
+            color: #334155;
             line-height: 1.7;
+        }
+        .faq-answer-inner.ans-blue { background: #f8faff; border: 1.5px solid #dbeafe; }
+        .faq-answer-inner.ans-green { background: #f6fbf8; border: 1.5px solid #d1fae5; }
+        .faq-answer-inner.ans-purple { background: #faf8ff; border: 1.5px solid #ede9fe; }
+        .faq-answer-inner.ans-amber { background: #fffdf5; border: 1.5px solid #fef3c7; }
+        .faq-answer-inner.ans-indigo { background: #f8f9ff; border: 1.5px solid #e0e7ff; }
+        .faq-answer-inner.ans-teal { background: #f4fbfb; border: 1.5px solid #ccfbf1; }
+        .faq-answer-inner.ans-red { background: #fdf6f6; border: 1.5px solid #fee2e2; }
+        .faq-answer-inner.ans-sky { background: #f6fbff; border: 1.5px solid #e0f2fe; }
+
+        .ans-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 11px;
+            font-weight: 900;
+            padding: 2px 7px;
+            border-radius: 5px;
+            margin-bottom: 8px;
         }
 
         /* 카카오톡 상담 플로팅 버튼 */
@@ -1711,14 +1966,14 @@
         <div class="home-grid">
     
         <div class="info-panel">
-        <div class="info-card" style="border: 1px solid #e2e8f0; background: #ffffff; box-shadow: var(--shadow-sm); padding: 22px;">
+        <div class="info-card" style="border: 1.5px solid var(--border-sub); background: #ffffff; box-shadow: var(--shadow-sm); padding: 22px; border-radius: 20px;">
                 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
                     <h3 style="margin:0; border:none; padding:0; font-size:17px; font-weight:800; color:#0f172a;">⏰ 대관 요금 안내</h3>
                     <button type="button" onclick="showTab('price')" style="background:none; border:none; color:#2563eb; font-size:12.5px; font-weight:700; cursor:pointer; text-decoration:underline;">상세 요금표 ❯</button>
                 </div>
 
                 <!-- 1. 일반 대관 묶음 -->
-                <div style="background:#f8fafc; border: 1px solid #e2e8f0; border-radius:12px; padding:14px; margin-bottom:12px;">
+                <div style="background:#faf7f2; border: 1.5px solid #ece4d8; border-radius:14px; padding:14px; margin-bottom:12px;">
                     <div style="color:#0f172a; font-weight:800; font-size:13.5px; margin-bottom:8px; display:flex; align-items:center; justify-content:space-between;">
                         <span>🎵 일반 대관</span>
                         <span style="font-size:11.5px; color:#64748b; font-weight:500;">(기본 2시간~)</span>
@@ -1736,7 +1991,7 @@
                 </div>
 
                 <!-- 2. 할인 결제! 묶음 (고대비 가독성 극대화) -->
-                <div style="background:#f0f7ff; border:1px solid #bfdbfe; border-radius:14px; padding:14px; margin-bottom:14px;">
+                <div style="background:#f0f7ff; border:1.5px solid #bfdbfe; border-radius:14px; padding:14px; margin-bottom:14px;">
                     <div style="color:#1e40af; font-weight:900; font-size:14px; margin-bottom:10px; display:flex; align-items:center; justify-content:space-between;">
                         <span>🔥 할인 결제! (우대 혜택)</span>
                         <span style="font-size:11px; color:#ffffff; background:#2563eb; padding:3px 8px; border-radius:6px; font-weight:800;">최대 20%↓</span>
@@ -1787,8 +2042,30 @@
                 </a>
             </div>
 
+                        <!-- 📷 갤러리 둘러보기 미니 프리뷰 카드 (좌측 패널 갤러리 미리보기) -->
+            <div class="home-gallery-banner" onclick="showTab('gallery')" style="background: #ffffff; border: 1.5px solid var(--border-sub); border-radius: 20px; padding: 18px; margin-top: 16px; box-shadow: var(--shadow-sm); cursor: pointer; transition: all 0.2s ease;">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 8px;">
+                    <div style="font-weight:900; font-size:14.5px; color:#0f172a; display:flex; align-items:center; gap:8px;">
+                        <span>📷 공간 &amp; 실사용 둘러보기</span>
+                        <span style="font-size:10.5px; background:#eff6ff; color:#2563eb; border:1px solid #bfdbfe; padding:2px 7px; border-radius:6px; font-weight:800;">실사 12장</span>
+                    </div>
+                    <span style="font-size:12px; color:#2563eb; font-weight:800;">갤러리 보기 ❯</span>
+                </div>
+                <div class="home-gallery-preview-grid">
+                    <img src="images/space/photo_10.png" alt="라이브 클립 & 영상 촬영" class="home-gallery-thumb" style="grid-row: span 2;" loading="lazy">
+                    <img src="images/space/photo_04.jpeg" alt="세미나 & 합주 전경" class="home-gallery-thumb" loading="lazy">
+                    <img src="images/space/photo_17.jpg" alt="야마하 88건반 & MOTIF 7" class="home-gallery-thumb" loading="lazy">
+                    <img src="images/space/photo_11.png" alt="10인 대규모 워십 밴드" class="home-gallery-thumb" loading="lazy">
+                    <img src="images/space/photo_14.jpg" alt="풀 어쿠스틱 드럼 세트" class="home-gallery-thumb" loading="lazy">
+                </div>
+                <div style="font-size:11.5px; color:#64748b; display:flex; justify-content:space-between; align-items:center; border-top:1px dashed #e2e8f0; padding-top:8px;">
+                    <span style="font-weight:600;">영상 촬영 · 세미나 · 88건반 · 10인 밴드 · 드럼</span>
+                    <span style="color:#2563eb; font-weight:800;">자세히 보기 ❯</span>
+                </div>
+            </div>
+
             <!-- 개인레슨 오픈 홍보 미니 배너 (화이트 고대비 스타일) -->
-            <div class="home-gallery-banner" onclick="showTab('lesson')" style="background:#ffffff; border:1px solid #e2e8f0; box-shadow:var(--shadow-sm); padding:18px;">
+            <div class="home-gallery-banner" onclick="showTab('lesson')" style="background:#ffffff; border:1.5px solid var(--border-sub); border-radius:20px; box-shadow:var(--shadow-sm); padding:18px; margin-top:16px;">
                 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
                     <div style="font-weight:800; font-size:14px; color:#0f172a; display:flex; align-items:center; gap:6px;">
                         <span>🎵 AWAKE LAB 개인레슨 오픈</span>
@@ -1797,7 +2074,7 @@
                     <span style="font-size:12px; color:#2563eb; font-weight:bold;">레슨 문의 ❯</span>
                 </div>
                 <div style="display:flex; gap:12px; align-items:center; margin:10px 0;">
-                    <img src="data:image/jpeg;base64,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" alt="민경선 드럼 강사" style="width:52px; height:52px; border-radius:50%; object-fit:cover; border:2px solid #2563eb; flex-shrink:0;" loading="lazy">
+                    <img src="images/profile-drum-1.jpg" alt="민경선 드럼 강사" style="width:52px; height:52px; border-radius:50%; object-fit:cover; border:2px solid #2563eb; flex-shrink:0;" loading="lazy">
                     <div style="font-size:12.5px; color:#334155; line-height:1.45;">
                         <strong style="color:#0f172a; font-size:13px;">드럼 1:1 직강 OPEN · 베이스 &amp; 건반 클래스 준비 중</strong><br>
                         <span style="color:#2563eb; font-weight:700;">취미 4회 18만 · 입시/전공 4회 30만 (회당 60분)</span>
@@ -1810,7 +2087,7 @@
             </div>
 
             <!-- 오시는 길 & 주차 안내 -->
-            <div class="info-card" style="border: 1px solid #e2e8f0; background: #ffffff; box-shadow: var(--shadow-sm); padding: 20px;">
+            <div class="info-card" style="border: 1.5px solid var(--border-sub); background: #ffffff; box-shadow: var(--shadow-sm); padding: 20px; border-radius: 20px; margin-top: 16px;">
                 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
                     <h3 style="margin:0; border-left:3px solid #0f172a; padding-left:10px; font-size:15px; font-weight:700; color:#0f172a;">📍 Location</h3>
                     <span style="font-size:11px; color:#15803d; background:#f0fdf4; border:1px solid #bbf7d0; padding:3px 8px; border-radius:6px; font-weight:800;">고수찜닭 B1</span>
@@ -1929,17 +2206,17 @@
                         </div>
                     </div>
                     
-                    <div style="width: 100%; border-top: 1px solid #e2e8f0; padding-top: 14px; margin-top: 4px;">
-                        <span style="background: #eff6ff; color: #1d4ed8; border: 1.5px solid #bfdbfe; font-size: 11px; font-weight: 800; padding: 4px 10px; border-radius: 12px; display: inline-block; margin-bottom: 6px;">
+                    <div style="width: 100%; border-top: 1.5px solid #e2e8f0; padding-top: 14px; margin-top: 4px;">
+                        <span style="background: #eff6ff; color: #1d4ed8; border: 1.5px solid #bfdbfe; font-size: 11.5px; font-weight: 900; padding: 4px 12px; border-radius: 12px; display: inline-block; margin-bottom: 6px;">
                             👑 원장 직강 1:1 전담 지도
                         </span>
                         <h3 style="margin: 4px 0 2px 0; font-size: 20px; color: #0f172a; font-weight: 900;">드러머 민경선</h3>
-                        <p style="margin: 0 0 10px 0; font-size: 13px; color: #2563eb; font-weight: 700;">호원대학교 실용음악과 드럼전공 학사</p>
+                        <p style="margin: 0 0 10px 0; font-size: 13px; color: #1d4ed8; font-weight: 800;">호원대학교 실용음악과 드럼전공 학사</p>
                         
-                        <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 10px; font-size: 12px; color: #475569; display: flex; flex-direction: column; gap: 4px; text-align: left; line-height: 1.4;">
-                            <div>🥁 <strong>10년+</strong> 풍부한 레슨 & 필드 지도 경력</div>
-                            <div>🎓 <strong>호원대·국제예대·백석문화대</strong> 합격생 배출</div>
-                            <div>🎧 <strong>풀 어쿠스틱 드럼</strong> + 쉴드 직강 환경</div>
+                        <div style="background: #ffffff; border: 1.5px solid #cbd5e1; border-radius: 12px; padding: 12px; font-size: 12.5px; color: #0f172a; font-weight: 700; display: flex; flex-direction: column; gap: 6px; text-align: left; line-height: 1.45;">
+                            <div>🥁 <strong style="color: #0f172a;">10년+</strong> 풍부한 레슨 &amp; 필드 지도 경력</div>
+                            <div>🎓 <strong style="color: #0f172a;">호원대·국제예대·백석문화대</strong> 합격생 배출</div>
+                            <div>🎧 <strong style="color: #0f172a;">풀 어쿠스틱 드럼</strong> + 쉴드 직강 환경</div>
                         </div>
                     </div>
                 </div>
@@ -1947,36 +2224,62 @@
                 <!-- 우측 박스: 레슨 철학 및 특장점 -->
                 <div style="display: flex; flex-direction: column; gap: 16px; justify-content: space-between;">
                     <div>
-                        <div style="display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 12px;">
-                            <span style="background: #f5f3ff; color: #6d28d9; border: 1.5px solid #ddd6fe; padding: 4px 12px; border-radius: 10px; font-size: 12px; font-weight: 800;">호원대 드럼전공 학사</span>
-                            <span style="background: #eff6ff; color: #1d4ed8; border: 1.5px solid #bfdbfe; padding: 4px 12px; border-radius: 10px; font-size: 12px; font-weight: 800;">10년+ 레슨 지도 경력</span>
-                            <span style="background: #ecfdf5; color: #047857; border: 1.5px solid #a7f3d0; padding: 4px 12px; border-radius: 10px; font-size: 12px; font-weight: 800;">입시 합격 다수 배출</span>
+                        <div style="display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 14px;">
+                            <span style="background: #f5f3ff; color: #581c87; border: 1.5px solid #c084fc; padding: 5px 12px; border-radius: 10px; font-size: 12.5px; font-weight: 900;">🎓 호원대 드럼전공 학사</span>
+                            <span style="background: #eff6ff; color: #1e3a8a; border: 1.5px solid #93c5fd; padding: 5px 12px; border-radius: 10px; font-size: 12.5px; font-weight: 900;">🥁 10년+ 레슨 지도 경력</span>
+                            <span style="background: #ecfdf5; color: #064e3b; border: 1.5px solid #6ee7b7; padding: 5px 12px; border-radius: 10px; font-size: 12.5px; font-weight: 900;">🏆 입시 합격 다수 배출</span>
                         </div>
                         
-                        <h3 class="lesson-headline" style="margin: 0 0 12px 0; font-size: 20px; color: #0f172a; font-weight: 900; line-height: 1.45;">
-                            "대학 밴드 동아리부터 퇴근 후 힐링 취미, 교회 찬양팀 반주까지 —<br><span style="color: #2563eb;">실전 합주와 무대에서 진짜 빛나는 드럼</span>을 알려드립니다."
+                        <h3 class="lesson-headline" style="margin: 0 0 14px 0; font-size: 20px; color: #0f172a; font-weight: 900; line-height: 1.5;">
+                            "대학 밴드 동아리부터 퇴근 후 힐링 취미, 교회 찬양팀 반주까지 —<br><span style="color: #1d4ed8; text-decoration: underline; text-decoration-color: #93c5fd; text-underline-offset: 4px;">실전 합주와 무대에서 진짜 빛나는 드럼</span>을 알려드립니다."
                         </h3>
                         
-                        <div style="background: #faf7f2; border: 1.5px solid #ece4d8; border-radius: 16px; padding: 18px; margin-bottom: 14px;">
-                            <p style="margin: 0 0 8px 0; font-size: 13.5px; color: #0f172a; font-weight: 800;">
-                                💡 악보만 기계적으로 외우는 딱딱한 레슨이 아닙니다.
-                            </p>
-                            <div style="font-size: 13.5px; color: #334155; line-height: 1.7; display: flex; flex-direction: column; gap: 4px;">
-                                <div>🎸 <strong>대학생</strong>: 동아리 합주 및 캠퍼스 축제 무대 실전 테크닉 & 앙상블 호흡</div>
-                                <div>💼 <strong>직장인</strong>: 하루 스트레스 해소와 최신 가요·팝·록 1곡 완벽 마스터</div>
-                                <div>⛪ <strong>교회 찬양팀</strong>: 은혜로운 예배 흐름 빌드업과 센스 넘치는 CCM 필인 노하우</div>
-                                <div>🎯 <strong>입시·전공</strong>: 나노 단위 터치·타이밍 교정과 합격 전략 실전 코칭</div>
+                        <div style="background: #faf7f2; border: 1.5px solid #dcd3c4; border-radius: 16px; padding: 18px; margin-bottom: 14px;">
+                            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1.5px solid #e2e8f0;">
+                                <span style="font-size: 16px;">💡</span>
+                                <span style="font-size: 14.5px; color: #0f172a; font-weight: 900;">악보만 기계적으로 외우는 딱딱한 레슨이 아닙니다.</span>
+                            </div>
+                            <div style="display: flex; flex-direction: column; gap: 8px;">
+                                <div style="background: #ffffff; border: 1.5px solid #e2e8f0; border-radius: 10px; padding: 10px 14px; display: flex; align-items: flex-start; gap: 10px;">
+                                    <span style="background: #fee2e2; color: #991b1b; font-size: 12px; font-weight: 900; padding: 2px 8px; border-radius: 6px; white-space: nowrap; border: 1px solid #fca5a5;">🎸 대학생</span>
+                                    <span style="font-size: 13.5px; color: #0f172a; font-weight: 600; line-height: 1.5;">동아리 합주 및 캠퍼스 축제 무대 <strong style="color: #b91c1c; font-weight: 800;">실전 테크닉 &amp; 앙상블 호흡</strong> 완벽 지도</span>
+                                </div>
+                                <div style="background: #ffffff; border: 1.5px solid #e2e8f0; border-radius: 10px; padding: 10px 14px; display: flex; align-items: flex-start; gap: 10px;">
+                                    <span style="background: #eff6ff; color: #1e40af; font-size: 12px; font-weight: 900; padding: 2px 8px; border-radius: 6px; white-space: nowrap; border: 1px solid #bfdbfe;">💼 직장인</span>
+                                    <span style="font-size: 13.5px; color: #0f172a; font-weight: 600; line-height: 1.5;">하루 스트레스 해소와 최신 가요·팝·록 <strong style="color: #1d4ed8; font-weight: 800;">희망곡 1곡 속성 완벽 마스터</strong></span>
+                                </div>
+                                <div style="background: #ffffff; border: 1.5px solid #e2e8f0; border-radius: 10px; padding: 10px 14px; display: flex; align-items: flex-start; gap: 10px;">
+                                    <span style="background: #ecfdf5; color: #065f46; font-size: 12px; font-weight: 900; padding: 2px 8px; border-radius: 6px; white-space: nowrap; border: 1px solid #a7f3d0;">⛪ 찬양팀</span>
+                                    <span style="font-size: 13.5px; color: #0f172a; font-weight: 600; line-height: 1.5;">은혜로운 예배 흐름 빌드업과 센스 넘치는 <strong style="color: #047857; font-weight: 800;">CCM 실전 필인 노하우</strong> 전수</span>
+                                </div>
+                                <div style="background: #ffffff; border: 1.5px solid #e2e8f0; border-radius: 10px; padding: 10px 14px; display: flex; align-items: flex-start; gap: 10px;">
+                                    <span style="background: #f5f3ff; color: #581c87; font-size: 12px; font-weight: 900; padding: 2px 8px; border-radius: 6px; white-space: nowrap; border: 1px solid #ddd6fe;">🎯 입시·전공</span>
+                                    <span style="font-size: 13.5px; color: #0f172a; font-weight: 600; line-height: 1.5;">나노 단위 터치·타이밍 정밀 교정과 <strong style="color: #6d28d9; font-weight: 800;">합격 전략 실전 코칭</strong></span>
+                                </div>
                             </div>
                         </div>
                     </div>
 
-                    <div style="background: #eff6ff; border: 1.5px solid #bfdbfe; border-radius: 14px; padding: 18px; display: flex; flex-direction: column; gap: 10px;">
-                        <div style="font-weight: 900; font-size: 14px; color: #1e40af; display: flex; align-items: center; gap: 6px;">
+                    <div style="background: #f8fafc; border: 1.5px solid #cbd5e1; border-radius: 16px; padding: 18px; display: flex; flex-direction: column; gap: 12px;">
+                        <div style="font-weight: 900; font-size: 14.5px; color: #0f172a; display: flex; align-items: center; gap: 8px;">
+                            <span style="background: #eff6ff; color: #1d4ed8; border: 1px solid #bfdbfe; font-size: 12px; padding: 2px 8px; border-radius: 6px; font-weight: 900;">POINT</span>
                             <span>✨ AWAKE LAB 드럼 레슨만의 독보적인 장점</span>
                         </div>
-                        <div style="font-size: 13.2px; color: #1e3a8a; display: flex; flex-direction: column; gap: 8px; line-height: 1.55;">
-                            <div>🎧 <strong>합주실 어쿠스틱 드럼 환경 직강</strong>: 전자드럼이 아닌 TAMA & Pearl 실제 풀 어쿠스틱 드럼 셋과 차음 쉴드 환경에서 실전 터치감 습득</div>
-                            <div>🎯 <strong>100% 개인 맞춤형 커리큘럼</strong>: 완전 기초 왕초보부터 퇴근 후 직장인 밴드, 교회 찬양팀 실전 반주, 예고·음대 실용음악과 입시까지 1:1 밀착 지도</div>
+                        <div style="display: flex; flex-direction: column; gap: 10px;">
+                            <div style="display: flex; align-items: flex-start; gap: 10px; font-size: 13.5px; line-height: 1.6; color: #0f172a;">
+                                <span style="font-size: 16px; flex-shrink: 0;">🎧</span>
+                                <div>
+                                    <strong style="color: #1d4ed8; font-weight: 800;">합주실 실제 어쿠스틱 드럼 환경 직강</strong>: 
+                                    <span style="color: #1e293b; font-weight: 600;">전자드럼이 아닌 TAMA &amp; Pearl 실제 풀 어쿠스틱 드럼 세트와 아크릴 차음 쉴드 환경에서 현장 터치감과 다이내믹을 직접 체득합니다.</span>
+                                </div>
+                            </div>
+                            <div style="display: flex; align-items: flex-start; gap: 10px; font-size: 13.5px; line-height: 1.6; color: #0f172a;">
+                                <span style="font-size: 16px; flex-shrink: 0;">🎯</span>
+                                <div>
+                                    <strong style="color: #047857; font-weight: 800;">100% 개인 맞춤형 1:1 밀착 커리큘럼</strong>: 
+                                    <span style="color: #1e293b; font-weight: 600;">완전 기초 왕초보부터 직장인 취미 밴드, 교회 찬양팀 실전 반주, 예고·음대 실용음악과 대학 입시까지 수강생 목표에 맞춰 1:1로 지도합니다.</span>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -1989,7 +2292,7 @@
                         🔥 전체 5명 소수정예 집중 지도 (취미 · 전공 도합)
                     </span>
                     <h3 style="margin: 10px 0 6px 0; font-size: 22px; color: #0f172a; font-weight: 900;">1:1 개인 레슨 프로그램 안내</h3>
-                    <p style="margin: 0; font-size: 14px; color: #475569; font-weight: 600;">레슨 퀄리티 유지를 위해 취미와 전공 구분 없이 <strong style="color: #dc2626;">도합 총 5명 정원제</strong>로 운영됩니다.</p>
+                    <p style="margin: 0; font-size: 14px; color: #1e293b; font-weight: 700;">레슨 퀄리티 유지를 위해 취미와 전공 구분 없이 <strong style="color: #dc2626;">도합 총 5명 정원제</strong>로 운영됩니다.</p>
                 </div>
 
                 <div class="lesson-plan-grid">
@@ -1998,18 +2301,20 @@
                         <div style="position: absolute; top: 18px; right: 18px; background: #fef2f2; border: 1.5px solid #fecaca; color: #dc2626; font-size: 11px; font-weight: 800; padding: 4px 10px; border-radius: 12px;">
                             ⚡ 전체 5명 정원 포함
                         </div>
-                        <div>
-                            <span class="lesson-plan-badge" style="background: #ecfdf5; color: #047857; border: 1.5px solid #a7f3d0;">
-                                초보 · 직장인 · 찬양팀
-                            </span>
-                            <h4 style="margin: 12px 0 0 0; font-size: 22px; color: #0f172a; font-weight: 900;">취미 1:1 개인레슨</h4>
-                            <p style="margin: 6px 0 0 0; font-size: 13.5px; color: #475569; font-weight: 600;">기초부터 탄탄하게! 좋아하는 곡을 내 손으로 직접 연주하는 기쁨</p>
+                        <div style="flex: 1; display: flex; flex-direction: column;">
+                            <div>
+                                <span class="lesson-plan-badge" style="background: #ecfdf5; color: #047857; border: 1.5px solid #a7f3d0;">
+                                    초보 · 직장인 · 찬양팀
+                                </span>
+                                <h4 style="margin: 12px 0 0 0; font-size: 22px; color: #0f172a; font-weight: 900;">취미 1:1 개인레슨</h4>
+                                <p style="margin: 6px 0 0 0; font-size: 13.5px; color: #1e293b; font-weight: 700;">기초부터 탄탄하게! 좋아하는 곡을 내 손으로 직접 연주하는 기쁨</p>
 
-                            <div class="lesson-price-large" style="color: #0f172a;">
-                                180,000원 <span>/ 월 4회 (회당 60분)</span>
+                                <div class="lesson-price-large" style="color: #0f172a;">
+                                    180,000원 <span>/ 월 4회 (회당 60분)</span>
+                                </div>
                             </div>
 
-                            <ul class="lesson-feature-list">
+                            <ul class="lesson-feature-list" style="margin-top: 20px;">
                                 <li><span class="chk-badge">✓</span> <div><strong>1:1 맞춤형 60분 밀착 지도</strong> (주 1회, 총 4회)</div></li>
                                 <li><span class="chk-badge">✓</span> <div>스틱 그립, 페달링 기본자세 및 스트로크 완벽 교정</div></li>
                                 <li><span class="chk-badge">✓</span> <div>기본 8비트, 16비트 리듬 패턴과 필수 필인(Fill-in) 마스터</div></li>
@@ -2019,9 +2324,9 @@
                             </ul>
                         </div>
 
-                        <div style="margin-top: 10px;">
-                            <a href="http://pf.kakao.com/_xminSX/chat" target="_blank" rel="noopener noreferrer" style="display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; padding: 14px; background: #0f172a; color: #ffffff; text-decoration: none; border-radius: 12px; font-size: 14.5px; font-weight: 800; box-shadow: 0 4px 14px rgba(15,23,42,0.15); transition: all 0.2s;">
-                                💬 취미 레슨 상담 신청 ❯
+                        <div style="margin-top: auto; padding-top: 22px;">
+                            <a href="http://pf.kakao.com/_xminSX/chat" target="_blank" rel="noopener noreferrer" style="display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; height: 50px; background: #0f172a; color: #ffffff; text-decoration: none; border-radius: 12px; font-size: 15px; font-weight: 800; box-shadow: 0 4px 14px rgba(15,23,42,0.2); transition: all 0.2s;">
+                                💬 취미 레슨 1:1 상담 신청 ❯
                             </a>
                         </div>
                     </div>
@@ -2031,29 +2336,31 @@
                         <div style="position: absolute; top: 18px; right: 18px; background: #eff6ff; border: 1.5px solid #bfdbfe; color: #1d4ed8; font-size: 11px; font-weight: 800; padding: 4px 10px; border-radius: 12px;">
                             ⚡ 최고 합격률 집중반
                         </div>
-                        <div>
-                            <span class="lesson-plan-badge" style="background: #f5f3ff; color: #6d28d9; border: 1.5px solid #ddd6fe;">
-                                예고 · 음대 입시 / 전공자
-                            </span>
-                            <h4 style="margin: 12px 0 0 0; font-size: 22px; color: #0f172a; font-weight: 900;">입시 · 전공 1:1 심화레슨</h4>
-                            <p style="margin: 6px 0 0 0; font-size: 13.5px; color: #475569; font-weight: 600;">실용음악과 대학 입시, 전문 세션 드러머를 위한 나노 단위 테크닉 교정</p>
+                        <div style="flex: 1; display: flex; flex-direction: column;">
+                            <div>
+                                <span class="lesson-plan-badge" style="background: #f5f3ff; color: #6d28d9; border: 1.5px solid #ddd6fe;">
+                                    예고 · 음대 입시 / 전공자
+                                </span>
+                                <h4 style="margin: 12px 0 0 0; font-size: 22px; color: #0f172a; font-weight: 900;">입시 · 전공 1:1 심화레슨</h4>
+                                <p style="margin: 6px 0 0 0; font-size: 13.5px; color: #1e293b; font-weight: 700;">실용음악과 대학 입시, 전문 세션 드러머를 위한 나노 단위 테크닉 교정</p>
 
-                            <div class="lesson-price-large" style="color: #2563eb;">
-                                300,000원 <span>/ 월 4회 (회당 60분)</span>
+                                <div class="lesson-price-large" style="color: #2563eb;">
+                                    300,000원 <span>/ 월 4회 (회당 60분)</span>
+                                </div>
                             </div>
 
-                            <ul class="lesson-feature-list">
-                                <li><span class="chk-badge" style="background: #f5f3ff; color: #7c3aed;">✓</span> <div><strong>1:1 고강도 정밀 심화 지도</strong> (주 1회, 총 4회)</div></li>
-                                <li><span class="chk-badge" style="background: #f5f3ff; color: #7c3aed;">✓</span> <div>루디먼트(Rudiments) 정밀 테크닉 (파라디들, 플램, 롤 응용)</div></li>
-                                <li><span class="chk-badge" style="background: #f5f3ff; color: #7c3aed;">✓</span> <div>Funk, Latin, Jazz, Odd-meter 등 <strong>장르별 심화 그루브 마스터</strong></div></li>
-                                <li><span class="chk-badge" style="background: #f5f3ff; color: #7c3aed;">✓</span> <div><strong>실전 연주 모니터링</strong> & 터치·타이밍 정밀 피드백</div></li>
-                                <li><span class="chk-badge" style="background: #f5f3ff; color: #7c3aed;">✓</span> <div>수험생 개성에 맞춘 입시곡 선곡, 솔로잉 편곡 & 모의 실기 평가</div></li>
-                                <li><span class="chk-badge" style="background: #f5f3ff; color: #7c3aed;">✓</span> <div>호원대, 국제예대, 백석문화대 등 <strong>다수 합격생 배출 노하우 전수</strong></div></li>
+                            <ul class="lesson-feature-list" style="margin-top: 20px;">
+                                <li><span class="chk-badge chk-badge-blue">✓</span> <div><strong>1:1 고강도 정밀 심화 지도</strong> (주 1회, 총 4회)</div></li>
+                                <li><span class="chk-badge chk-badge-blue">✓</span> <div>루디먼트(Rudiments) 정밀 테크닉 (파라디들, 플램, 롤 응용)</div></li>
+                                <li><span class="chk-badge chk-badge-blue">✓</span> <div>Funk, Latin, Jazz, Odd-meter 등 <strong>장르별 심화 그루브 마스터</strong></div></li>
+                                <li><span class="chk-badge chk-badge-blue">✓</span> <div><strong>실전 연주 모니터링</strong> &amp; 터치·타이밍 정밀 피드백</div></li>
+                                <li><span class="chk-badge chk-badge-blue">✓</span> <div>수험생 개성에 맞춘 입시곡 선곡, 솔로잉 편곡 &amp; 모의 실기 평가</div></li>
+                                <li><span class="chk-badge chk-badge-blue">✓</span> <div>호원대, 국제예대, 백석문화대 등 <strong>다수 합격생 배출 노하우 전수</strong></div></li>
                             </ul>
                         </div>
 
-                        <div style="margin-top: 10px;">
-                            <a href="http://pf.kakao.com/_xminSX/chat" target="_blank" rel="noopener noreferrer" style="display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; padding: 14px; background: #2563eb; color: #ffffff; text-decoration: none; border-radius: 12px; font-size: 14.5px; font-weight: 800; box-shadow: 0 4px 14px rgba(37,99,235,0.25); transition: all 0.2s;">
+                        <div style="margin-top: auto; padding-top: 22px;">
+                            <a href="http://pf.kakao.com/_xminSX/chat" target="_blank" rel="noopener noreferrer" style="display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; height: 50px; background: #2563eb; color: #ffffff; text-decoration: none; border-radius: 12px; font-size: 15px; font-weight: 800; box-shadow: 0 4px 14px rgba(37,99,235,0.3); transition: all 0.2s;">
                                 🔥 입시·전공 레슨 심층 상담 ❯
                             </a>
                         </div>
@@ -2061,7 +2368,7 @@
                 </div>
             </div>
 
-            <!-- 강사 주요 약력 및 활동 이력 -->
+            <!-- 강사 주요 약력<!-- 강사 주요 약력 및 활동 이력 -->
             <div class="career-card-wrapper" style="background: #ffffff; border: 1.5px solid var(--border-sub); border-radius: 22px; padding: 28px; box-shadow: var(--shadow-md); margin-top: 14px;">
                 <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; border-bottom: 1.5px solid #f1f5f9; padding-bottom: 14px;">
                     <h4 style="margin: 0; font-size: 17px; color: #0f172a; font-weight: 900; display: flex; align-items: center; gap: 8px;">
@@ -2072,13 +2379,13 @@
 
                 <div class="career-card-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
                     <!-- 카드 1: 학력 및 사사 -->
-                    <div style="background: #faf7f2; border: 1.5px solid #ece4d8; border-radius: 16px; padding: 18px;">
+                    <div style="background: #faf7f2; border: 1.5px solid #dcd3c4; border-radius: 16px; padding: 18px;">
                         <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 10px;">
                             <span style="font-size: 16px;">🎓</span>
-                            <strong style="color: #0f172a; font-size: 14px; font-weight: 800;">학력 및 교육 사사</strong>
+                            <strong style="color: #0f172a; font-size: 14.5px; font-weight: 900;">학력 및 교육 사사</strong>
                         </div>
-                        <div style="font-size: 13.2px; color: #334155; line-height: 1.65; display: flex; flex-direction: column; gap: 5px;">
-                            <div>• <strong>호원대학교 실용음악과 드럼전공 학사</strong></div>
+                        <div style="font-size: 13.5px; color: #0f172a; font-weight: 600; line-height: 1.7; display: flex; flex-direction: column; gap: 6px;">
+                            <div>• <strong style="color: #1d4ed8; font-weight: 800;">호원대학교 실용음악과 드럼전공 학사</strong></div>
                             <div>• 차준호, 정원영, 송홍섭, 전성식, 한상원 교수님 사사</div>
                             <div>• 제3야전군사령부 군악대 병장 만기전역</div>
                             <div>• 호원대, 국제예대, 백석문화대, 계원예중 등 다수 입시 합격생 지도</div>
@@ -2086,27 +2393,27 @@
                     </div>
 
                     <!-- 카드 2: 주요 출강 경력 -->
-                    <div style="background: #faf7f2; border: 1.5px solid #ece4d8; border-radius: 16px; padding: 18px;">
+                    <div style="background: #faf7f2; border: 1.5px solid #dcd3c4; border-radius: 16px; padding: 18px;">
                         <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 10px;">
                             <span style="font-size: 16px;">🏫</span>
-                            <strong style="color: #0f172a; font-size: 14px; font-weight: 800;">주요 출강 경력</strong>
+                            <strong style="color: #0f172a; font-size: 14.5px; font-weight: 900;">주요 출강 경력</strong>
                         </div>
-                        <div style="font-size: 13.2px; color: #334155; line-height: 1.65; display: flex; flex-direction: column; gap: 5px;">
-                            <div>• <strong>현 I Am 실용음악학원 드럼 강사</strong> (10년 근속 출강)</div>
-                            <div>• <strong>현 뮤지끄 실용음악학원 드럼 강사</strong> (5년 근속 출강)</div>
+                        <div style="font-size: 13.5px; color: #0f172a; font-weight: 600; line-height: 1.7; display: flex; flex-direction: column; gap: 6px;">
+                            <div>• <strong style="color: #0f172a; font-weight: 800;">현 I Am 실용음악학원 드럼 강사</strong> (10년 근속 출강)</div>
+                            <div>• <strong style="color: #0f172a; font-weight: 800;">현 뮤지끄 실용음악학원 드럼 강사</strong> (5년 근속 출강)</div>
                             <div>• 현 107실용음악학원 드럼 강사</div>
                             <div>• 전 비뉴베 실용음악학원(3년), YL, CM, 라다실용음악학원 출강</div>
                         </div>
                     </div>
 
                     <!-- 카드 3: 아티스트 라이브 & 방송 세션 -->
-                    <div style="background: #faf7f2; border: 1.5px solid #ece4d8; border-radius: 16px; padding: 18px;">
+                    <div style="background: #faf7f2; border: 1.5px solid #dcd3c4; border-radius: 16px; padding: 18px;">
                         <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 10px;">
                             <span style="font-size: 16px;">🎸</span>
-                            <strong style="color: #0f172a; font-size: 14px; font-weight: 800;">아티스트 라이브 & 방송 세션</strong>
+                            <strong style="color: #0f172a; font-size: 14.5px; font-weight: 900;">아티스트 라이브 &amp; 방송 세션</strong>
                         </div>
-                        <div style="font-size: 13px; color: #334155; line-height: 1.6; display: flex; flex-direction: column; gap: 5px;">
-                            <div>• 김재중, 이진성(먼데이키즈), 슈퍼주니어 신동, 스윙스, 보이비 라이브 무대 드럼 세션</div>
+                        <div style="font-size: 13.5px; color: #0f172a; font-weight: 600; line-height: 1.7; display: flex; flex-direction: column; gap: 6px;">
+                            <div>• <strong style="color: #0f172a; font-weight: 800;">김재중, 이진성(먼데이키즈), 슈퍼주니어 신동, 스윙스, 보이비</strong> 라이브 무대 드럼 세션</div>
                             <div>• 베이시스트 전성식 교수 밴드 라이브 다수 세션</div>
                             <div>• 워십웨이커스 메인 드러머, 새에덴교회 드러머 사역</div>
                             <div>• 청와대 2020년 국가조찬기도회 집회 드럼 세션 (CBS 방송)</div>
@@ -2116,13 +2423,13 @@
                     </div>
 
                     <!-- 카드 4: 주요 음반 레코딩 세션 -->
-                    <div style="background: #faf7f2; border: 1.5px solid #ece4d8; border-radius: 16px; padding: 18px;">
+                    <div style="background: #faf7f2; border: 1.5px solid #dcd3c4; border-radius: 16px; padding: 18px;">
                         <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 10px;">
                             <span style="font-size: 16px;">💿</span>
-                            <strong style="color: #0f172a; font-size: 14px; font-weight: 800;">주요 음반 레코딩 세션</strong>
+                            <strong style="color: #0f172a; font-size: 14.5px; font-weight: 900;">주요 음반 레코딩 세션</strong>
                         </div>
-                        <div style="font-size: 13.2px; color: #334155; line-height: 1.65; display: flex; flex-direction: column; gap: 5px;">
-                            <div>• <strong>워십웨이커스 1집/2집</strong> 전 앨범 작사·작곡 및 드럼 연주</div>
+                        <div style="font-size: 13.5px; color: #0f172a; font-weight: 600; line-height: 1.7; display: flex; flex-direction: column; gap: 6px;">
+                            <div>• <strong style="color: #1d4ed8; font-weight: 800;">워십웨이커스 1집/2집</strong> 전 앨범 작사·작곡 및 드럼 연주</div>
                             <div>• 새에덴국악찬양단 '혈루병 여인의 고백' 녹음 세션</div>
                             <div>• 밴드 'Navy clover', 뉴에덴워십 앨범 등 다수 녹음 세션</div>
                         </div>
@@ -2182,13 +2489,13 @@
                             <tr>
                                 <td><strong style="color:#0f172a;">주중 일반</strong></td>
                                 <td>시간당 (기본 2시간~)</td>
-                                <td><span class="badge-cost" style="color:#0f172a;">25,000원</span></td>
+                                <td><span class="badge-cost" style="color:#0f172a; font-size:15px; font-weight:900;">25,000원</span></td>
                                 <td>월~금 18시 이전 대관</td>
                             </tr>
                             <tr>
-                                <td><strong style="color:#60a5fa;">주말 / 공휴일 / 금요일 18:00~20:00</strong></td>
+                                <td><strong style="color:#1d4ed8;">주말 / 공휴일 / 금요일 18:00~20:00</strong></td>
                                 <td>시간당 (기본 2시간~)</td>
-                                <td><span class="badge-cost" style="color:#60a5fa;">30,000원</span></td>
+                                <td><span class="badge-cost" style="color:#1d4ed8; font-size:15px; font-weight:900;">30,000원</span></td>
                                 <td>금요일 저녁(18:00~20:00) 및 주말/공휴일 대관</td>
                             </tr>
                         </tbody>
@@ -2274,92 +2581,208 @@
         </div>
     </div>
 
-    <!-- 3. 가이드 탭 (GUIDE) -->
+        <!-- 3. 가이드 탭 (GUIDE) -->
     <div id="guideContent" class="tab-content">
         <div class="guide-container">
             <div class="guide-header-box">
                 <h2>깨어있는 연구소</h2>
                 <div class="guide-header-line"></div>
-                <p class="sub1">시설 사용 및 안전 안내 가이드</p>
-                <p class="sub2">창작자를 위한 최적의 공간, 깨어있는 연구소 (Awake Lab)</p>
+                <p class="sub1" style="color: var(--text-title); font-weight: 800; font-size: 16px;">시설 이용 & 안전 종합 안내 가이드</p>
+                <p class="sub2" style="color: #64748b; font-size: 13.5px; margin-top: 4px;">모두가 안전하고 쾌적하게 음악에 몰입할 수 있도록 이용 수칙을 준수해 주세요.</p>
             </div>
             
+            <!-- 가이드 카드 01: 스마트 출입 안내 -->
             <div class="guide-card">
-                <div class="guide-side">
-                    <span style="font-size: 40px; margin-bottom: 10px;">👤</span>
-                    <span>01</span>
-                    <p>출입 안내</p>
+                <div class="guide-card-header">
+                    <div class="guide-card-header-left">
+                        <span class="guide-num-badge" style="background: #eff6ff; color: #2563eb; border: 1.5px solid #bfdbfe;">01</span>
+                        <h3 class="guide-card-title">
+                            <span>🔑 스마트 출입 및 입·퇴실 가이드</span>
+                        </h3>
+                    </div>
+                    <span class="guide-cat-pill" style="background: #eff6ff; color: #1d4ed8; border: 1px solid #bfdbfe;">DOOR &amp; ACCESS</span>
                 </div>
-                <div class="guide-info">
-                    <div class="guide-item">
-                        <div class="guide-title">• <strong>진입 유리문 비밀번호</strong> <span class="pw-box" style="color: var(--text-title); font-size:13px; font-weight:700;">예약 확정 시 문자로 자동 발송</span></div>
+
+                <div class="guide-sub-grid">
+                    <!-- 칸 1: 진입 유리문 비밀번호 -->
+                    <div class="guide-sub-box">
+                        <div class="guide-sub-box-header">
+                            <div class="guide-sub-box-title">
+                                <span>🔑 외부 유리문 비밀번호</span>
+                            </div>
+                            <span class="guide-badge-tag" style="background: #eff6ff; color: #1d4ed8; border: 1px solid #bfdbfe;">문자 자동 발송</span>
+                        </div>
+                        <div class="guide-sub-box-desc">
+                            예약 확정 시 휴대폰 문자로 <strong>입구 도어락 비밀번호</strong>가 자동 발송됩니다. 키패드에 번호 입력 후 출입해 주세요.
+                        </div>
                     </div>
-                    <div class="guide-item">
-                        <div class="guide-title">• <strong>입실 방법</strong></div>
-                        <div class="guide-desc">방문문 앞에서 관리자에게 연락 주시면 원격으로 개방해 드립니다.</div>
+
+                    <!-- 칸 2: 방음문 입실 방법 -->
+                    <div class="guide-sub-box">
+                        <div class="guide-sub-box-header">
+                            <div class="guide-sub-box-title">
+                                <span>🚪 내부 방음문 원격 개방</span>
+                            </div>
+                            <span class="guide-badge-tag" style="background: #f0fdf4; color: #15803d; border: 1px solid #bbf7d0;">관리자 원격 오픈</span>
+                        </div>
+                        <div class="guide-sub-box-desc">
+                            방음문 앞에 도착하신 후 관리자에게 전화 또는 문자 주시면 <strong>원격 IoT 시스템으로 즉시 개방</strong>해 드립니다.
+                        </div>
                     </div>
-                    <div class="guide-item">
-                        <div class="guide-title">• <strong>퇴실 의무</strong></div>
-                        <div class="guide-desc">관리자에게 <span style="color:#d32f2f; font-weight:800;">퇴실 연락 필수</span> 및 외부 유리문 잠금 상태를<br>반드시 확인해 주세요.</div>
+
+                    <!-- 칸 3: 필수 퇴실 의무 (전체 너비 강조 박스) -->
+                    <div class="guide-sub-box" style="grid-column: 1 / -1; background: #fef2f2; border: 1.5px solid #fecaca;">
+                        <div class="guide-sub-box-header">
+                            <div class="guide-sub-box-title" style="color: #dc2626;">
+                                <span>🔒 필수 퇴실 절차 및 확인 의무</span>
+                            </div>
+                            <span class="guide-badge-tag" style="background: #fee2e2; color: #dc2626; border: 1px solid #fca5a5;">퇴실 연락 필수</span>
+                        </div>
+                        <div class="guide-sub-box-desc" style="color: #991b1b;">
+                            합주 종료 후 관리자에게 <strong style="color: #dc2626;">퇴실 연락(전화/문자)을 반드시 필수</strong>로 남겨주시고, <strong>외부 유리문이 완전히 닫혀 잠겼는지</strong> 반드시 확인해 주세요.
+                        </div>
                     </div>
                 </div>
             </div>
 
+            <!-- 가이드 카드 02: 조명 및 기기 전원 -->
             <div class="guide-card">
-                <div class="guide-side">
-                    <span style="font-size: 40px; margin-bottom: 10px;">💡</span>
-                    <span>02</span>
-                    <p>조명 및 기기 전원</p>
+                <div class="guide-card-header">
+                    <div class="guide-card-header-left">
+                        <span class="guide-num-badge" style="background: #fff7ed; color: #ea580c; border: 1.5px solid #fed7aa;">02</span>
+                        <h3 class="guide-card-title">
+                            <span>💡 조명 스위치 및 음향 콘솔 전원 운영</span>
+                        </h3>
+                    </div>
+                    <span class="guide-cat-pill" style="background: #fff7ed; color: #c2410c; border: 1px solid #fed7aa;">POWER &amp; LIGHTS</span>
                 </div>
-                <div class="guide-info">
-                    <div class="guide-item">
-                        <div class="guide-title">• <strong>입구 조명</strong></div>
-                        <div class="guide-desc">쇼파 뒤 스위치 중 <span style="color:#1976d2; font-weight:bold;">스티커 부착된 부분만</span> 켜주세요.</div>
+
+                <div class="guide-sub-grid">
+                    <!-- 칸 1: 입구 조명 -->
+                    <div class="guide-sub-box">
+                        <div class="guide-sub-box-header">
+                            <div class="guide-sub-box-title">
+                                <span>🛋️ 입구 메인 조명</span>
+                            </div>
+                            <span class="guide-badge-tag" style="background: #eff6ff; color: #1d4ed8; border: 1px solid #bfdbfe;">스티커 부착부</span>
+                        </div>
+                        <div class="guide-sub-box-desc">
+                            쇼파 뒤편 벽면 스위치 중 <strong style="color: #2563eb;">원형 스티커가 부착된 부분만</strong> 켜고 꺼주시기 바랍니다.
+                        </div>
                     </div>
-                    <div class="guide-item">
-                        <div class="guide-title">• <strong>무대 조명</strong></div>
-                        <div class="guide-desc">콘솔 쪽 벽면 스위치 중 <span style="color:#1976d2; font-weight:bold;">스티커 부착된 부분만</span> 켜주세요.</div>
+
+                    <!-- 칸 2: 무대 조명 -->
+                    <div class="guide-sub-box">
+                        <div class="guide-sub-box-header">
+                            <div class="guide-sub-box-title">
+                                <span>✨ 무대 연주 조명</span>
+                            </div>
+                            <span class="guide-badge-tag" style="background: #eff6ff; color: #1d4ed8; border: 1px solid #bfdbfe;">스티커 부착부</span>
+                        </div>
+                        <div class="guide-sub-box-desc">
+                            음향 콘솔 쪽 벽면 스위치 중 <strong style="color: #2563eb;">원형 스티커가 부착된 버튼만</strong> 조작해 주세요.
+                        </div>
                     </div>
-                    <div class="guide-item">
-                        <div class="guide-title">• <strong>콘솔 운영</strong></div>
-                        <div class="guide-desc">전원 ON 시 <span style="color:#d32f2f; font-weight:bold;">위에서부터 순서대로</span>, OFF 시 <span style="color:#d32f2f; font-weight:bold;">역순으로</span> 조작 바랍니다.</div>
+
+                    <!-- 칸 3: 콘솔 전원 운영 순서 -->
+                    <div class="guide-sub-box" style="background: #eff6ff; border: 1.5px solid #bfdbfe;">
+                        <div class="guide-sub-box-header">
+                            <div class="guide-sub-box-title" style="color: #1e40af;">
+                                <span>🎛️ 콘솔 전원 순차 조작</span>
+                            </div>
+                            <span class="guide-badge-tag" style="background: #dbeafe; color: #1e40af; border: 1px solid #93c5fd;">순서 엄수</span>
+                        </div>
+                        <div class="guide-sub-box-desc" style="color: #1e3a8a;">
+                            • 전원 켤 때 (ON): <strong style="color: #2563eb;">위에서부터 순서대로</strong> 조작<br>
+                            • 전원 끌 때 (OFF): <strong style="color: #dc2626;">맨 아래부터 역순으로</strong> 조작
+                        </div>
                     </div>
-                    <div class="guide-item">
-                        <div class="guide-title">• <strong>조작 금지</strong></div>
-                        <div class="guide-desc">콘솔 우측 바닥의 별도 기기 전원은 <span style="color:#d32f2f; font-weight:bold;">절대 만지지 마세요.</span></div>
+
+                    <!-- 칸 4: 조작 절대 금지 -->
+                    <div class="guide-sub-box" style="background: #fff7ed; border: 1.5px solid #fed7aa;">
+                        <div class="guide-sub-box-header">
+                            <div class="guide-sub-box-title" style="color: #c2410c;">
+                                <span>⚠️ 바닥 기기 조작 금지</span>
+                            </div>
+                            <span class="guide-badge-tag" style="background: #fee2e2; color: #dc2626; border: 1px solid #fca5a5;">절대 조작 금지</span>
+                        </div>
+                        <div class="guide-sub-box-desc" style="color: #7c2d12;">
+                            콘솔 우측 바닥에 설치된 별도 장비 전원은 시스템 보호를 위해 <strong style="color: #dc2626;">절대 임의로 만지지 마세요.</strong>
+                        </div>
                     </div>
                 </div>
             </div>
 
+            <!-- 가이드 카드 03: 시설 이용 수칙 -->
             <div class="guide-card">
-                <div class="guide-side">
-                    <span style="font-size: 40px; margin-bottom: 10px;">📋</span>
-                    <span>03</span>
-                    <p>시설 이용 수칙</p>
+                <div class="guide-card-header">
+                    <div class="guide-card-header-left">
+                        <span class="guide-num-badge" style="background: #ecfdf5; color: #059669; border: 1.5px solid #a7f3d0;">03</span>
+                        <h3 class="guide-card-title">
+                            <span>📋 쾌적한 시설 이용 수칙 &amp; 정리 매너</span>
+                        </h3>
+                    </div>
+                    <span class="guide-cat-pill" style="background: #ecfdf5; color: #047857; border: 1px solid #a7f3d0;">CLEAN &amp; RULES</span>
                 </div>
-                <div class="guide-info">
-                    <div class="guide-item">
-                        <div class="guide-title">• <strong>청결 유지</strong></div>
-                        <div class="guide-desc">음식물 반입 및 취사는 원칙적으로 금지합니다.</div>
+
+                <div class="guide-sub-grid">
+                    <!-- 칸 1: 음식물 반입 금지 -->
+                    <div class="guide-sub-box" style="background: #fef2f2; border: 1.5px solid #fecaca;">
+                        <div class="guide-sub-box-header">
+                            <div class="guide-sub-box-title" style="color: #dc2626;">
+                                <span>🚫 음식물 반입 및 취사 금지</span>
+                            </div>
+                            <span class="guide-badge-tag" style="background: #fee2e2; color: #dc2626; border: 1px solid #fca5a5;">청결 유지</span>
+                        </div>
+                        <div class="guide-sub-box-desc" style="color: #991b1b;">
+                            공간 청결을 위해 <strong>음식물 반입 및 취사는 원칙적으로 금지</strong>합니다. (뚜껑 있는 생수/음료만 반입 허용)
+                        </div>
                     </div>
-                    <div class="guide-item">
-                        <div class="guide-title">• <strong>제습기 & 공기청정기</strong></div>
-                        <div class="guide-desc">최적의 습도와 쾌적한 룸 환경을 위해 <span style="color:#2ecc71; font-weight:bold;">24시간 상시 가동 중</span>입니다. 퇴실 시 <span style="color:#2ecc71; font-weight:bold;">전원을 끄지 마시고 그대로 켜두시면</span> 됩니다.</div>
+
+                    <!-- 칸 2: 제습기 & 공기청정기 상시 가동 -->
+                    <div class="guide-sub-box" style="background: #f0fdf4; border: 1.5px solid #bbf7d0;">
+                        <div class="guide-sub-box-header">
+                            <div class="guide-sub-box-title" style="color: #15803d;">
+                                <span>🌀 제습기 &amp; 공기청정기 가동</span>
+                            </div>
+                            <span class="guide-badge-tag" style="background: #dcfce7; color: #15803d; border: 1px solid #86efac;">24시간 상시 가동</span>
+                        </div>
+                        <div class="guide-sub-box-desc" style="color: #14532d;">
+                            악기 최적 습도 유지를 위해 24시간 가동 중입니다. 퇴실 시에도 <strong style="color: #15803d;">전원을 끄지 마시고 켜두세요.</strong>
+                        </div>
                     </div>
-                    <div class="guide-item">
-                        <div class="guide-title">• <strong>기타 장비</strong></div>
-                        <div class="guide-desc">공조기는 가동하지 마시고, 방음문은 별도로 잠그지 않아도 됩니다.</div>
+
+                    <!-- 칸 3: 공조기 및 방음문 -->
+                    <div class="guide-sub-box">
+                        <div class="guide-sub-box-header">
+                            <div class="guide-sub-box-title">
+                                <span>💨 공조기 및 방음문</span>
+                            </div>
+                            <span class="guide-badge-tag" style="background: #f1f5f9; color: #475569; border: 1px solid #cbd5e1;">조작 불필요</span>
+                        </div>
+                        <div class="guide-sub-box-desc">
+                            벽면 공조기는 별도로 가동하지 마시고, 내부 방음문은 퇴실 시 잠그지 않고 그냥 닫아두시면 됩니다.
+                        </div>
                     </div>
-                    <div class="guide-item">
-                        <div class="guide-title">• <strong>정리 정돈</strong></div>
-                        <div class="guide-desc">퇴실 전 조명 소등, 쓰레기 및 악보 정리를 부탁드립니다.</div>
+
+                    <!-- 칸 4: 정리 정돈 매너 -->
+                    <div class="guide-sub-box">
+                        <div class="guide-sub-box-header">
+                            <div class="guide-sub-box-title">
+                                <span>🧹 퇴실 5분 전 정리 정돈</span>
+                            </div>
+                            <span class="guide-badge-tag" style="background: #eff6ff; color: #1d4ed8; border: 1px solid #bfdbfe;">매너 준수</span>
+                        </div>
+                        <div class="guide-sub-box-desc">
+                            퇴실 5분 전 <strong>조명 소등, 마이크/케이블 제자리 정돈, 쓰레기 및 악보 정리</strong>를 부탁드립니다.
+                        </div>
                     </div>
                 </div>
             </div>
 
-            <div class="guide-footer">
-                <h3>AWAKE LAB</h3>
-                <p>창작자를 위한 최적의 공간</p>
+            <div class="guide-footer" style="background: #ffffff; border: 1.5px solid var(--border-sub); border-radius: 18px; padding: 22px; text-align: center; margin-top: 20px; box-shadow: var(--shadow-sm);">
+                <h3 style="margin: 0 0 6px 0; font-size: 17px; color: #0f172a; font-weight: 900;">AWAKE LAB</h3>
+                <p style="margin: 0; font-size: 13.5px; color: #64748b; font-weight: 600;">창작자를 위한 최적의 공간 · 깨어있는 연구소</p>
             </div>
         </div>
     </div>
@@ -2379,9 +2802,9 @@
                 <form id="lookupForm" onsubmit="event.preventDefault(); searchMyReservations();">
                     <div style="margin-bottom:14px;">
                         <label style="display:block; font-size:13px; color:#aaa; margin-bottom:6px;">📱 휴대폰 번호 또는 예약번호</label>
-                        <input type="text" id="lookupInput" placeholder="예: 010-1234-5678 또는 예약번호" style="width:100%; padding:16px; background: var(--bg-page); border: 1px solid var(--border-sub); color:#fff; border-radius:14px; font-size:15px;" required>
+                        <input type="text" id="lookupInput" placeholder="예: 010-1234-5678 또는 예약번호" style="width:100%; padding:16px; background: #ffffff; border: 1.5px solid var(--border-sub); color: var(--text-title); border-radius:14px; font-size:15px;" required>
                     </div>
-                    <button type="submit" class="btn btn-submit" class="btn btn-primary" style="width:100%; padding:14px; font-size:14px;">내 예약 확인하기 ❯</button>
+                    <button type="submit" class="btn btn-submit" style="width:100%; padding:14px; font-size:14px;">내 예약 확인하기 ❯</button>
                 </form>
             </div>
 
@@ -2391,170 +2814,193 @@
         </div>
     </div>
 
-    <!-- 5. 자주 묻는 질문 탭 (FAQ / Q&A) -->
+        <!-- 5. 자주 묻는 질문 탭 (FAQ / Q&A) -->
     <div id="faqContent" class="tab-content">
         <div class="guide-container">
             <div class="guide-header-box">
                 <h2>자주 묻는 질문</h2>
                 <div class="guide-header-line"></div>
-                <p class="sub1" style="color: #e9d5ff;">궁금하신 점을 빠르고 명쾌하게 해결해 드립니다</p>
-                <p class="sub2">어웨이크 랩(AWAKE LAB) 예약 및 시설 이용 관련 핵심 Q&A</p>
+                <p class="sub1" style="color: var(--text-title); font-weight: 800; font-size: 16px;">궁금하신 점을 빠르고 명쾌하게 해결해 드립니다</p>
+                <p class="sub2" style="color: #64748b; font-size: 13.5px; margin-top: 4px;">어웨이크 랩(AWAKE LAB) 예약 및 시설 이용 관련 핵심 Q&amp;A</p>
             </div>
 
             <div class="faq-list">
-                <!-- Q1 -->
-                <div class="faq-card open">
+                <!-- Q1: 예약/확정 (블루) -->
+                <div class="faq-card cat-blue open">
                     <div class="faq-question" onclick="toggleFaq(this)">
-                        <div>
-                            <span class="q-tag">예약/확정</span>
-                            <span>Q1. 예약 신청 후 언제 최종 확정되며, 출입 비밀번호는 언제 받나요?</span>
+                        <div class="faq-question-left">
+                            <span class="q-tag q-tag-blue">📅 예약 / 확정</span>
+                            <span class="faq-question-text">Q1. 예약 신청 후 언제 최종 확정되며, 출입 비밀번호는 언제 받나요?</span>
                         </div>
                         <span class="faq-arrow">▼</span>
                     </div>
                     <div class="faq-answer" style="display: block;">
-                        달력에서 원하시는 날짜와 시간을 선택 후 신청하시면 즉시 <strong>'입금 대기'</strong> 상태로 선점됩니다.<br>
-                        안내된 계좌(케이뱅크 100-111-300282 민경선)로 대관료를 입금해 주시면, 관리자가 입금 확인 즉시 <strong>건물 현관 출입문 비밀번호 및 합주실 원격 개방 안내 문자가 고객님의 휴대폰으로 자동 발송</strong>되며 최종 확정됩니다!
+                        <div class="faq-answer-inner ans-blue">
+                            <div class="ans-badge" style="background: #dbeafe; color: #1d4ed8;">ANSWER</div><br>
+                            달력에서 원하시는 날짜와 시간을 선택 후 신청하시면 즉시 <strong>'입금 대기'</strong> 상태로 자동 선점됩니다.<br>
+                            안내된 계좌(<strong style="color: #1d4ed8;">케이뱅크 100-111-300282 민경선</strong>)로 대관료를 입금해 주시면, 관리자가 입금 확인 즉시 <strong style="color: #1d4ed8;">건물 현관 출입문 비밀번호 및 합주실 원격 개방 안내 문자</strong>가 고객님의 휴대폰으로 자동 발송되며 최종 확정됩니다!
+                        </div>
                     </div>
                 </div>
 
-                <!-- Q2 -->
-                <div class="faq-card">
+                <!-- Q2: 출입/입실 (그린) -->
+                <div class="faq-card cat-green">
                     <div class="faq-question" onclick="toggleFaq(this)">
-                        <div>
-                            <span class="q-tag">출입/입실</span>
-                            <span>Q2. 합주실 도어락(출입문)은 어떻게 열고 들어가나요?</span>
+                        <div class="faq-question-left">
+                            <span class="q-tag q-tag-green">🚪 출입 / 입실</span>
+                            <span class="faq-question-text">Q2. 합주실 도어락(출입문)은 어떻게 열고 들어가나요?</span>
                         </div>
                         <span class="faq-arrow">▼</span>
                     </div>
                     <div class="faq-answer">
-                        1. <strong>건물 1층 초입 현관문</strong>: 예약 확정 시 문자로 발송된 비밀번호를 입력하여 열고 지하 1층으로 내려오시면 됩니다.<br>
-                        2. <strong>합주실 메인 방음 도어</strong>: 합주실 문 앞 도착 후 관리자 번호(<code>010-6240-6569</code>)로 '도착했습니다' 문자를 남겨주시면 관리자가 확인 즉시 <strong>원격으로 문을 열어드립니다!</strong>
+                        <div class="faq-answer-inner ans-green">
+                            <div class="ans-badge" style="background: #d1fae5; color: #047857;">ANSWER</div><br>
+                            1. <strong>건물 1층 초입 현관문</strong>: 예약 확정 시 문자로 발송된 비밀번호를 키패드에 입력하여 열고 지하 1층으로 내려오시면 됩니다.<br>
+                            2. <strong>합주실 메인 방음 도어</strong>: 합주실 문 앞 도착 후 관리자 번호(<strong style="color: #047857;">010-6240-6569</strong>)로 '도착했습니다' 문자를 남겨주시면 관리자가 확인 즉시 <strong style="color: #047857;">원격으로 문을 열어드립니다!</strong>
+                        </div>
                     </div>
                 </div>
 
-                <!-- Q3 -->
-                <div class="faq-card">
+                <!-- Q3: 정기권 혜택 (퍼플) -->
+                <div class="faq-card cat-purple">
                     <div class="faq-question" onclick="toggleFaq(this)">
-                        <div>
-                            <span class="q-tag">정기권 혜택</span>
-                            <span>Q3. 정기권(월 4회)과 매주 고정팀 혜택 및 신청 방법은 어떻게 되나요?</span>
+                        <div class="faq-question-left">
+                            <span class="q-tag q-tag-purple">🎁 정기권 혜택</span>
+                            <span class="faq-question-text">Q3. 정기권(월 4회)과 매주 고정팀 혜택 및 신청 방법은 어떻게 되나요?</span>
                         </div>
                         <span class="faq-arrow">▼</span>
                     </div>
                     <div class="faq-answer">
-                        정기권은 <strong>월 4회 고정 시간 선점 + 최대 20% 파격 할인</strong> 혜택이 적용되는 특별 우대 상품입니다.<br>
-                        • <strong>⛪ 교회 찬양팀 (주말)</strong>: A형(회당 2h) 20만 원(17% 할인) / B형(회당 3h) 29만 원(20% 할인)<br>
-                        • <strong>🏢 인근 직장인 밴드 (주중)</strong>: A형(회당 2h) 16만 원(20% 할인) / B형(회당 3h) 24만 원(20% 할인)<br>
-                        • <strong>🏢 인근 직장인 밴드 (일요일)</strong>: A형(회당 2h) 20만 원(17% 할인) / B형(회당 3h) 29만 원(20% 할인)<br>
-                        👉 예약 신청 창에서 <strong>[🎁 정기권 (월 4회 할인)]</strong> 탭을 누르고 신청하시면 향후 4주간 동일 요일/시간이 자동으로 일괄 선점됩니다!
+                        <div class="faq-answer-inner ans-purple">
+                            <div class="ans-badge" style="background: #ede9fe; color: #6d28d9;">ANSWER</div><br>
+                            정기권은 <strong style="color: #6d28d9;">월 4회 고정 시간 선점 + 최대 20% 파격 할인</strong> 혜택이 적용되는 특별 우대 상품입니다.<br>
+                            • <strong>⛪ 교회 찬양팀 (주말)</strong>: A형(회당 2h) 20만 원(17%↓) / B형(회당 3h) 29만 원(20%↓)<br>
+                            • <strong>🏢 인근 직장인 밴드 (주중)</strong>: A형(회당 2h) 16만 원(20%↓) / B형(회당 3h) 24만 원(20%↓)<br>
+                            • <strong>🏢 인근 직장인 밴드 (일요일)</strong>: A형(회당 2h) 20만 원(17%↓) / B형(회당 3h) 29만 원(20%↓)<br>
+                            👉 예약 창 상단의 <strong>[🎁 정기권 (월 4회 할인)]</strong> 탭을 누르고 신청하시면 향후 4주간 동일 요일/시간이 자동으로 일괄 선점됩니다!
+                        </div>
                     </div>
                 </div>
 
-                <!-- Q4 -->
-                <div class="faq-card">
+                <!-- Q4: 대관 기준 (앰버) -->
+                <div class="faq-card cat-amber">
                     <div class="faq-question" onclick="toggleFaq(this)">
-                        <div>
-                            <span class="q-tag">대관 기준</span>
-                            <span>Q4. 기본 대관 시간 및 최소 이용 기준이 있나요?</span>
+                        <div class="faq-question-left">
+                            <span class="q-tag q-tag-amber">⏰ 대관 기준</span>
+                            <span class="faq-question-text">Q4. 기본 대관 시간 및 최소 이용 기준이 있나요?</span>
                         </div>
                         <span class="faq-arrow">▼</span>
                     </div>
                     <div class="faq-answer">
-                        악기 세팅 및 쾌적하고 여유 있는 합주를 위해 일반 대관은 <strong>최소 2시간 이상부터</strong> 예약 가능합니다.<br>
-                        예약 창에서 <strong>합주 시작 시간과 종료 시간을 차례로 클릭</strong>하시면 중간 시간대가 자동으로 일괄 선택되어 아주 편리하게 신청하실 수 있습니다.
+                        <div class="faq-answer-inner ans-amber">
+                            <div class="ans-badge" style="background: #fef3c7; color: #b45309;">ANSWER</div><br>
+                            악기 세팅 및 쾌적하고 여유 있는 합주를 위해 일반 대관은 <strong style="color: #b45309;">최소 2시간 이상부터</strong> 예약 가능합니다.<br>
+                            실시간 예약 창에서 <strong style="color: #b45309;">합주 시작 시간과 종료 시간을 차례로 클릭</strong>하시면 중간 시간대가 자동으로 일괄 선택되어 아주 편리하게 신청하실 수 있습니다.
+                        </div>
                     </div>
                 </div>
 
-                <!-- Q5 -->
-                <div class="faq-card">
+                <!-- Q5: 장비/음향 (인디고) -->
+                <div class="faq-card cat-indigo">
                     <div class="faq-question" onclick="toggleFaq(this)">
-                        <div>
-                            <span class="q-tag">장비/음향</span>
-                            <span>Q5. 합주실 내 구비 장비(콘솔/건반/앰프/드럼) 스펙이 어떻게 되나요?</span>
+                        <div class="faq-question-left">
+                            <span class="q-tag q-tag-indigo">🎸 장비 / 음향</span>
+                            <span class="faq-question-text">Q5. 합주실 내 구비 장비(콘솔/건반/앰프/드럼) 스펙이 어떻게 되나요?</span>
                         </div>
                         <span class="faq-arrow">▼</span>
                     </div>
                     <div class="faq-answer">
-                        프로 밴드 및 워십 사운드를 위해 엄선된 전문 장비가 완비되어 있습니다:<br>
-                        • <strong>콘솔</strong>: Behringer X32 Compact + Midas DL32 (스테이지 랙 완비)<br>
-                        • <strong>메인 피아노</strong>: Yamaha P-225 (88건반)<br>
-                        • <strong>신디사이저</strong>: Yamaha Motif 7<br>
-                        • <strong>기타 앰프</strong>: Fender Champion II 100<br>
-                        • <strong>베이스 앰프</strong>: Ashdown Bass Amp<br>
-                        • <strong>드럼</strong>: TAMA Drum & Zildjian A Custom Set (차음 쉴드 완비)<br>
-                        • <strong>마이크/음향</strong>: 다이나믹 마이크 다수 (슈어 SM58 / TM58 등) + 메인 PA 시스템
+                        <div class="faq-answer-inner ans-indigo">
+                            <div class="ans-badge" style="background: #e0e7ff; color: #4338ca;">ANSWER</div><br>
+                            프로 밴드 및 워십 사운드를 위해 엄선된 전문 장비가 완비되어 있습니다:<br>
+                            • <strong>콘솔</strong>: Behringer X32 Compact + Midas DL32 (스테이지 랙 완비)<br>
+                            • <strong>메인 피아노</strong>: Yamaha P-225 (88건반 해머액션)<br>
+                            • <strong>신디사이저</strong>: Yamaha Motif 7<br>
+                            • <strong>기타 앰프</strong>: Fender Champion II 100<br>
+                            • <strong>베이스 앰프</strong>: Ashdown Bass Amp<br>
+                            • <strong>드럼</strong>: TAMA Drum &amp; Zildjian A Custom Set (전용 차음 쉴드 완비)<br>
+                            • <strong>마이크/음향</strong>: 다이나믹 마이크 다수 (슈어 SM58 / TM58 등) + 메인 PA 시스템
+                        </div>
                     </div>
                 </div>
 
-                <!-- Q6 -->
-                <div class="faq-card">
+                <!-- Q6: 주차/오시는길 (틸) -->
+                <div class="faq-card cat-teal">
                     <div class="faq-question" onclick="toggleFaq(this)">
-                        <div>
-                            <span class="q-tag">주차/오시는길</span>
-                            <span>Q6. 주차 공간 및 무거운 악기 하차가 가능한가요?</span>
+                        <div class="faq-question-left">
+                            <span class="q-tag q-tag-teal">🚗 주차 / 오시는길</span>
+                            <span class="faq-question-text">Q6. 주차 공간 및 무거운 악기 하차가 가능한가요?</span>
                         </div>
                         <span class="faq-arrow">▼</span>
                     </div>
                     <div class="faq-answer">
-                        • <strong>위치</strong>: 경기 용인시 수지구 죽전로168번길 19 지하 1층 (고수찜닭 건물 B1)<br>
-                        • <strong>주차</strong>: 건물 전면 주차 공간 또는 인근 골목/공영 주차 공간을 이용하실 수 있습니다.<br>
-                        • <strong>장비 하차</strong>: 드럼 스네어, 페달, 베이스/기타 앰프 등 무거운 장비 하차 시 건물 바로 앞 일시 정차가 가능합니다.
+                        <div class="faq-answer-inner ans-teal">
+                            <div class="ans-badge" style="background: #ccfbf1; color: #0f766e;">ANSWER</div><br>
+                            • <strong>위치</strong>: 경기 용인시 수지구 죽전로168번길 19 지하 1층 (단국대 앞 고수찜닭 건물 B1)<br>
+                            • <strong>주차</strong>: 건물 전면 주차 공간 또는 인근 골목/공영 주차 공간을 이용하실 수 있습니다.<br>
+                            • <strong>장비 하차</strong>: 드럼 스네어, 페달, 베이스/기타 등 무거운 장비 하차 시 건물 바로 앞 일시 정차가 가능합니다.
+                        </div>
                     </div>
                 </div>
 
-                <!-- Q7 -->
-                <div class="faq-card">
+                <!-- Q7: 이용 수칙 (레드) -->
+                <div class="faq-card cat-red">
                     <div class="faq-question" onclick="toggleFaq(this)">
-                        <div>
-                            <span class="q-tag">이용 수칙</span>
-                            <span>Q7. 실내화 착용 및 음식물/음료 반입 규정은 어떻게 되나요?</span>
+                        <div class="faq-question-left">
+                            <span class="q-tag q-tag-red">🚫 이용 수칙</span>
+                            <span class="faq-question-text">Q7. 실내화 착용 및 음식물/음료 반입 규정은 어떻게 되나요?</span>
                         </div>
                         <span class="faq-arrow">▼</span>
                     </div>
                     <div class="faq-answer">
-                        • <strong>실내화 착용 필수</strong>: 쾌적한 환경 유지를 위해 외부 신발 착용은 불가하며, 입구에 비치된 전용 실내화를 착용해 주세요.<br>
-                        • <strong>제습기 & 공기청정기</strong>: 최적의 온습도와 쾌적한 공기 유지를 위해 <strong>24시간 상시 가동 중</strong>이므로, 퇴실 시 전원을 끄지 마시고 그대로 켜두시면 됩니다.<br>
-                        • <strong>음식물 반입 불가</strong>: 고가 음향 장비 보호를 위해 음식물 및 취사는 엄격히 금지됩니다.<br>
-                        • <strong>음료</strong>: 뚜껑이 있는 텀블러나 생수병에 한해 반입 가능합니다.<br>
-                        • <strong>퇴실 매너</strong>: 다음 팀을 위해 퇴실 5분 전 장비 전원 OFF 및 조명 소등, 악보 정리를 부탁드립니다.
+                        <div class="faq-answer-inner ans-red">
+                            <div class="ans-badge" style="background: #fee2e2; color: #b91c1c;">ANSWER</div><br>
+                            • <strong>실내화 착용 필수</strong>: 쾌적한 바닥 유지를 위해 외부 신발 착용은 불가하며, 입구에 비치된 실내화를 착용해 주세요.<br>
+                            • <strong>제습기 &amp; 공기청정기</strong>: 최적 온습도 유지를 위해 <strong style="color: #15803d;">24시간 상시 가동 중</strong>이므로, 퇴실 시 전원을 끄지 마시고 그대로 켜두시면 됩니다.<br>
+                            • <strong>음식물 반입 불가</strong>: 고가 음향 장비 보호를 위해 <strong style="color: #dc2626;">음식물 및 취사는 엄격히 금지</strong>됩니다.<br>
+                            • <strong>음료</strong>: 뚜껑이 있는 텀블러나 생수병에 한해 반입 가능합니다.<br>
+                            • <strong>퇴실 매너</strong>: 다음 팀을 위해 퇴실 5분 전 장비 전원 OFF 및 조명 소등, 악보 정리를 부탁드립니다.
+                        </div>
                     </div>
                 </div>
 
-                <!-- Q8 -->
-                <div class="faq-card">
+                <!-- Q8: 안전/보안 (스카이) -->
+                <div class="faq-card cat-sky">
                     <div class="faq-question" onclick="toggleFaq(this)">
-                        <div>
-                            <span class="q-tag">안전/보안</span>
-                            <span>Q8. 늦은 시간이나 야간 이용 시 안전/보안은 어떤가요?</span>
+                        <div class="faq-question-left">
+                            <span class="q-tag q-tag-sky">🛡️ 안전 / 보안</span>
+                            <span class="faq-question-text">Q8. 늦은 시간이나 야간 이용 시 안전/보안은 어떤가요?</span>
                         </div>
                         <span class="faq-arrow">▼</span>
                     </div>
                     <div class="faq-answer">
-                        어웨이크 랩은 <strong>ADT 캡스(SK쉴더스) 24시간 무인 출동 경비 시스템 및 실시간 CCTV 보안</strong>이 철저하게 가동 중입니다.<br>
-                        늦은 밤이나 새벽 시간대, 혹은 여성/청소년 밴드도 외부 침입이나 위험 걱정 없이 <strong>오직 음악과 합주에만 안심하고 집중</strong>하실 수 있습니다. 🛡️
+                        <div class="faq-answer-inner ans-sky">
+                            <div class="ans-badge" style="background: #e0f2fe; color: #0369a1;">ANSWER</div><br>
+                            어웨이크 랩은 <strong style="color: #0284c7;">ADT 캡스(SK쉴더스) 24시간 무인 출동 경비 시스템 및 실시간 CCTV 보안</strong>이 철저하게 가동 중입니다.<br>
+                            늦은 밤이나 새벽 시간대, 혹은 여성/청소년 밴드도 외부 침입이나 위험 걱정 없이 <strong>오직 음악과 합주에만 안심하고 집중</strong>하실 수 있습니다. 🛡️
+                        </div>
                     </div>
                 </div>
             </div>
 
-            <!-- 하단 1:1 문의 배너 -->
-            <div style="background: linear-gradient(135deg, #181d2c, #1f273d); border: 1px solid #334155; border-radius: 18px; padding: 26px 20px; text-align: center; margin-top: 15px;">
-                <h4 style="margin: 0 0 8px 0; color: #0f172a; font-size: 17px;">💬 더 궁금한 점이 있으신가요?</h4>
-                <p style="margin: 0 0 18px 0; color: #94a3b8; font-size: 13px;">카카오톡 채널 또는 관리자 연락처로 문의하시면 가장 빠르고 친절하게 답변해 드립니다.</p>
+            <!-- 하단 1:1 문의 배너 (화이트 카드 & 고대비 스타일) -->
+            <div style="background: #ffffff; border: 1.5px solid var(--border-sub); border-radius: 20px; padding: 28px 24px; text-align: center; margin-top: 24px; box-shadow: var(--shadow-md);">
+                <h4 style="margin: 0 0 8px 0; color: #0f172a; font-size: 18px; font-weight: 900;">💬 더 궁금한 점이 있으신가요?</h4>
+                <p style="margin: 0 0 18px 0; color: #64748b; font-size: 13.5px;">카카오톡 채널 또는 관리자 연락처로 문의하시면 가장 친절하고 신속하게 답변해 드립니다.</p>
                 <div style="display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;">
-                    <a href="http://pf.kakao.com/_xminSX/chat" target="_blank" rel="noopener noreferrer" style="display: inline-flex; align-items: center; gap: 8px; background: #FEE500; color: #000; text-decoration: none; padding: 13px 22px; border-radius: 12px; font-weight: 900; font-size: 14px; box-shadow: 0 4px 15px rgba(254,229,0,0.35); transition: transform 0.2s;">
+                    <a href="http://pf.kakao.com/_xminSX/chat" target="_blank" rel="noopener noreferrer" style="display: inline-flex; align-items: center; gap: 8px; background: #FEE500; color: #191919; text-decoration: none; padding: 12px 22px; border-radius: 12px; font-weight: 900; font-size: 14px; box-shadow: 0 4px 14px rgba(254,229,0,0.35); transition: transform 0.2s;">
                         <svg width="18" height="18" viewBox="0 0 24 24" fill="#000"><path d="M12 3C6.48 3 2 6.48 2 10.8c0 2.76 1.84 5.18 4.62 6.54-.2.74-.74 2.68-.85 3.09-.14.52.19.51.4.37.16-.11 2.54-1.73 3.56-2.43.74.1 1.5.16 2.27.16 5.52 0 10-3.48 10-7.8S17.52 3 12 3z"/></svg>
                         카카오톡 1:1 실시간 문의
                     </a>
-                    <a href="tel:010-6240-6569" style="display: inline-flex; align-items: center; gap: 6px; background: var(--text-title); color: #fff; text-decoration: none; padding: 12px 24px; border-radius: var(--radius-sm); font-weight: 600; font-size: 14px; border: none; border-radius: 12px; font-weight: 800; font-size: 14px; box-shadow: 0 4px 15px rgba(138,43,226,0.4);">
+                    <a href="tel:010-6240-6569" style="display: inline-flex; align-items: center; gap: 6px; background: #0f172a; color: #ffffff; text-decoration: none; padding: 12px 22px; border-radius: 12px; font-weight: 800; font-size: 14px; box-shadow: 0 4px 14px rgba(15,23,42,0.18);">
                         📞 010-6240-6569 전화/문자
                     </a>
                 </div>
             </div>
         </div>
     </div>
-</div>
 
-<!-- 5. 관리자 PIN 비밀번호 인증 모달 -->
+<!-- 5. 관리자 PIN 비밀번호 인증 모달 --><!-- 5. 관리자 PIN 비밀번호 인증 모달 -->
 <div id="adminAuthModal" class="modal">
     <div class="modal-content" style="max-width:400px; text-align:center;">
         <div style="font-size:40px; margin-bottom:10px;">👑</div>
@@ -2646,9 +3092,9 @@
                 <span>총 대관료: <strong id="livePriceAmount" style="color:#2563eb; font-size:16px;">0원</strong></span>
             </div>
             
-            <input type="text" id="teamName" placeholder="합주팀 이름 (예: 워십웨이커스)" style="width:100%; padding:16px; background: var(--bg-page); border: 1px solid var(--border-sub); color:#fff; border-radius:14px; margin-bottom:12px; font-size: 15px;" required>
+            <input type="text" id="teamName" placeholder="합주팀 이름 (예: 워십웨이커스)" style="width:100%; padding:16px; background: #ffffff; border: 1.5px solid var(--border-sub); color: var(--text-title); border-radius:14px; margin-bottom:12px; font-size: 15px;" required>
             
-            <input type="tel" id="bookerPhone" placeholder="휴대폰 번호 (예: 010-1234-5678)" maxlength="13" style="width:100%; padding:16px; background: var(--bg-page); border: 1px solid var(--border-sub); color:#fff; border-radius:14px; margin-bottom:22px; font-size: 15px;" required>
+            <input type="tel" id="bookerPhone" placeholder="휴대폰 번호 (예: 010-1234-5678)" maxlength="13" style="width:100%; padding:16px; background: #ffffff; border: 1.5px solid var(--border-sub); color: var(--text-title); border-radius:14px; margin-bottom:22px; font-size: 15px;" required>
             
             <div class="btn-group">
                 <button type="button" class="btn btn-back" onclick="closeModal()">취소</button>
@@ -2898,12 +3344,12 @@
 
         <div style="margin-bottom:16px;">
             <label style="font-size:12px; color:#aaa; font-weight:bold;">입금자명 (예약팀명 또는 예약자 성명)</label>
-            <input type="text" id="simDepositName" style="width:100%; box-sizing:border-box; background: var(--bg-page); border: 1px solid var(--border-sub); color:#fff; padding:12px; border-radius:10px; margin-top:6px; font-size:14px;" placeholder="예: 워십웨이커스 또는 민경선">
+            <input type="text" id="simDepositName" style="width:100%; box-sizing:border-box; background: #ffffff; border: 1.5px solid var(--border-sub); color: var(--text-title); padding:12px; border-radius:10px; margin-top:6px; font-size:14px;" placeholder="예: 워십웨이커스 또는 민경선">
         </div>
 
         <div style="margin-bottom:22px;">
             <label style="font-size:12px; color:#aaa; font-weight:bold;">입금 금액 (원)</label>
-            <input type="number" id="simDepositAmount" style="width:100%; box-sizing:border-box; background: var(--bg-page); border: 1px solid var(--border-sub); color:#fff; padding:12px; border-radius:10px; margin-top:6px; font-size:14px;" placeholder="예: 50000 또는 200000">
+            <input type="number" id="simDepositAmount" style="width:100%; box-sizing:border-box; background: #ffffff; border: 1.5px solid var(--border-sub); color: var(--text-title); padding:12px; border-radius:10px; margin-top:6px; font-size:14px;" placeholder="예: 50000 또는 200000">
         </div>
 
         <div style="display:flex; gap:10px;">
