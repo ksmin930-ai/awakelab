@@ -282,7 +282,7 @@
 
         /* ===== 2. 메인 컨테이너 ===== */
         .main-container {
-            max-width: 1200px;
+            max-width: 1240px;
             margin: 0 auto;
             padding: 20px 20px 80px;
             width: 100%;
@@ -407,7 +407,7 @@
         /* ===== 3. 홈 그리드 (예약 & 정보) ===== */
         .home-grid {
             display: grid;
-            grid-template-columns: 380px 1fr;
+            grid-template-columns: 360px 1fr;
             gap: 28px;
             align-items: start;
         }
@@ -547,43 +547,47 @@
             width: 100% !important;
             box-sizing: border-box !important;
             overflow: hidden !important;
-            padding: 7px 4px;
-            min-height: 82px;
+            padding: 8px 5px;
+            min-height: 94px;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: flex-start;
-            border-radius: 10px;
+            border-radius: 12px;
             cursor: pointer;
             font-size: 14px;
             color: var(--text-title);
             position: relative;
             transition: all 0.15s ease;
-            border: 1px solid transparent;
+            border: 1px solid var(--border-sub);
             background: var(--bg-card);
         }
         .date-cell:hover:not(.disabled) {
             background: var(--bg-sub);
-            border-color: var(--border-sub);
+            border-color: #2563eb;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(37,99,235,0.08);
         }
         .date-cell.today .date-num {
             background: var(--accent-amber);
             color: #ffffff !important;
             border-radius: 50%;
-            width: 24px;
-            height: 24px;
+            width: 26px;
+            height: 26px;
             display: inline-flex;
             align-items: center;
             justify-content: center;
             font-weight: 800;
         }
         .date-cell.selected {
-            background: var(--text-title) !important;
-            color: #FFFDF9 !important;
-            border-radius: 10px;
+            background: #eff6ff !important;
+            border: 2px solid #2563eb !important;
+            border-radius: 12px;
+            box-shadow: 0 4px 14px rgba(37,99,235,0.18);
         }
         .date-cell.selected .date-num {
-            color: #FFFDF9 !important;
+            color: #1d4ed8 !important;
+            font-weight: 900 !important;
         }
         .date-cell.disabled {
             color: var(--border-dark);
@@ -608,10 +612,10 @@
             overflow: hidden !important;
             text-overflow: ellipsis !important;
             white-space: nowrap !important;
-            font-size: 9.5px;
-            line-height: 1.25;
-            padding: 3px 3px;
-            border-radius: 5px;
+            font-size: 10px;
+            line-height: 1.3;
+            padding: 3px 4px;
+            border-radius: 6px;
             margin-top: 3px;
             text-align: center;
             letter-spacing: -0.3px;
@@ -620,7 +624,7 @@
         .res-badge .badge-time {
             display: block;
             font-weight: 800;
-            font-size: 8.5px;
+            font-size: 9px;
             line-height: 1.15;
             overflow: hidden;
             text-overflow: ellipsis;
@@ -632,7 +636,7 @@
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;
-            font-size: 8.5px;
+            font-size: 9px;
             font-weight: 600;
         }
     
@@ -735,9 +739,106 @@
         /* 시간 슬롯 체크박스 그리드 */
         .checkbox-grid {
             display: grid;
-            grid-template-columns: 1fr 1fr;
+            grid-template-columns: repeat(auto-fill, minmax(138px, 1fr));
             gap: 8px;
             margin-bottom: 20px;
+        }
+        .booking-inputs-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        /* 반응형 유틸리티 */
+        .desktop-only { display: inline; }
+        .mobile-only { display: none; }
+
+        /* 데스크톱: 달력 아래 인라인 예약 패널 전개 */
+        @media (min-width: 769px) {
+            #reservationModal {
+                position: static !important;
+                width: 100% !important;
+                height: auto !important;
+                background: transparent !important;
+                backdrop-filter: none !important;
+                -webkit-backdrop-filter: none !important;
+                margin-top: 22px !important;
+                padding: 0 !important;
+                z-index: 10 !important;
+            }
+            #reservationModal.open {
+                display: block !important;
+            }
+            #reservationModal:not(.open) {
+                display: none !important;
+            }
+            #reservationModal .modal-content {
+                width: 100% !important;
+                max-width: 100% !important;
+                max-height: none !important;
+                overflow-y: visible !important;
+                background: var(--bg-card) !important;
+                border: 1.5px solid var(--border-sub) !important;
+                border-radius: var(--radius-lg) !important;
+                padding: 28px 26px !important;
+                box-shadow: 0 10px 30px rgba(0,0,0,0.06) !important;
+                margin: 0 !important;
+                animation: fadeInDown 0.25s ease !important;
+            }
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-8px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .desktop-only { display: none !important; }
+            .mobile-only { display: inline !important; }
+            .checkbox-grid {
+                grid-template-columns: 1fr 1fr !important;
+            }
+            .booking-inputs-grid {
+                grid-template-columns: 1fr !important;
+                gap: 10px !important;
+                margin-bottom: 18px !important;
+            }
+            #reservationModal {
+                position: fixed !important;
+                top: 0 !important;
+                left: 0 !important;
+                width: 100% !important;
+                height: 100% !important;
+                margin-top: 0 !important;
+                background: rgba(15, 23, 42, 0.65) !important;
+                backdrop-filter: blur(8px) !important;
+                -webkit-backdrop-filter: blur(8px) !important;
+                z-index: 2000 !important;
+                padding: 16px !important;
+                box-sizing: border-box !important;
+                align-items: center !important;
+                justify-content: center !important;
+            }
+            #reservationModal.open {
+                display: flex !important;
+            }
+            #reservationModal:not(.open) {
+                display: none !important;
+            }
+            #reservationModal .modal-content {
+                max-width: 520px !important;
+                max-height: 90vh !important;
+                overflow-y: auto !important;
+                padding: 22px 18px !important;
+                border-radius: var(--radius-lg) !important;
+            }
         }
         .checkbox-grid input[type="checkbox"] {
             display: none;
@@ -1871,8 +1972,130 @@
                         <span id="loadingText">서버에서 최신 현황을 불러오는 중...</span>
                     </div>
                 </div>
+                <div class="calendar-tip" style="text-align:center; margin-top:16px; padding-top:12px; border-top:1px dashed var(--border-sub); font-size:12.5px; color:var(--text-muted);">
+                    <span class="desktop-only">💡 캘린더에서 원하시는 날짜를 클릭하시면 <strong>바로 아래에 시간표와 예약 신청창</strong>이 열립니다.</span>
+                    <span class="mobile-only">💡 원하시는 날짜를 터치하시면 예약 신청 팝업이 열립니다.</span>
                 </div>
             </div>
+
+            <!-- 예약 신청 패널 (PC에서는 달력 바로 아래 인라인 전개 / 모바일에서는 모달 팝업) -->
+<div id="reservationModal" class="modal">
+    <div class="modal-content">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; padding-bottom:12px; border-bottom:1px solid var(--border-sub);">
+            <div style="display:flex; align-items:center; gap:8px;">
+                <span style="font-size:20px;">📅</span>
+                <h3 id="modalTitle" style="margin:0; font-size:20px; font-weight:800; color:var(--text-title); letter-spacing:-0.5px;">날짜 선택</h3>
+            </div>
+            <div style="display:flex; align-items:center; gap:10px;">
+                <button type="button" onclick="closeModal(); showTab('price');" style="background:none; border:none; color:#2563eb; font-size:12.5px; font-weight:700; cursor:pointer; text-decoration:underline;">📋 전체 요금표</button>
+                <button type="button" onclick="closeModal();" style="background:#f1f5f9; border:1px solid #cbd5e1; color:#334155; font-size:12px; font-weight:700; padding:5px 12px; border-radius:8px; cursor:pointer; display:flex; align-items:center; gap:4px; transition:all 0.15s ease;" title="예약창 닫기">✕ 닫기</button>
+            </div>
+        </div>
+        
+        <div id="dateRateBadge" style="display:inline-block; font-size:12px; font-weight:700; padding:6px 14px; border-radius:20px; margin-bottom:8px; background:rgba(77,148,255,0.12); color: var(--text-title); border:1px solid rgba(77,148,255,0.3);">주중 일반 요금 (25,000원 / 시간)</div>
+        <div style="font-size:12px; color:#475569; background:#f8fafc; border:1px solid #e2e8f0; border-radius:10px; padding:8px 12px; margin-bottom:14px; display:flex; align-items:center; justify-content:space-between;">
+            <span>⏰ 합주실 운영시간: <strong style="color:#0f172a;">09:00 ~ 20:00</strong></span>
+            <span style="color:#e11d48; font-weight:700;">※ 20시 이후 합주 마감</span>
+        </div>
+
+        <!-- 1. 예약 카테고리 선택 (일반 vs 정기권) -->
+        <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 14px;">
+            <button type="button" id="catGeneralBtn" class="cat-tab active" onclick="setBookingCategory('general')">🎵 일반 대관 (1회)</button>
+            <button type="button" id="catPassBtn" class="cat-tab" onclick="setBookingCategory('pass')">🎁 정기권 (월4회 할인)</button>
+        </div>
+
+        <!-- 2. 정기권 플랜 선택 (정기권 탭 활성화 시) -->
+        <div id="passPlanContainer" style="display:none; background: var(--bg-sub); border:1px solid #323d60; border-radius:16px; padding:14px; margin-bottom:16px;">
+            <div style="font-size:13px; color: var(--text-title); font-weight:bold; margin-bottom:10px; display:flex; justify-content:space-between;">
+                <span>🌟 정기권 플랜 선택</span>
+                <span style="font-size:11px; color:#aaa;">(월 4회 정기 이용)</span>
+            </div>
+            <div id="passPlanOptions" style="display:flex; flex-direction:column; gap:8px;"></div>
+        </div>
+
+        <!-- 3. 예약 시간 단위 프리셋 (일반 대관 시) -->
+        <div id="durationPresetBox" style="margin-bottom:14px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+                <span style="font-size:12px; color:#aaa; font-weight:600;">⏱️ 이용 시간 선택 (시작 시간 원클릭):</span>
+            </div>
+            <div style="display:grid; grid-template-columns: 1.2fr 1fr 1fr; gap: 6px;">
+                <button type="button" class="dur-btn active" id="dur2" onclick="setDurationMode(2)">⚡ 2시간 (기본)</button>
+                <button type="button" class="dur-btn" id="dur3" onclick="setDurationMode(3)">🕒 3시간</button>
+                <button type="button" class="dur-btn" id="durCustom" onclick="setDurationMode(0)">✏️ 직접 선택</button>
+            </div>
+        </div>
+
+        <div class="schedule-box" id="dailySchedule">
+            <strong style="color: var(--text-title); font-size:14px;">🗓️ 현재 예약 현황</strong>
+            <div id="scheduleList" style="margin-top:8px; color:#999; font-size:13px; line-height: 1.8;"></div>
+        </div>
+        
+        <form id="reservationForm">
+            <div id="adminCreateWeekly" style="display:none; margin-bottom: 16px; padding: 14px; background: rgba(39, 174, 96, 0.1); border: 1px solid #27ae60; border-radius: 14px;">
+                <label style="color:#2ecc71; font-weight:bold; font-size:14px; display:flex; align-items:center; cursor:pointer;">
+                    <input type="checkbox" id="createWeeklyToggle" style="margin-right:10px; width:18px; height:18px;"> 👑 [관리자] 향후 24주 매주 고정팀 일괄 등록
+                </label>
+            </div>
+
+            <div id="rangeGuideBanner" class="range-guide-banner"></div>
+            <div class="checkbox-grid" id="timeGrid"></div>
+            
+            <!-- 단국대 학생 10% 특별 할인 체크박스 (일반 대관 시) -->
+            <div id="dkuDiscountBox" style="background: #eff6ff; border:1px solid #bfdbfe; border-radius:14px; padding:12px 16px; margin-bottom:14px;">
+                <label style="display:flex; align-items:flex-start; gap:10px; cursor:pointer; font-size:13.5px; font-weight:700; color:#0f172a;">
+                    <input type="checkbox" id="dkuDiscountCheck" onchange="updateLivePrice()" style="margin-top:3px; width:18px; height:18px; accent-color:#3b82f6;">
+                    <div>
+                        <span style="color: #1e40af; font-weight:800;">🎓 단국대학교 학생 10% 특별 할인 적용</span>
+                        <p style="margin:4px 0 0 0; font-size:11.5px; color:#475569; font-weight:normal; line-height:1.4;">
+                            • 단품 대관 10% 즉시 할인 (주중 22,500원 / 주말 27,000원)<br>
+                            • <strong style="color:#fbbf24;">※ 단국대 모바일/실물 학생증 지참 + 예약 신청 후 관리자 문자 확인(학생증 사진 전송) 필수</strong>
+                        </p>
+                    </div>
+                </label>
+            </div>
+
+            <!-- 실시간 요금 계산 바 -->
+            <div id="livePriceBox" style="background: var(--bg-sub); border: 1px solid var(--border-sub); border-radius:14px; padding:14px 18px; margin-bottom:18px; display:flex; justify-content:space-between; align-items:center; font-size:14px;">
+                <span>선택 시간: <strong id="selectedHoursCount" style="color: var(--text-title);">0시간</strong> <span id="hoursNotice" style="font-size:12px; color:#888;">(기본 2시간~)</span></span>
+                <span>총 대관료: <strong id="livePriceAmount" style="color:#2563eb; font-size:16px;">0원</strong></span>
+            </div>
+            
+            <div class="booking-inputs-grid">
+                <div>
+                    <label for="teamName" style="display:block; font-size:12.5px; font-weight:700; color:var(--text-title); margin-bottom:6px;">합주팀 이름</label>
+                    <input type="text" id="teamName" placeholder="예: 워십웨이커스" style="width:100%; box-sizing:border-box; padding:14px 16px; background: #ffffff; border: 1.5px solid var(--border-sub); color: var(--text-title); border-radius:12px; font-size: 14.5px;" required>
+                </div>
+                <div>
+                    <label for="bookerPhone" style="display:block; font-size:12.5px; font-weight:700; color:var(--text-title); margin-bottom:6px;">예약자 휴대폰 번호</label>
+                    <input type="tel" id="bookerPhone" placeholder="예: 010-1234-5678" maxlength="13" style="width:100%; box-sizing:border-box; padding:14px 16px; background: #ffffff; border: 1.5px solid var(--border-sub); color: var(--text-title); border-radius:12px; font-size: 14.5px;" required>
+                </div>
+            </div>
+            
+            <div class="btn-group">
+                <button type="button" class="btn btn-back" onclick="closeModal()">취소</button>
+                <button type="submit" class="btn btn-submit" id="submitBtn">예약 신청</button>
+            </div>
+        </form>
+
+        <div id="adminArea" style="display:none; margin-top:25px; border-top:1px solid #222; padding-top:20px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
+                <p style="color: var(--text-title); font-weight:bold; font-size:14px; margin:0;">[관리자 전용 설정]</p>
+                <button type="button" onclick="loadReservations(true)" style="background:#333; color:#fff; border:none; padding:6px 12px; border-radius:8px; font-size:12px; cursor:pointer;">🔄 데이터 갱신</button>
+            </div>
+            <div id="adminDetailBox" style="background: var(--bg-sub); border: 1px solid var(--border-sub); border-radius:12px; padding:15px; margin-bottom:15px; font-size:13px; line-height:1.8; color:#bbb;"></div>
+            <div style="display:flex; flex-direction:column; gap:10px;">
+                <button class="btn" style="background:#27ae60; color:#fff" onclick="updateStatus('confirmed')" id="approveBtn">✅ 이 날짜 예약 승인 (확정 문자 발송)</button>
+                <button class="btn" style="background:#1a7a4a; color:#fff; font-size:13px;" onclick="approveBatchRes()" id="approveBatchBtn" style="display:none;">🔁 이 팀 전체 일정 일괄 승인 (정기권/고정팀)</button>
+                <button type="button" class="btn" style="background:#2563eb; color:#fff; font-size:13.5px; font-weight:bold; box-shadow:0 4px 15px rgba(37,99,235,0.35);" onclick="openRescheduleModal(currentAdminRes)" id="rescheduleBtn">📅 예약 날짜/시간 변경 (스케줄 변동)</button>
+                <div class="btn-group">
+                    <button class="btn" style="background:#c0392b; color:#fff; font-size:13px;" onclick="deleteRes('single')" id="deleteBtn">🗑️ 이 날짜만 삭제</button>
+                    <button class="btn" style="background:#8e44ad; color:#fff; font-size:13px;" onclick="deleteRes('team')" id="deleteTeamBtn">💥 이 팀 전체 일정 삭제</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+        </div>
         </div>
     </div>
 
@@ -2604,109 +2827,7 @@
     </div>
 </div>
 
-<div id="reservationModal" class="modal">
-    <div class="modal-content">
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
-            <h3 id="modalTitle" style="margin:0; font-size:20px; letter-spacing:-0.5px;">날짜 선택</h3>
-            <button type="button" onclick="closeModal(); showTab('price');" style="background:none; border:none; color: var(--text-title); font-size:12px; font-weight:bold; cursor:pointer; text-decoration:underline;">📋 전체 요금표</button>
-        </div>
-        
-        <div id="dateRateBadge" style="display:inline-block; font-size:12px; font-weight:700; padding:6px 14px; border-radius:20px; margin-bottom:8px; background:rgba(77,148,255,0.12); color: var(--text-title); border:1px solid rgba(77,148,255,0.3);">주중 일반 요금 (25,000원 / 시간)</div>
-        <div style="font-size:11.5px; color:#cbd5e1; background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08); border-radius:10px; padding:7px 12px; margin-bottom:14px; display:flex; align-items:center; justify-content:space-between;">
-            <span>⏰ 합주실 운영시간: <strong style="color:#0f172a;">09:00 ~ 20:00</strong></span>
-            <span style="color:#fb7185; font-weight:700;">※ 20시 이후 합주 마감</span>
-        </div>
 
-        <!-- 1. 예약 카테고리 선택 (일반 vs 정기권) -->
-        <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 14px;">
-            <button type="button" id="catGeneralBtn" class="cat-tab active" onclick="setBookingCategory('general')">🎵 일반 대관 (1회)</button>
-            <button type="button" id="catPassBtn" class="cat-tab" onclick="setBookingCategory('pass')">🎁 정기권 (월4회 할인)</button>
-        </div>
-
-        <!-- 2. 정기권 플랜 선택 (정기권 탭 활성화 시) -->
-        <div id="passPlanContainer" style="display:none; background: var(--bg-sub); border:1px solid #323d60; border-radius:16px; padding:14px; margin-bottom:16px;">
-            <div style="font-size:13px; color: var(--text-title); font-weight:bold; margin-bottom:10px; display:flex; justify-content:space-between;">
-                <span>🌟 정기권 플랜 선택</span>
-                <span style="font-size:11px; color:#aaa;">(월 4회 정기 이용)</span>
-            </div>
-            <div id="passPlanOptions" style="display:flex; flex-direction:column; gap:8px;"></div>
-        </div>
-
-        <!-- 3. 예약 시간 단위 프리셋 (일반 대관 시) -->
-        <div id="durationPresetBox" style="margin-bottom:14px;">
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
-                <span style="font-size:12px; color:#aaa; font-weight:600;">⏱️ 이용 시간 선택 (시작 시간 원클릭):</span>
-            </div>
-            <div style="display:grid; grid-template-columns: 1.2fr 1fr 1fr; gap: 6px;">
-                <button type="button" class="dur-btn active" id="dur2" onclick="setDurationMode(2)">⚡ 2시간 (기본)</button>
-                <button type="button" class="dur-btn" id="dur3" onclick="setDurationMode(3)">🕒 3시간</button>
-                <button type="button" class="dur-btn" id="durCustom" onclick="setDurationMode(0)">✏️ 직접 선택</button>
-            </div>
-        </div>
-
-        <div class="schedule-box" id="dailySchedule">
-            <strong style="color: var(--text-title); font-size:14px;">🗓️ 현재 예약 현황</strong>
-            <div id="scheduleList" style="margin-top:8px; color:#999; font-size:13px; line-height: 1.8;"></div>
-        </div>
-        
-        <form id="reservationForm">
-            <div id="adminCreateWeekly" style="display:none; margin-bottom: 16px; padding: 14px; background: rgba(39, 174, 96, 0.1); border: 1px solid #27ae60; border-radius: 14px;">
-                <label style="color:#2ecc71; font-weight:bold; font-size:14px; display:flex; align-items:center; cursor:pointer;">
-                    <input type="checkbox" id="createWeeklyToggle" style="margin-right:10px; width:18px; height:18px;"> 👑 [관리자] 향후 24주 매주 고정팀 일괄 등록
-                </label>
-            </div>
-
-            <div id="rangeGuideBanner" class="range-guide-banner"></div>
-            <div class="checkbox-grid" id="timeGrid"></div>
-            
-            <!-- 단국대 학생 10% 특별 할인 체크박스 (일반 대관 시) -->
-            <div id="dkuDiscountBox" style="background: #eff6ff; border:1px solid #bfdbfe; border-radius:14px; padding:12px 16px; margin-bottom:14px;">
-                <label style="display:flex; align-items:flex-start; gap:10px; cursor:pointer; font-size:13.5px; font-weight:700; color:#0f172a;">
-                    <input type="checkbox" id="dkuDiscountCheck" onchange="updateLivePrice()" style="margin-top:3px; width:18px; height:18px; accent-color:#3b82f6;">
-                    <div>
-                        <span style="color: #1e40af; font-weight:800;">🎓 단국대학교 학생 10% 특별 할인 적용</span>
-                        <p style="margin:4px 0 0 0; font-size:11.5px; color:#475569; font-weight:normal; line-height:1.4;">
-                            • 단품 대관 10% 즉시 할인 (주중 22,500원 / 주말 27,000원)<br>
-                            • <strong style="color:#fbbf24;">※ 단국대 모바일/실물 학생증 지참 + 예약 신청 후 관리자 문자 확인(학생증 사진 전송) 필수</strong>
-                        </p>
-                    </div>
-                </label>
-            </div>
-
-            <!-- 실시간 요금 계산 바 -->
-            <div id="livePriceBox" style="background: var(--bg-sub); border: 1px solid var(--border-sub); border-radius:14px; padding:14px 18px; margin-bottom:18px; display:flex; justify-content:space-between; align-items:center; font-size:14px;">
-                <span>선택 시간: <strong id="selectedHoursCount" style="color: var(--text-title);">0시간</strong> <span id="hoursNotice" style="font-size:12px; color:#888;">(기본 2시간~)</span></span>
-                <span>총 대관료: <strong id="livePriceAmount" style="color:#2563eb; font-size:16px;">0원</strong></span>
-            </div>
-            
-            <input type="text" id="teamName" placeholder="합주팀 이름 (예: 워십웨이커스)" style="width:100%; padding:16px; background: #ffffff; border: 1.5px solid var(--border-sub); color: var(--text-title); border-radius:14px; margin-bottom:12px; font-size: 15px;" required>
-            
-            <input type="tel" id="bookerPhone" placeholder="휴대폰 번호 (예: 010-1234-5678)" maxlength="13" style="width:100%; padding:16px; background: #ffffff; border: 1.5px solid var(--border-sub); color: var(--text-title); border-radius:14px; margin-bottom:22px; font-size: 15px;" required>
-            
-            <div class="btn-group">
-                <button type="button" class="btn btn-back" onclick="closeModal()">취소</button>
-                <button type="submit" class="btn btn-submit" id="submitBtn">예약 신청</button>
-            </div>
-        </form>
-
-        <div id="adminArea" style="display:none; margin-top:25px; border-top:1px solid #222; padding-top:20px;">
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
-                <p style="color: var(--text-title); font-weight:bold; font-size:14px; margin:0;">[관리자 전용 설정]</p>
-                <button type="button" onclick="loadReservations(true)" style="background:#333; color:#fff; border:none; padding:6px 12px; border-radius:8px; font-size:12px; cursor:pointer;">🔄 데이터 갱신</button>
-            </div>
-            <div id="adminDetailBox" style="background: var(--bg-sub); border: 1px solid var(--border-sub); border-radius:12px; padding:15px; margin-bottom:15px; font-size:13px; line-height:1.8; color:#bbb;"></div>
-            <div style="display:flex; flex-direction:column; gap:10px;">
-                <button class="btn" style="background:#27ae60; color:#fff" onclick="updateStatus('confirmed')" id="approveBtn">✅ 이 날짜 예약 승인 (확정 문자 발송)</button>
-                <button class="btn" style="background:#1a7a4a; color:#fff; font-size:13px;" onclick="approveBatchRes()" id="approveBatchBtn" style="display:none;">🔁 이 팀 전체 일정 일괄 승인 (정기권/고정팀)</button>
-                <button type="button" class="btn" style="background:#2563eb; color:#fff; font-size:13.5px; font-weight:bold; box-shadow:0 4px 15px rgba(37,99,235,0.35);" onclick="openRescheduleModal(currentAdminRes)" id="rescheduleBtn">📅 예약 날짜/시간 변경 (스케줄 변동)</button>
-                <div class="btn-group">
-                    <button class="btn" style="background:#c0392b; color:#fff; font-size:13px;" onclick="deleteRes('single')" id="deleteBtn">🗑️ 이 날짜만 삭제</button>
-                    <button class="btn" style="background:#8e44ad; color:#fff; font-size:13px;" onclick="deleteRes('team')" id="deleteTeamBtn">💥 이 팀 전체 일정 삭제</button>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
 
 <!-- 신청 정보 최종 확인 모달 -->
 <div id="confirmBookingModal" class="modal" style="z-index: 10000;">
@@ -3939,10 +4060,16 @@
             const cell = document.createElement('div'); 
             cell.className = 'date-cell';
             const dStr = `${year}-${String(month+1).padStart(2,'0')}-${String(i).padStart(2,'0')}`;
+            cell.dataset.date = dStr;
             const day = new Date(year, month, i).getDay();
             const hName = holidayData[dStr];
             let dClass = day === 0 || hName ? "sun-text" : day === 6 ? "sat-text" : "";
             cell.innerHTML = `<span class="date-num ${dClass}">${hName ? `<span class="holiday-name">${hName}</span>` : ''}${i}</span>`;
+
+            // 선택된 날짜 강조
+            if (dStr === window.selectedDate && document.getElementById('reservationModal')?.classList.contains('open')) {
+                cell.classList.add('selected');
+            }
 
             // 오늘 날짜 원형 강조
             if (dStr === todayStr) cell.classList.add('today');
@@ -4019,6 +4146,10 @@
 
     function openBooking(d, day) {
         window.selectedDate = d; 
+        document.querySelectorAll('.date-cell').forEach(c => c.classList.remove('selected'));
+        const clickedCell = document.querySelector(`.date-cell[data-date="${d}"]`);
+        if (clickedCell) clickedCell.classList.add('selected');
+
         document.getElementById('modalTitle').textContent = d + " 예약 신청";
         document.getElementById('adminArea').style.display = 'none'; 
         document.getElementById('reservationForm').style.display = 'block';
@@ -4093,7 +4224,18 @@
         updateLivePrice();
         document.getElementById('teamName').value = '';
         document.getElementById('bookerPhone').value = '';
-        document.getElementById('reservationModal').style.display = 'flex';
+        const resModal = document.getElementById('reservationModal');
+        if (resModal) {
+            resModal.classList.add('open');
+            if (window.innerWidth <= 768) {
+                resModal.style.display = 'flex';
+            } else {
+                resModal.style.display = 'block';
+                setTimeout(() => {
+                    resModal.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                }, 60);
+            }
+        }
     }
 
     // [신청 정보 최종 확인 모달 열기/닫기 및 실제 전송 파이프라인]
@@ -4362,7 +4504,23 @@
             batchBtn.style.display = isBatch ? 'block' : 'none';
         }
 
-        document.getElementById('reservationModal').style.display = 'flex';
+        window.selectedDate = res.date;
+        document.querySelectorAll('.date-cell').forEach(c => c.classList.remove('selected'));
+        const clickedAdminCell = document.querySelector(`.date-cell[data-date="${res.date}"]`);
+        if (clickedAdminCell) clickedAdminCell.classList.add('selected');
+
+        const resModal = document.getElementById('reservationModal');
+        if (resModal) {
+            resModal.classList.add('open');
+            if (window.innerWidth <= 768) {
+                resModal.style.display = 'flex';
+            } else {
+                resModal.style.display = 'block';
+                setTimeout(() => {
+                    resModal.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                }, 60);
+            }
+        }
     }
 
     // [관리자 전용] 승인 처리 (문자 발송)
@@ -4700,7 +4858,12 @@
 
     function closeModal() { 
         resetRangeState();
-        document.getElementById('reservationModal').style.display = 'none'; 
+        const resModal = document.getElementById('reservationModal');
+        if (resModal) {
+            resModal.classList.remove('open');
+            resModal.style.display = 'none';
+        }
+        document.querySelectorAll('.date-cell.selected').forEach(c => c.classList.remove('selected'));
     }
 
     // [관리자 전용] 정기권/고정팀 전체 일정 일괄 승인
@@ -4946,7 +5109,7 @@
 
     // 3분마다 백그라운드 자동 갱신 (사용자가 어떤 모달도 열지 않은 상태에서만)
     setInterval(() => {
-        const modalOpen = document.getElementById('reservationModal')?.style.display === 'flex';
+        const modalOpen = document.getElementById('reservationModal')?.classList.contains('open');
         const resultOpen = document.getElementById('resultModal')?.style.display === 'flex';
         const confirmOpen = document.getElementById('confirmBookingModal')?.style.display === 'flex';
         const adminListOpen = document.getElementById('adminListModal')?.style.display === 'flex';
