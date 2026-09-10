@@ -1,6 +1,6 @@
 # AWAKE LAB 개발 가이드 및 프로젝트 규칙
 
-- **운용 Netlify 주소**: `https://awakelab.netlify.app`
+- **운용 배포 주소**: `https://awakelab.vercel.app/`
 - **로컬 테스트 주소**: `http://localhost:8080`
 - **프로젝트 핵심 규칙**: 
   - [개발계획서.md](./개발계획서.md)를 개발 과정 동안 최우선 기본 규칙으로 참조할 것.
