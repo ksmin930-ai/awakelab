@@ -1220,7 +1220,7 @@
             background: #0f172a;
             box-shadow: 0 4px 12px rgba(0,0,0,0.08);
             border: 1px solid #cbd5e1;
-            aspect-ratio: 16 / 11;
+            aspect-ratio: 3 / 3.6;
         }
         .lesson-photo-wrap img {
             width: 100%;
@@ -1228,6 +1228,12 @@
             object-fit: cover;
             display: block;
             transition: transform 0.3s ease;
+        }
+        .lesson-photo-wrap:first-child img {
+            object-position: 72% 30%;
+        }
+        .lesson-photo-wrap:last-child img {
+            object-position: 32% 25%;
         }
         .lesson-photo-wrap:hover img {
             transform: scale(1.05);
@@ -1601,8 +1607,8 @@
                 margin-bottom: 12px !important;
             }
             .lesson-photo-wrap {
-                aspect-ratio: 16 / 11 !important;
-                border-radius: 10px !important;
+                aspect-ratio: 3 / 3.4 !important;
+                border-radius: 12px !important;
             }
             .lesson-photo-wrap .photo-badge {
                 font-size: 9.5px !important;
