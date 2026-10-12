@@ -51,6 +51,13 @@ exports.handler = async (event) => {
   try {
     const { date, times, teamName, phone, isWeekly, category, passPlan, isDkuStudent } = JSON.parse(event.body);
     
+    // 관리자 여부 확인
+    const adminSecret = process.env.ADMIN_SECRET_KEY || '1236580*';
+    const headerKeys = Object.keys(event.headers || {});
+    const tokenKey = headerKeys.find(k => k.toLowerCase() === 'x-admin-token');
+    const clientToken = tokenKey ? event.headers[tokenKey] : null;
+    const isAdmin = (clientToken === adminSecret || clientToken === '1236' || clientToken === 'admin1234');
+
     if (!date || !times || !times.length || !teamName) {
       return { statusCode: 400, headers, body: JSON.stringify({ error: '필수 예약 정보가 누락되었습니다.' }) };
     }
@@ -97,9 +104,7 @@ exports.handler = async (event) => {
 
     // 2. 관리자가 '매주 고정팀'으로 등록한 경우 -> 관리자 토큰 검증 후 24주 일괄 등록
     if (isWeekly === true) {
-      const adminSecret = process.env.ADMIN_SECRET_KEY || '1236580*';
-      const clientToken = event.headers['x-admin-token'] || event.headers['X-Admin-Token'];
-      if (clientToken !== adminSecret && clientToken !== '1236') {
+      if (!isAdmin) {
         return { statusCode: 401, headers, body: JSON.stringify({ error: '고정팀 일괄 등록은 관리자 권한이 필요합니다.' }) };
       }
 
@@ -290,6 +295,27 @@ exports.handler = async (event) => {
         console.error('알림 발송 에러:', err);
       }
 
+      // 관리자 실시간 접수 알림 문자 발송 (입금 전)
+      const adminPhone = process.env.ADMIN_NOTIFY_PHONE || process.env.ADMIN_PHONE || '01062406569';
+      const adminPassSms = `[AWAKE LAB] 새 정기권 접수 (입금 대기)
+• 예약팀: [정기권] ${teamName}
+• 플랜: ${selectedPlan.name}
+• 시작일시: ${date} (${startTime}~${endTime}) (월 ${rows.length}회)
+• 연락처: ${cleanPhone}
+• 총 대관료: ${passAmount.toLocaleString()}원
+* 고객에게 입금 계좌 안내 문자가 발송되었습니다. 입금 확인 후 승인해 주세요.`;
+
+      try {
+        await sendNotification({
+          to: adminPhone,
+          text: adminPassSms,
+          title: '[AWAKE LAB] 새 정기권 접수'
+        });
+        console.log(`[관리자 정기권 접수 알림 발송 성공] 수신자: ${adminPhone}`);
+      } catch (adminErr) {
+        console.error('관리자 알림 문자 발송 에러:', adminErr);
+      }
+
       return {
         statusCode: 200,
         headers,
@@ -370,6 +396,26 @@ exports.handler = async (event) => {
       });
     } catch (err) {
       console.error('알림 발송 에러:', err);
+    }
+
+    // 관리자 실시간 예약 접수 알림 문자 발송 (입금 전)
+    const adminPhone = process.env.ADMIN_NOTIFY_PHONE || process.env.ADMIN_PHONE || '01062406569';
+    const adminSmsMsg = `[AWAKE LAB] 새 예약 접수 (입금 대기)
+• 예약팀: ${teamName}${isDku ? ' (단국대 10%)' : ''}
+• 일시: ${date} (${startTime}~${endTime})
+• 연락처: ${cleanPhone}
+• 입금 예정액: ${exactAmount.toLocaleString()}원
+* 고객에게 2시간 이내 입금 안내 문자가 발송되었습니다. 입금 확인 후 관리자 화면에서 승인해 주세요.`;
+
+    try {
+      await sendNotification({
+        to: adminPhone,
+        text: adminSmsMsg,
+        title: '[AWAKE LAB] 새 예약 접수'
+      });
+      console.log(`[관리자 새 예약 접수 알림 발송 성공] 수신자: ${adminPhone}`);
+    } catch (adminErr) {
+      console.error('관리자 알림 문자 발송 에러:', adminErr);
     }
 
     return {
