@@ -340,8 +340,8 @@ exports.handler = async (event) => {
     const isDku = (isDkuStudent === true);
     if (isDku) {
       exactAmount = Math.round(exactAmount * 0.9);
-      if (!finalTeamName.includes('[단국대]')) {
-        finalTeamName = `[단국대 10%] ${finalTeamName}`;
+      if (!finalTeamName.includes('[대학생]')) {
+        finalTeamName = `[대학생 10%] ${finalTeamName}`;
       }
     }
     const periodStr = `[${date} ${startTime}:00+09, ${date} ${endTime}:00+09)`;
@@ -401,7 +401,7 @@ exports.handler = async (event) => {
     // 관리자 실시간 예약 접수 알림 문자 발송 (입금 전)
     const adminPhone = process.env.ADMIN_NOTIFY_PHONE || process.env.ADMIN_PHONE || '01062406569';
     const adminSmsMsg = `[AWAKE LAB] 새 예약 접수 (입금 대기)
-• 예약팀: ${teamName}${isDku ? ' (단국대 10%)' : ''}
+• 예약팀: ${teamName}${isDku ? ' (대학생 10%)' : ''}
 • 일시: ${date} (${startTime}~${endTime})
 • 연락처: ${cleanPhone}
 • 입금 예정액: ${exactAmount.toLocaleString()}원
